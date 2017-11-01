@@ -1,0 +1,33 @@
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = CA
+ST = ON
+L = Toronto
+O = Sickkids
+OU = CCM
+CN = www.company.com
+
+[v3_req]
+keyUsage = keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = www.company.com
+DNS.2 = company.com
+DNS.3 = company.net
+DNS.4 = localhost
+DNS.5 = 127.0.0.1
+
+# IPv6 localhost
+DNS.7     = ::1
+
+# IPv4 localhost
+IP.1       = 127.0.0.1
+
+# IPv6 localhost
+IP.2     = ::1
