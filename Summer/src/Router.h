@@ -14,7 +14,7 @@
 #include "Response.h"
 #include "Trie.h"
 
-namespace Http {
+namespace Summer {
 
 struct Context {
   Request &req_;
@@ -39,43 +39,39 @@ public:
   int operator()() { return handler_count_++; }
 };
 
-/**
- * @brief   global counter as default Counter to Handler_
- */
-static auto global_handler_counter = HandlerCounter();
+// global counter as default Counter to Handler_
+static HandlerCounter global_handler_counter = HandlerCounter();
 
 /**
  * @brief   A Wrapper around a Callable,
  */
-template <typename Counter = HandlerCounter> class Handler_ {
+template <typename Counter = HandlerCounter> 
+class Handler_ {
 public:
   using HandlerFunc = std::function<void(Context &)>;
-
   explicit Handler_() : handler_(nullptr), handler_id_(0){};
-  explicit Handler_(HandlerFunc handler,
-                    Counter& count_up = global_handler_counter)
+  explicit Handler_(HandlerFunc handler, Counter& count_up = global_handler_counter)
       : handler_(handler), handler_id_(count_up()){};
 
   operator bool() const { return handler_ != nullptr; }
   void operator()(Context &ctx) { handler_(ctx); }
-  bool operator==(const Handler_<> &rhs) {
-    return handler_id_ == rhs.handler_id_;
-  }
-  bool operator!=(const Handler_<> &rhs) { return !(operator==(rhs)); }
+  bool operator< (const Handler_<> &rhs) { return handler_id_ < rhs.handler_id_; }
+  bool operator<=(const Handler_<> &rhs) { return !(rhs.handler_id_ < handler_id_); }
+  bool operator==(const Handler_<> &rhs) { return !(rhs.handler_id_ < handler_id_) && !(handler_id_ < rhs.handler_id_); }  
+  bool operator!=(const Handler_<> &rhs) { return (rhs.handler_id_ < handler_id_) || (handler_id_ < rhs.handler_id_); }  
+  bool operator> (const Handler_<> &rhs) { return rhs.handler_id_ < handler_id_; }
+  bool operator>=(const Handler_<> &rhs) { return !(handler_id_ < rhs.handler_id_); }
 
   void handle(HandlerFunc handle, Counter& count_up = global_handler_counter) {
     handler_ = handle;
-    if (!handler_id_)
-      handler_id_ = count_up();
+    if (!handler_id_) handler_id_ = count_up();
   }
 
 public:
   HandlerFunc handler_;
   int handler_id_;
 
-public:
-  friend auto inline operator<<(std::ostream &strm, Handler_<> &handler)
-      -> std::ostream & {
+  friend inline std::ostream & operator<<(std::ostream &strm, Handler_<> &handler) {
     return strm << "(" << handler.handler_id_ << ")";
   }
 };
@@ -87,7 +83,8 @@ using Handler = Handler_<>;
  * @brief   A class for constructing routes at compile-time, and
  *          resolving request to a sequence of handlers at run-time
  */
-template <typename T> class Router {
+template <typename T> 
+class Router {
 public:
   explicit Router() : routes_(method_count){};
   /**
@@ -99,14 +96,14 @@ public:
    *
    * @precond path starts with /
    */
-  auto handle(RequestMethod method, std::string path, T handler) -> void {
+  void handle(RequestMethod method, std::string path, T handler) {
     assert(path.front() == '/');
     auto &route = routes_[etoint(method)];
     route.insert({path, handler});
   }
 
   template <typename Container = std::vector<RequestMethod>>
-  auto handle(Container methods, std::string path, T handler) -> void {
+  void handle(Container methods, std::string path, T handler) {
     for (const auto &method : methods)
       handle(method, path, handler);
   }
@@ -114,16 +111,16 @@ public:
   /**
    * @brief   Handle wrapper functions
    */
-  auto get(std::string path, T handler = T()) -> void {
+  void get(std::string path, T handler = T()) {
     handle(RequestMethod::GET, path, handler);
   }
-  auto post(std::string path, T handler = T()) -> void {
+  void post(std::string path, T handler = T()) {
     handle(RequestMethod::POST, path, handler);
   }
-  auto put(std::string path, T handler = T()) -> void {
+  void put(std::string path, T handler = T()) {
     handle(RequestMethod::PUT, path, handler);
   }
-  auto use(std::string path, T handler = T()) -> void {
+  void use(std::string path, T handler = T()) {
     for (int method = static_cast<int>(RequestMethod::GET);
          method != static_cast<int>(RequestMethod::UNDETERMINED); ++method) {
       handle(static_cast<RequestMethod>(method), path, handler);
@@ -133,7 +130,7 @@ public:
    * @brief   Resolve path to a sequence of handler calls
    *          If no matching path is found, the sequence is empty
    */
-  auto resolve(RequestMethod method, std::string path) -> std::vector<T> {
+  std::vector<T> resolve(RequestMethod method, std::string path) {
     auto &route = routes_[etoint(method)];
     auto found = route.find(path);
     if (found == route.end())
@@ -149,7 +146,8 @@ public:
     std::reverse(handle_sequence.begin(), handle_sequence.end());
     return handle_sequence;
   }
-  auto resolve(Request &req) -> std::vector<T> {
+
+  std::vector<T> resolve(Request &req) {
     auto method = req.method_;
     auto path = req.uri_.abs_path_;
     auto &route = routes_[etoint(method)];
@@ -179,8 +177,7 @@ public:
   std::vector<Trie<T>> routes_;
 
 public:
-  friend auto inline operator<<(std::ostream &strm, Router r)
-      -> std::ostream & {
+  friend std::ostream & operator<<(std::ostream &strm, Router r) {
     for (int i = 0; i < method_count; ++i) {
       auto &trie = r.routes_[i];
       if (trie.size_ != 0) {

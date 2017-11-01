@@ -7,7 +7,7 @@
 #include <utility>
 
 
-using namespace Http;
+using namespace Summer;
 
 auto test_base64(std::pair<std::string, std::string> in_out) -> void {
 

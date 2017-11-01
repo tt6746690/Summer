@@ -6,7 +6,7 @@
 #include "Utilities.h"
 #include "Response.h"
 
-using namespace Http;
+using namespace Summer;
 
 TEST_CASE("Message::Manipulate header member", "[Message]")
 {

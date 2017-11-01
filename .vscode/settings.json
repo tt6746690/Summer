@@ -1,6 +1,4 @@
 {
-  "editor.formatOnSave": true,
-  "editor.wordWrap": "off",
   "files.associations": {
     "*.txt": "cmake",
     "__config": "cpp",
@@ -32,5 +30,7 @@
     "__locale": "cpp",
     "algorithm": "cpp",
     "iosfwd": "cpp"
-  }
+  },
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "off"
 }

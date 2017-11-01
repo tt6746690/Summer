@@ -1,7 +1,5 @@
 project(Summer)
 
-# cmake -H. -Bbuild -Wno-dev
-# cmake --build build -- -j3
 
 # include directory and set up lib dependencies
 include_directories(src)
@@ -19,7 +17,9 @@ file(GLOB SOURCE_FILES
     "./src/*.h"
     "./src/*.cpp"
     "./src/codec/*.h"
-    "./src/codec/*.cpp"    
+    "./src/codec/*.cpp"
+    "./src/middlewares/*.h"    
+    "./src/middlewares/*.cpp"        
 )
 
 add_library(Http ${SOURCE_FILES})

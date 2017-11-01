@@ -8,7 +8,7 @@
 
 using namespace std;
 using namespace asio;
-using namespace Http;
+using namespace Summer;
 
 TEST_CASE("Construct routes", "[Server]")
 {

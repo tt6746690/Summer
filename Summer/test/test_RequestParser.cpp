@@ -8,12 +8,12 @@
 #include "Request.h"
 #include "Constants.h"
 
-using namespace Http;
+using namespace Summer;
 
 TEST_CASE("Uri", "[RequestParser]")
 {
     RequestParser parser;
-    REQUIRE(parser.state_ == RequestParser::State::req_start);
+    REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
 
     Request req;
     REQUIRE(req.method_ == RequestMethod::UNDETERMINED);
@@ -46,8 +46,8 @@ TEST_CASE("Uri", "[RequestParser]")
 TEST_CASE("Overall", "[RequestParser]")
 {
     RequestParser parser;
-    REQUIRE(parser.state_ == RequestParser::State::req_start);
-
+    REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
+    
     Request req;
     REQUIRE(req.method_ == RequestMethod::UNDETERMINED);
     REQUIRE(req.uri_.state_ == UriState::uri_start);
@@ -95,8 +95,8 @@ TEST_CASE("Method", "[RequestParser]")
 {
 
     RequestParser parser;
-    REQUIRE(parser.state_ == RequestParser::State::req_start);
-
+    REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
+    
     Request req;
     REQUIRE(req.method_ == RequestMethod::UNDETERMINED);
     REQUIRE(req.uri_.state_ == UriState::uri_start);

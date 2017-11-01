@@ -10,26 +10,23 @@
 #include "asio/ssl.hpp"
 #include "asio/ssl/impl/src.hpp"
 
-#include <chrono>
 #include <fstream>
-#include <iostream>
-#include <memory>
 #include <string>
 #include <utility>
-
 
 #include "Connection.h"
 #include "Router.h"
 
 
-namespace Http {
+namespace Summer {
 
 using ServerAddr = std::pair<std::string, int>;
 
 /**
  * @brief   A generic Http server
  */
-template <typename Derived> class GenericServer {
+template <typename Derived> 
+class GenericServer {
 public:
   constexpr static int max_header_bytes = 1 << 20; // 1MB
 public:
@@ -87,8 +84,6 @@ class HttpServer : public GenericServer<HttpServer> {
 public:
   explicit HttpServer(const ServerAddr server_addr)
       : GenericServer(server_addr){};
-
-public:
   /**
    * @brief   Accept connection and creates new session
    */
@@ -110,7 +105,7 @@ public:
   /**
    * @brief   Scheme of HTTPS
    */
-  auto scheme() -> std::string { return "http"; }
+  std::string scheme() { return "http"; }
 };
 
 /**
@@ -123,7 +118,6 @@ public:
     configure_ssl_context();
   };
 
-public:
   /**
    * @brief   Accept connection and creates new session
    */
@@ -145,7 +139,10 @@ public:
   /**
    * @brief   Scheme of HTTPS
    */
-  auto scheme() -> std::string { return "https"; }
+  std::string scheme() { return "https"; }
+
+private:
+  asio::ssl::context context_;
 
 private:
   /**
@@ -159,19 +156,17 @@ private:
     context_.set_password_callback([](
         std::size_t max_length, asio::ssl::context::password_purpose purpose) {
       std::string passphrase;
-      std::fstream passinf("Http/ssl/passphrase", std::ios::in);
+      std::fstream passinf("Summer/ssl/passphrase", std::ios::in);
       if (passinf) {
         std::getline(passinf, passphrase);
       }
       return passphrase;
     });
-    context_.use_private_key_file("Http/ssl/key.pem", asio::ssl::context::pem);
-    context_.use_certificate_chain_file("Http/ssl/cert.pem");
-    context_.use_tmp_dh_file("Http/ssl/dh512.pem");
+    context_.use_private_key_file("Summer/ssl/key.pem", asio::ssl::context::pem);
+    context_.use_certificate_chain_file("Summer/ssl/cert.pem");
+    context_.use_tmp_dh_file("Summer/ssl/dh512.pem");
   };
 
-private:
-  asio::ssl::context context_;
 };
 }
 

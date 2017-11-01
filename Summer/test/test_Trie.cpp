@@ -4,7 +4,7 @@
 
 #include "Trie.h"
 
-using namespace Http;
+using namespace Summer;
 
 TEST_CASE("TrieNode", "[Trie]")
 {

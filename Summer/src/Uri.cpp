@@ -1,19 +1,49 @@
 #include <cstdio>
 #include <ostream>
 
+
+#include "Uri.h"
 #include "Constants.h"
 #include "RequestParser.h"
-#include "Uri.h"
+#include "Utilities.h"
 
-namespace Http {
+namespace Summer {
 
-auto ctohex(unsigned int c) -> std::string {
+
+/**
+ * static strings
+ */
+static constexpr char unreserved_charset[] =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~";
+// static constexpr char reserved_charset[] = "!*'();:@&=+$,/?#[]";
+static constexpr char uri_charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn"
+                                  "opqrstuvwxyz0123456789-_.~!*'();:@&=+$,/"
+                                  "?#[]";
+
+bool is_uri_unreserved(char c) {
+  for (auto b = std::begin(unreserved_charset), e = std::end(unreserved_charset); b != e; b++) {
+    if (c == *b) return true;
+  }
+  return false;
+}
+
+bool is_uri(char c) {
+  for (auto b = std::begin(uri_charset), e = std::end(uri_charset); b != e; b++) {
+    if (c == *b) return true;
+  }
+  return false;
+}
+
+/**
+ * @brief   Converts 1 utf8 byte to its hex value
+ */
+std::string ctohex(unsigned int c) {
   std::ostringstream os;
   os << std::hex << std::uppercase << c;
   return os.str();
 }
 
-auto Uri::decode() -> void {
+void Uri::decode() {
   scheme_ = urldecode(scheme_);
   host_ = urldecode(host_);
   abs_path_ = urldecode(abs_path_);
@@ -21,7 +51,8 @@ auto Uri::decode() -> void {
   fragment_ = urldecode(fragment_);
 }
 
-auto Uri::urlencode(const std::string &url) -> std::string {
+std::string Uri::urlencode(const std::string &url) 
+{
   if (url.empty())
     return {};
 
@@ -35,7 +66,8 @@ auto Uri::urlencode(const std::string &url) -> std::string {
   return encoded;
 }
 
-auto Uri::urldecode(const std::string &url) -> std::string {
+std::string Uri::urldecode(const std::string &url) 
+{
   if (url.empty())
     return {};
 
@@ -57,7 +89,8 @@ auto Uri::urldecode(const std::string &url) -> std::string {
   return decoded;
 }
 
-auto Uri::make_query(const std::string &qstr) -> ssmap {
+ssmap Uri::make_query(const std::string &qstr) 
+{
   constexpr char tok_and = '&';
   constexpr char tok_equal = '=';
 
@@ -98,7 +131,7 @@ auto Uri::make_query(const std::string &qstr) -> ssmap {
       -- return 414 request-uri too long ...
   */
 
-auto Uri::consume(char c) -> ParseStatus {
+ParseStatus Uri::consume(char c) {
   switch (state_) {
   case UriState::uri_start:
     if (c == '/') {
@@ -185,7 +218,7 @@ auto Uri::consume(char c) -> ParseStatus {
 /*
     "http:" "//" host [ ":" port ] [ abs_path [ "?" query ]]
 */
-auto operator<<(std::ostream &strm, Uri uri) -> std::ostream & {
+std::ostream& operator<<(std::ostream &strm, Uri uri) {
   if (uri.scheme_.size())
     strm << uri.scheme_ + "://" + uri.host_;
   if (uri.port_.size())
@@ -198,4 +231,6 @@ auto operator<<(std::ostream &strm, Uri uri) -> std::ostream & {
     strm << "#" << uri.fragment_;
   return strm;
 }
+
+
 }

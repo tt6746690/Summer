@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <utility>
 
-namespace Http {
+namespace Summer {
 
 
 template<typename InputIter>
@@ -24,8 +24,7 @@ auto concat(InputIter begin, InputIter end) -> std::string{
   return s;
 }
 
-static inline auto split(std::string s, char delim)
-    -> std::pair<std::string, std::string> {
+static inline auto split(std::string s, char delim) -> std::pair<std::string, std::string> {
   auto pos = s.find(delim);
   if (pos != std::string::npos)
     return std::make_pair(s.substr(0, pos), s.substr(pos + 1));

@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-namespace Http
+namespace Summer
 {
 
 using BYTE = uint8_t;

@@ -6,7 +6,7 @@
 #include "Router.h"
 #include "Constants.h"
 
-using namespace Http;
+using namespace Summer;
 
 TEST_CASE("handle, resolves", "[Router]")
 {

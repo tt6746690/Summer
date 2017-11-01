@@ -1,17 +1,13 @@
 #include "asio.hpp"
 #include "asio/ssl.hpp"
 
-#include <iostream>
-#include <iterator> // advance
-#include <utility>  // enable_shared_from_this, move
-
 #include "Connection.h"
-#include "Uri.h"
-#include "Constants.h"
+#include <iostream>
 
 using namespace std;
 
-namespace Http {
+namespace Summer {
+
 
 template<typename SocketType> 
 void Connection<SocketType>::stop(){

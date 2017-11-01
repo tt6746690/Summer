@@ -2,9 +2,35 @@
 #include <vector> // emplace_back
 
 #include "RequestParser.h"
+#include "Request.h"
 #include "Uri.h" // uri.consume
 
-namespace Http {
+namespace Summer {
+
+enum class RequestParser::State {
+  req_start = 1,        // 1
+  req_start_lf,         // 2
+  req_method,           // 3
+  req_uri,              // 4
+  req_http_h,           // 5
+  req_http_ht,          // 6
+  req_http_htt,         // 7
+  req_http_http,        // 8
+  req_http_slash,       // 9
+  req_http_major,       // 10
+  req_http_dot,         // 11
+  req_http_minor,       // 12
+  req_start_line_cr,    // 13
+  req_start_line_lf,    // 14
+  req_field_name_start, // 15
+  req_field_name,       // 16
+  req_field_value,      // 17
+  req_header_lf,        // 18
+  req_header_lws,       // 19
+  req_header_end        // 20
+};
+
+RequestParser::RequestParser() : state_(State::req_start){};
 
 /*
         Request         = Request-Line                  ; Section 5.1

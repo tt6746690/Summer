@@ -8,7 +8,7 @@
 #include <iostream>
 #include <cassert>
 
-namespace Http
+namespace Summer
 {
 
 // Base64Codec

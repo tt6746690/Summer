@@ -5,7 +5,7 @@
 
 #include "Uri.h"
 
-using namespace Http;
+using namespace Summer;
 
 TEST_CASE("uri encoding/decoding", "[Uri]")
 {

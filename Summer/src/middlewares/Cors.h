@@ -12,7 +12,7 @@
 #include "Router.h"
 
 
-namespace Http {
+namespace Summer {
 
 /**
  * @brief   Partial impl of Cors https://www.w3.org/TR/cors/

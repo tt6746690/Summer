@@ -5,18 +5,18 @@
 #include "asio/ssl.hpp"
 #include "asio/basic_waitable_timer.hpp"
 
-
-#include <type_traits>
 #include <chrono>
-#include <utility>
-#include <iostream>
+#include <utility>  // enable_shared_from_this, move
 
 #include "Request.h"
-#include "RequestParser.h"
 #include "Response.h"
+#include "RequestParser.h"
 #include "Router.h"
 
-namespace Http {
+namespace Summer {
+
+// forward declaration 
+enum class ParseStatus;
 
 using TcpSocket = asio::ip::tcp::socket;
 using SslSocket = asio::ssl::stream<asio::ip::tcp::socket>;
@@ -24,31 +24,17 @@ using ClockType = std::chrono::steady_clock;
 
 
 template <typename SocketType>
-class Connection : public std::enable_shared_from_this<Connection<SocketType>> {
+class Connection 
+  : public std::enable_shared_from_this<Connection<SocketType>> {
 
 public:
   using DeadlineTimer = asio::basic_waitable_timer<ClockType>;
   static constexpr auto max_time = ClockType::duration::max();
   static constexpr auto read_timeout = std::chrono::seconds(2);
 
-public:
-  explicit Connection(asio::io_service& io_service, Router<Handler> &router)
-      : socket_(io_service),
-        read_deadline_(io_service),
-        router_(router){
-          read_deadline_.expires_from_now(max_time);
-        };
+  explicit Connection(asio::io_service& io_service, Router<Handler> &router);
+  explicit Connection(asio::io_service& io_service, asio::ssl::context& context, Router<Handler> &router);
 
-  explicit Connection(
-    asio::io_service& io_service, asio::ssl::context& context, Router<Handler> &router)
-      : socket_(io_service, context),
-        read_deadline_(io_service),
-        router_(router){
-          read_deadline_.expires_from_now(max_time);
-        };
-
-
-public:
   /**
    * @brief   Starts reading asynchronously
    *          For TLS, do handshake first
@@ -99,6 +85,25 @@ private:
   RequestParser request_parser_;
   Router<Handler> &router_;
 };
+
+
+template<typename SocketType>   
+inline Connection<SocketType>::Connection(asio::io_service& io_service, Router<Handler> &router)
+: socket_(io_service),
+  read_deadline_(io_service),
+  router_(router){
+    read_deadline_.expires_from_now(max_time);
+  };
+
+template<typename SocketType>  
+inline Connection<SocketType>::Connection(asio::io_service& io_service, asio::ssl::context& context, Router<Handler> &router)
+: socket_(io_service, context),
+  read_deadline_(io_service),
+  router_(router){
+    read_deadline_.expires_from_now(max_time);
+  };
+
+
 
 
 

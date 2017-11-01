@@ -12,7 +12,7 @@
 
 #include "Utilities.h"
 
-namespace Http
+namespace Summer
 {
 
 template <typename T>

@@ -1,17 +1,15 @@
-#include <iostream>
-#include <cassert>
-#include <string>
-#include <utility>
-#include <vector>
-#include <algorithm>
-
 #include "Message.h"
 #include "Constants.h"
 
-namespace Http
+#include <ostream>
+#include <cassert>
+#include <algorithm>
+
+
+namespace Summer
 {
 
-auto Message::version(int major, int minor) -> std::string
+std::string Message::version(int major, int minor)
 {
     return "HTTP/" + std::to_string(major) + "." + std::to_string(minor);
 }
@@ -27,16 +25,16 @@ void Message::build_header_value(char c)
     header_value(headers_.back()).push_back(c);
 }
 
-auto Message::header_name(HeaderType &header) -> Message::HeaderNameType &
+Message::HeaderNameType& Message::header_name(HeaderType &header)
 {
     return std::get<0>(header);
 }
-auto Message::header_value(HeaderType &header) -> Message::HeaderValueType &
+Message::HeaderValueType& Message::header_value(HeaderType &header)
 {
     return std::get<1>(header);
 }
 
-auto Message::get_header(HeaderNameType name) -> std::pair<HeaderValueType, bool>
+std::pair<Message::HeaderValueType, bool> Message::get_header(HeaderNameType name)
 {
     HeaderValueType val{};
     bool valid = false;
@@ -49,7 +47,7 @@ auto Message::get_header(HeaderNameType name) -> std::pair<HeaderValueType, bool
     return std::make_pair(val, valid);
 }
 
-auto Message::flatten_header() const -> std::string
+std::string Message::flatten_header() const
 {
     std::string headers_flat;
     for (auto &header : headers_)
@@ -78,7 +76,7 @@ void Message::unset_header(HeaderNameType name)
     headers_.erase(end, headers_.end());
 }
 
-auto Message::content_length() -> int
+int Message::content_length()
 {
     HeaderValueType val = "";
     bool found;
@@ -96,7 +94,7 @@ void Message::content_length(int length)
     set_header({"Content-Length", std::to_string(length)});
 }
 
-auto Message::content_type() -> HeaderValueType
+Message::HeaderValueType Message::content_type()
 {
     HeaderValueType val = "";
     bool found;
@@ -114,8 +112,8 @@ void Message::content_type(HeaderValueType value)
     set_header({"Content-Type", value});
 }
 
-auto operator<<(std::ostream &strm, Message::HeaderType &header) -> std::ostream &
+std::ostream& operator<<(std::ostream& os, Message::HeaderType& header)
 {
-    return strm << Message::header_name(header) << ": " << Message::header_value(header) << std::endl;
+    return os << Message::header_name(header) << ": " << Message::header_value(header) << std::endl;
 }
 }

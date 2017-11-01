@@ -1,21 +1,24 @@
 #ifndef URI_H
 #define URI_H
 
-#include <ostream>
+#include <iosfwd>
 #include <string>
 
 #include "Constants.h"
 
-namespace Http {
+namespace Summer {
 
-/**
- * @brief   Converts 1 utf8 byte to its hex value
- */
+// forward declare 
+enum class ParseStatus;
+
+
+// interface function 
 auto ctohex(unsigned int c) -> std::string;
+auto is_uri(char c) -> bool;
+auto is_uri_unreserved(char c) -> bool;
 
-class Uri {
-public:
-  /* Assume only accepting Url for now*/
+
+struct Uri {
   std::string scheme_;
   std::string host_;
   std::string port_;
@@ -31,7 +34,6 @@ public:
    * @precondition  c is valid uri char
    */
   auto consume(char c) -> ParseStatus;
-
   /**
    * @brief   Decodes fields in uri
    */
@@ -60,39 +62,10 @@ public:
    */
   auto static make_query(const std::string &query) -> ssmap;
 
-public:
+  // print
   friend auto operator<<(std::ostream &strm, Uri uri) -> std::ostream &;
 };
 
-/**
- * static strings
- */
-
-static constexpr char unreserved_charset[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~";
-static constexpr char reserved_charset[] = "!*'();:@&=+$,/?#[]";
-static constexpr char uri_charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn"
-                                      "opqrstuvwxyz0123456789-_.~!*'();:@&=+$,/"
-                                      "?#[]";
-
-constexpr bool is_uri_unreserved(char c) {
-  for (auto b = std::begin(unreserved_charset),
-            e = std::end(unreserved_charset);
-       b != e; b++) {
-    if (c == *b)
-      return true;
-  }
-  return false;
-}
-
-constexpr bool is_uri(char c) {
-  for (auto b = std::begin(uri_charset), e = std::end(uri_charset); b != e;
-       b++) {
-    if (c == *b)
-      return true;
-  }
-  return false;
-}
 }
 
 #endif

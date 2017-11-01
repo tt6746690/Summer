@@ -7,7 +7,7 @@
 #include "Response.h"
 #include "Utilities.h"
 
-using namespace Http;
+using namespace Summer;
 
 TEST_CASE("Enum StatusCode", "[Response]")
 {

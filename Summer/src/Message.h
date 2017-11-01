@@ -1,13 +1,13 @@
 #ifndef HEADER_H
 #define HEADER_H
 
-#include <list>
-#include <ostream>
+
+#include <iosfwd>
 #include <string>
 #include <utility> // pair
 #include <vector>
 
-namespace Http {
+namespace Summer {
 
 class Message {
 public:

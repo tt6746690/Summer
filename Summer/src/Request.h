@@ -10,7 +10,7 @@
 #include "Uri.h"       // Uri
 #include "Utilities.h" // enum_map
 
-namespace Http {
+namespace Summer {
 
 class Request : public Message {
 

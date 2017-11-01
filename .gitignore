@@ -4,9 +4,9 @@ log
 
 
 # build 
-./build
-./lib
-./bin
+build/
+lib/
+bin/
 
 # cmake 
 CMakeCache.txt

@@ -4,7 +4,7 @@
 #include "json.hpp"
 #include <unordered_map>
 
-namespace Http {
+namespace Summer {
 
 /**
  * types
@@ -33,7 +33,6 @@ enum class UriState {
 /**
  * RequestParser
  */
-enum class ParseStatus { accept = 1, reject, in_progress };
 
 /**
  * Requests
