@@ -1,5 +1,5 @@
-#ifndef ROUTER_H
-#define ROUTER_H
+#ifndef __ROUTER_H__
+#define __ROUTER_H__
 
 #include <algorithm>
 #include <functional>
@@ -14,9 +14,11 @@
 #include "Response.h"
 #include "Trie.h"
 
-namespace Summer {
+namespace Summer
+{
 
-struct Context {
+struct Context
+{
   Request &req_;
   Response &res_;
   ssmap &param_;
@@ -30,7 +32,8 @@ struct Context {
  * @brief   Defines rules for giving handler unique ids
  *          template arguments to Handler during instantiation
  */
-class HandlerCounter {
+class HandlerCounter
+{
 private:
   int handler_count_;
 
@@ -45,33 +48,37 @@ static HandlerCounter global_handler_counter = HandlerCounter();
 /**
  * @brief   A Wrapper around a Callable,
  */
-template <typename Counter = HandlerCounter> 
-class Handler_ {
+template <typename Counter = HandlerCounter>
+class Handler_
+{
 public:
   using HandlerFunc = std::function<void(Context &)>;
   explicit Handler_() : handler_(nullptr), handler_id_(0){};
-  explicit Handler_(HandlerFunc handler, Counter& count_up = global_handler_counter)
+  explicit Handler_(HandlerFunc handler, Counter &count_up = global_handler_counter)
       : handler_(handler), handler_id_(count_up()){};
 
   operator bool() const { return handler_ != nullptr; }
   void operator()(Context &ctx) { handler_(ctx); }
-  bool operator< (const Handler_<> &rhs) { return handler_id_ < rhs.handler_id_; }
+  bool operator<(const Handler_<> &rhs) { return handler_id_ < rhs.handler_id_; }
   bool operator<=(const Handler_<> &rhs) { return !(rhs.handler_id_ < handler_id_); }
-  bool operator==(const Handler_<> &rhs) { return !(rhs.handler_id_ < handler_id_) && !(handler_id_ < rhs.handler_id_); }  
-  bool operator!=(const Handler_<> &rhs) { return (rhs.handler_id_ < handler_id_) || (handler_id_ < rhs.handler_id_); }  
-  bool operator> (const Handler_<> &rhs) { return rhs.handler_id_ < handler_id_; }
+  bool operator==(const Handler_<> &rhs) { return !(rhs.handler_id_ < handler_id_) && !(handler_id_ < rhs.handler_id_); }
+  bool operator!=(const Handler_<> &rhs) { return (rhs.handler_id_ < handler_id_) || (handler_id_ < rhs.handler_id_); }
+  bool operator>(const Handler_<> &rhs) { return rhs.handler_id_ < handler_id_; }
   bool operator>=(const Handler_<> &rhs) { return !(handler_id_ < rhs.handler_id_); }
 
-  void handle(HandlerFunc handle, Counter& count_up = global_handler_counter) {
+  void handle(HandlerFunc handle, Counter &count_up = global_handler_counter)
+  {
     handler_ = handle;
-    if (!handler_id_) handler_id_ = count_up();
+    if (!handler_id_)
+      handler_id_ = count_up();
   }
 
 public:
   HandlerFunc handler_;
   int handler_id_;
 
-  friend inline std::ostream & operator<<(std::ostream &strm, Handler_<> &handler) {
+  friend inline std::ostream &operator<<(std::ostream &strm, Handler_<> &handler)
+  {
     return strm << "(" << handler.handler_id_ << ")";
   }
 };
@@ -83,8 +90,9 @@ using Handler = Handler_<>;
  * @brief   A class for constructing routes at compile-time, and
  *          resolving request to a sequence of handlers at run-time
  */
-template <typename T> 
-class Router {
+template <typename T>
+class Router
+{
 public:
   explicit Router() : routes_(method_count){};
   /**
@@ -96,14 +104,16 @@ public:
    *
    * @precond path starts with /
    */
-  void handle(RequestMethod method, std::string path, T handler) {
+  void handle(RequestMethod method, std::string path, T handler)
+  {
     assert(path.front() == '/');
     auto &route = routes_[etoint(method)];
     route.insert({path, handler});
   }
 
   template <typename Container = std::vector<RequestMethod>>
-  void handle(Container methods, std::string path, T handler) {
+  void handle(Container methods, std::string path, T handler)
+  {
     for (const auto &method : methods)
       handle(method, path, handler);
   }
@@ -111,18 +121,23 @@ public:
   /**
    * @brief   Handle wrapper functions
    */
-  void get(std::string path, T handler = T()) {
+  void get(std::string path, T handler = T())
+  {
     handle(RequestMethod::GET, path, handler);
   }
-  void post(std::string path, T handler = T()) {
+  void post(std::string path, T handler = T())
+  {
     handle(RequestMethod::POST, path, handler);
   }
-  void put(std::string path, T handler = T()) {
+  void put(std::string path, T handler = T())
+  {
     handle(RequestMethod::PUT, path, handler);
   }
-  void use(std::string path, T handler = T()) {
+  void use(std::string path, T handler = T())
+  {
     for (int method = static_cast<int>(RequestMethod::GET);
-         method != static_cast<int>(RequestMethod::UNDETERMINED); ++method) {
+         method != static_cast<int>(RequestMethod::UNDETERMINED); ++method)
+    {
       handle(static_cast<RequestMethod>(method), path, handler);
     }
   }
@@ -130,14 +145,16 @@ public:
    * @brief   Resolve path to a sequence of handler calls
    *          If no matching path is found, the sequence is empty
    */
-  std::vector<T> resolve(RequestMethod method, std::string path) {
+  std::vector<T> resolve(RequestMethod method, std::string path)
+  {
     auto &route = routes_[etoint(method)];
     auto found = route.find(path);
     if (found == route.end())
       return {};
     std::vector<T> handle_sequence;
 
-    while (found != route.end()) {
+    while (found != route.end())
+    {
       if (*found)
         handle_sequence.push_back(*found);
       --found;
@@ -147,7 +164,8 @@ public:
     return handle_sequence;
   }
 
-  std::vector<T> resolve(Request &req) {
+  std::vector<T> resolve(Request &req)
+  {
     auto method = req.method_;
     auto path = req.uri_.abs_path_;
     auto &route = routes_[etoint(method)];
@@ -163,7 +181,8 @@ public:
 
     std::vector<T> handle_sequence;
 
-    while (found != route.end()) {
+    while (found != route.end())
+    {
       if (*found)
         handle_sequence.push_back(*found);
       --found;
@@ -177,10 +196,13 @@ public:
   std::vector<Trie<T>> routes_;
 
 public:
-  friend std::ostream & operator<<(std::ostream &strm, Router r) {
-    for (int i = 0; i < method_count; ++i) {
+  friend std::ostream &operator<<(std::ostream &strm, Router r)
+  {
+    for (int i = 0; i < method_count; ++i)
+    {
       auto &trie = r.routes_[i];
-      if (trie.size_ != 0) {
+      if (trie.size_ != 0)
+      {
         strm << Request::request_method_to_string(static_cast<RequestMethod>(i))
              << std::endl;
         strm << trie << std::endl;
@@ -189,6 +211,6 @@ public:
     return strm;
   }
 };
-}
 
-#endif
+} // namespace Summer
+#endif // __ROUTER_H__

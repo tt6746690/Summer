@@ -1,39 +1,40 @@
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef __CONNECTION_H__
+#define __CONNECTION_H__
 
 #include "asio.hpp"
 #include "asio/ssl.hpp"
 #include "asio/basic_waitable_timer.hpp"
 
 #include <chrono>
-#include <utility>  // enable_shared_from_this, move
+#include <utility> // enable_shared_from_this, move
 
 #include "Request.h"
 #include "Response.h"
 #include "RequestParser.h"
 #include "Router.h"
 
-namespace Summer {
+namespace Summer
+{
 
-// forward declaration 
+// forward declaration
 enum class ParseStatus;
 
 using TcpSocket = asio::ip::tcp::socket;
 using SslSocket = asio::ssl::stream<asio::ip::tcp::socket>;
 using ClockType = std::chrono::steady_clock;
 
-
 template <typename SocketType>
-class Connection 
-  : public std::enable_shared_from_this<Connection<SocketType>> {
+class Connection
+    : public std::enable_shared_from_this<Connection<SocketType>>
+{
 
 public:
   using DeadlineTimer = asio::basic_waitable_timer<ClockType>;
   static constexpr auto max_time = ClockType::duration::max();
   static constexpr auto read_timeout = std::chrono::seconds(2);
 
-  explicit Connection(asio::io_service& io_service, Router<Handler> &router);
-  explicit Connection(asio::io_service& io_service, asio::ssl::context& context, Router<Handler> &router);
+  explicit Connection(asio::io_service &io_service, Router<Handler> &router);
+  explicit Connection(asio::io_service &io_service, asio::ssl::context &context, Router<Handler> &router);
 
   /**
    * @brief   Starts reading asynchronously
@@ -50,7 +51,6 @@ public:
    * @brief   Shuts down socket 
    */
   void terminate();
-
 
   /**
    * @brief   Read some from socket and save to buffer
@@ -76,6 +76,7 @@ public:
 
 public:
   SocketType socket_;
+
 private:
   std::array<char, 4096> buffer_;
   DeadlineTimer read_deadline_;
@@ -86,27 +87,23 @@ private:
   Router<Handler> &router_;
 };
 
+template <typename SocketType>
+inline Connection<SocketType>::Connection(asio::io_service &io_service, Router<Handler> &router)
+    : socket_(io_service),
+      read_deadline_(io_service),
+      router_(router)
+{
+  read_deadline_.expires_from_now(max_time);
+};
 
-template<typename SocketType>   
-inline Connection<SocketType>::Connection(asio::io_service& io_service, Router<Handler> &router)
-: socket_(io_service),
-  read_deadline_(io_service),
-  router_(router){
-    read_deadline_.expires_from_now(max_time);
-  };
+template <typename SocketType>
+inline Connection<SocketType>::Connection(asio::io_service &io_service, asio::ssl::context &context, Router<Handler> &router)
+    : socket_(io_service, context),
+      read_deadline_(io_service),
+      router_(router)
+{
+  read_deadline_.expires_from_now(max_time);
+};
 
-template<typename SocketType>  
-inline Connection<SocketType>::Connection(asio::io_service& io_service, asio::ssl::context& context, Router<Handler> &router)
-: socket_(io_service, context),
-  read_deadline_(io_service),
-  router_(router){
-    read_deadline_.expires_from_now(max_time);
-  };
-
-
-
-
-
-}
-
-#endif
+} // namespace Summer
+#endif // __CONNECTION_H__

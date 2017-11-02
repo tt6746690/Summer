@@ -1,5 +1,5 @@
-#ifndef RESPONSE_H
-#define RESPONSE_H
+#ifndef __RESPONSE_H__
+#define __RESPONSE_H__
 
 #include <iosfwd>
 
@@ -8,7 +8,6 @@
 
 namespace Summer
 {
-
 
 class Message;
 
@@ -76,6 +75,6 @@ public:
   static char *status_code_to_reason(StatusCode status_code);
   friend std::ostream &operator<<(std::ostream &os, const Response &response);
 };
-}
 
-#endif
+} // namespace Summer
+#endif // __RESPONSE_H__

@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef __SERVER_H__
+#define __SERVER_H__
 
 #define ASIO_SEPARATE_COMPILATION
 #define ASIO_STANDALONE
@@ -17,16 +17,17 @@
 #include "Connection.h"
 #include "Router.h"
 
-
-namespace Summer {
+namespace Summer
+{
 
 using ServerAddr = std::pair<std::string, int>;
 
 /**
  * @brief   A generic Http server
  */
-template <typename Derived> 
-class GenericServer {
+template <typename Derived>
+class GenericServer
+{
 public:
   constexpr static int max_header_bytes = 1 << 20; // 1MB
 public:
@@ -42,7 +43,8 @@ public:
    *  Initiate io_service event loop,
    *  acceptor instantiates and queues connection
    */
-  void run() {
+  void run()
+  {
     asio::ip::tcp::endpoint endpoint(asio::ip::tcp::v4(), port());
 
     // configure acceptor
@@ -65,7 +67,8 @@ public:
   /**
    * @brief   Scheme + authourity of server
    */
-  auto base_url() -> std::string {
+  auto base_url() -> std::string
+  {
     return static_cast<Derived *>(this)->scheme() + "://" + host() + ":" +
            std::to_string(port());
   }
@@ -80,27 +83,30 @@ public:
 /**
  * @brief   An HTTP server
  */
-class HttpServer : public GenericServer<HttpServer> {
+class HttpServer : public GenericServer<HttpServer>
+{
 public:
   explicit HttpServer(const ServerAddr server_addr)
       : GenericServer(server_addr){};
   /**
    * @brief   Accept connection and creates new session
    */
-  void accept_connection() {
+  void accept_connection()
+  {
 
     auto new_conn =
         std::make_shared<Connection<TcpSocket>>(io_service_, router_);
 
     acceptor_.async_accept(
-      new_conn->socket_,
-      [this, new_conn](std::error_code ec) {
+        new_conn->socket_,
+        [this, new_conn](std::error_code ec) {
 
-        if (!ec) {
-          new_conn->start();
-        }
-        accept_connection();
-      });
+          if (!ec)
+          {
+            new_conn->start();
+          }
+          accept_connection();
+        });
   }
   /**
    * @brief   Scheme of HTTPS
@@ -111,25 +117,29 @@ public:
 /**
  * @brief   An HTTPS server
  */
-class HttpsServer : public GenericServer<HttpsServer> {
+class HttpsServer : public GenericServer<HttpsServer>
+{
 public:
   explicit HttpsServer(const ServerAddr server_addr)
-      : GenericServer(server_addr), context_(asio::ssl::context::sslv23) {
+      : GenericServer(server_addr), context_(asio::ssl::context::sslv23)
+  {
     configure_ssl_context();
   };
 
   /**
    * @brief   Accept connection and creates new session
    */
-  void accept_connection() {
+  void accept_connection()
+  {
 
     auto new_conn =
         std::make_shared<Connection<SslSocket>>(io_service_, context_, router_);
 
     acceptor_.async_accept(
-      new_conn->socket_.lowest_layer(),
+        new_conn->socket_.lowest_layer(),
         [this, new_conn](std::error_code ec) {
-          if (!ec) {
+          if (!ec)
+          {
             new_conn->start();
           }
           accept_connection();
@@ -148,7 +158,8 @@ private:
   /**
    * @brief   Sets options, key, cert for Openssl
    */
-  void inline configure_ssl_context() {
+  void inline configure_ssl_context()
+  {
     context_.set_options(asio::ssl::context::default_workarounds |
                          asio::ssl::context::no_sslv2 |
                          asio::ssl::context::single_dh_use);
@@ -157,7 +168,8 @@ private:
         std::size_t max_length, asio::ssl::context::password_purpose purpose) {
       std::string passphrase;
       std::fstream passinf("Summer/ssl/passphrase", std::ios::in);
-      if (passinf) {
+      if (passinf)
+      {
         std::getline(passinf, passphrase);
       }
       return passphrase;
@@ -166,8 +178,7 @@ private:
     context_.use_certificate_chain_file("Summer/ssl/cert.pem");
     context_.use_tmp_dh_file("Summer/ssl/dh512.pem");
   };
-
 };
-}
 
-#endif
+} // namespace Summer
+#endif // __SERVER_H__

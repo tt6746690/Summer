@@ -1,16 +1,23 @@
-#ifndef REQUESTPARSER_H
-#define REQUESTPARSER_H
+#ifndef __REQUESTPARSER_H__
+#define __REQUESTPARSER_H__
 
 #include <iosfwd>
 
-namespace Summer {
+namespace Summer
+{
 
 // foward declaration
 class Request;
 
-enum class ParseStatus { accept = 1, reject, in_progress };
+enum class ParseStatus
+{
+  accept = 1,
+  reject,
+  in_progress
+};
 
-class RequestParser {
+class RequestParser
+{
 public:
   enum class State;
   explicit RequestParser();
@@ -18,7 +25,7 @@ public:
    * @brief Populate Request object given a Range of chars
    */
   template <typename In>
-  auto parse(Request &request, In begin, In end) -> std::tuple<In, ParseStatus>; 
+  auto parse(Request &request, In begin, In end) -> std::tuple<In, ParseStatus>;
   /**
    * @brief   Advance parser state given input char
    */
@@ -26,6 +33,7 @@ public:
   // Helper functions
   static void view_state(RequestParser::State state, ParseStatus status, char c);
   friend auto operator<<(std::ostream &strm, ParseStatus &status) -> std::ostream &;
+
 public:
   // member public
   State state_;
@@ -72,18 +80,35 @@ constexpr bool is_lf(char c) { return c == 10; }
 constexpr bool is_crlf(char c) { return c == 13 || c == 10; }
 constexpr bool is_sp(char c) { return c == 32; }
 constexpr bool is_ht(char c) { return c == 9; }
-constexpr bool is_separator(char c) {
-  switch (c) {
-    case '(': case ')': case '<': case '>': case '@': case ',': case ';': case ':': case '\\': case '"': 
-    case '/': case '[': case ']': case '?': case '=': case '{': case '}': case ' ':  case '\t':
-      return true;
-    default:
-      return false;
-    }
+constexpr bool is_separator(char c)
+{
+  switch (c)
+  {
+  case '(':
+  case ')':
+  case '<':
+  case '>':
+  case '@':
+  case ',':
+  case ';':
+  case ':':
+  case '\\':
+  case '"':
+  case '/':
+  case '[':
+  case ']':
+  case '?':
+  case '=':
+  case '{':
+  case '}':
+  case ' ':
+  case '\t':
+    return true;
+  default:
+    return false;
+  }
 }
 constexpr bool is_token(char c) { return !is_ctl(c) && !is_separator(c) && is_char(c); }
-
-
 
 // Template definition
 
@@ -91,7 +116,8 @@ template <typename In>
 inline std::tuple<In, ParseStatus> RequestParser::parse(Request &request, In begin, In end)
 {
   ParseStatus status;
-  while (begin != end) {
+  while (begin != end)
+  {
     status = consume(request, *begin++);
     if (status == ParseStatus::accept || status == ParseStatus::reject)
       break;
@@ -99,8 +125,5 @@ inline std::tuple<In, ParseStatus> RequestParser::parse(Request &request, In beg
   return {begin, status};
 }
 
-
-
-}
-
-#endif
+} // namespace Summer
+#endif // __REQUESTPARSER_H__

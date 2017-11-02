@@ -1,5 +1,5 @@
-#ifndef CODEC_H
-#define CODEC_H
+#ifndef __CODEC_H__
+#define __CODEC_H__
 
 // reference http://web.mit.edu/freebsd/head/contrib/wpa/src/utils/base64.c
 
@@ -95,6 +95,6 @@ private:
   static constexpr WORD SIGLOW0(WORD x) { return ROTR(x, 7) ^ ROTR(x, 18) ^ SHR(x, 3); }
   static constexpr WORD SIGLOW1(WORD x) { return ROTR(x, 17) ^ ROTR(x, 19) ^ SHR(x, 10); }
 };
-}
 
-#endif
+} // namespace Summer
+#endif // __CODEC_H__

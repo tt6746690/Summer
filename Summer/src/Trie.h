@@ -1,5 +1,5 @@
-#ifndef TRIE_H
-#define TRIE_H
+#ifndef __TRIE_H__
+#define __TRIE_H__
 
 #include <string>
 #include <utility>
@@ -505,5 +505,6 @@ public:
     return strm;
   }
 };
-}
-#endif
+
+} // namespace Summer
+#endif // __TRIE_H__

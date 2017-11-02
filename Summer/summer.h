@@ -1,6 +1,6 @@
 
-#ifndef __SUMMER_H__
-#define __SUMMER_H__
+#ifndef __SUMMER_HEADER_INCLUDE__
+#define __SUMMER_HEADER_INCLUDE__
 
 #include "src/Server.h"
 #include "src/Connection.h"
@@ -14,5 +14,6 @@
 #include "src/Router.h"
 #include "src/Trie.h"
 #include "src/codec/Codec.h"
+#include "src/middlewares/Cors.h"
 
-#endif
+#endif // __SUMMER_HEADER_INCLUDE__

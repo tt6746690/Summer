@@ -1,10 +1,11 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef __CONSTANTS_H__
+#define __CONSTANTS_H__
 
 #include "json.hpp"
 #include <unordered_map>
 
-namespace Summer {
+namespace Summer
+{
 
 /**
  * types
@@ -18,7 +19,8 @@ constexpr char EOL[] = "\r\n";
  * Uri
  */
 
-enum class UriState {
+enum class UriState
+{
   uri_start,
   uri_scheme,
   uri_slash,
@@ -38,7 +40,8 @@ enum class UriState {
  * Requests
  */
 
-enum class RequestMethod {
+enum class RequestMethod
+{
   GET = 0,
   HEAD,
   POST,
@@ -55,11 +58,12 @@ constexpr int method_count = static_cast<int>(RequestMethod::UNDETERMINED) -
                              static_cast<int>(RequestMethod::GET);
 
 constexpr static char *request_methods[] = {
-    (char *)"GET",     (char *)"HEAD",    (char *)"POST",
-    (char *)"PUT",     (char *)"PATCH",   (char *)"DELETE",
+    (char *)"GET", (char *)"HEAD", (char *)"POST",
+    (char *)"PUT", (char *)"PATCH", (char *)"DELETE",
     (char *)"CONNECT", (char *)"OPTIONS", (char *)"TRACE"};
 
-enum class RequestHeaderName {
+enum class RequestHeaderName
+{
   Accept = 0,
   Accept_Charset,
   Accept_Encoding,
@@ -100,7 +104,8 @@ enum class RequestHeaderName {
  * Response
  */
 
-enum class StatusCode {
+enum class StatusCode
+{
   Continue = 0,
   Switching_Protocols,
   OK,
@@ -147,7 +152,8 @@ constexpr int status_code_count =
     static_cast<int>(StatusCode::HTTP_Version_Not_Supported) -
     static_cast<int>(StatusCode::Continue) + 1;
 
-enum class ResponseHeaderName {
+enum class ResponseHeaderName
+{
   Access_Control_Allow_Origin,
   Access_Control_Allow_Credentials,
   Access_Control_Expose_Headers,
@@ -238,6 +244,6 @@ constexpr static char *reason_phrases[] = {
     (char *)"Service Unavailable",
     (char *)"Gateway Timeout",
     (char *)"HTTP Version Not Supported"};
-}
 
-#endif
+} // namespace Summer
+#endif // __CONSTANTS_H__

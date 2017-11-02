@@ -1,24 +1,24 @@
-#ifndef URI_H
-#define URI_H
+#ifndef __URI_H__
+#define __URI_H__
 
 #include <iosfwd>
 #include <string>
 
 #include "Constants.h"
 
-namespace Summer {
+namespace Summer
+{
 
-// forward declare 
+// forward declare
 enum class ParseStatus;
 
-
-// interface function 
+// interface function
 auto ctohex(unsigned int c) -> std::string;
 auto is_uri(char c) -> bool;
 auto is_uri_unreserved(char c) -> bool;
 
-
-struct Uri {
+struct Uri
+{
   std::string scheme_;
   std::string host_;
   std::string port_;
@@ -66,6 +66,5 @@ struct Uri {
   friend auto operator<<(std::ostream &strm, Uri uri) -> std::ostream &;
 };
 
-}
-
-#endif
+} // namespace Summer
+#endif // __URI_H__

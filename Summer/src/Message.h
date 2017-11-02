@@ -1,15 +1,16 @@
-#ifndef HEADER_H
-#define HEADER_H
-
+#ifndef __HEADER_H__
+#define __HEADER_H__
 
 #include <iosfwd>
 #include <string>
 #include <utility> // pair
 #include <vector>
 
-namespace Summer {
+namespace Summer
+{
 
-class Message {
+class Message
+{
 public:
   using HeaderNameType = std::string;
   using HeaderValueType = std::string;
@@ -70,5 +71,6 @@ public:
 
   friend auto operator<<(std::ostream &strm, HeaderType) -> std::ostream &;
 };
-}
-#endif
+
+} // namespace Summer
+#endif // __CONSTANTS_H__
