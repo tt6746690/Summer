@@ -31,8 +31,21 @@
     "algorithm": "cpp",
     "iosfwd": "cpp",
     "utility": "cpp",
-    "*.ipp": "cpp"
+    "*.ipp": "cpp",
+    "__functional_base": "cpp",
+    "atomic": "cpp",
+    "bitset": "cpp",
+    "chrono": "cpp",
+    "functional": "cpp",
+    "limits": "cpp",
+    "locale": "cpp",
+    "memory": "cpp",
+    "random": "cpp",
+    "ratio": "cpp",
+    "system_error": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp"
   },
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.wordWrap": "off"
 }

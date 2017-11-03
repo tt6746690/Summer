@@ -4,6 +4,7 @@ project(Summer)
 # include directory and set up lib dependencies
 include_directories(src)
 include_directories(src/codec)
+include_directories(src/middlewares)
 include_directories(SYSTEM ${HEADER_ONLY_INCLUDE})
 
 # openssl
@@ -22,7 +23,7 @@ file(GLOB SOURCE_FILES
     "./src/middlewares/*.cpp"        
 )
 
-add_library(Http ${SOURCE_FILES})
+# add_library(Summer ${SOURCE_FILES})
 add_executable(server main.cpp ${SOURCE_FILES})
 
 
@@ -30,7 +31,6 @@ add_executable(server main.cpp ${SOURCE_FILES})
 file(GLOB TEST_FILES
     "./test/*.cpp"
 )
-
 
 add_executable(test main-test.cpp  ${TEST_FILES} ${SOURCE_FILES})
 

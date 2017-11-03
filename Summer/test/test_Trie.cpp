@@ -6,6 +6,7 @@
 
 using namespace Summer;
 
+
 TEST_CASE("TrieNode", "[Trie]")
 {
     Trie<std::string>::TrieNode n{};
