@@ -44,7 +44,11 @@
     "ratio": "cpp",
     "system_error": "cpp",
     "tuple": "cpp",
-    "type_traits": "cpp"
+    "type_traits": "cpp",
+    "queue": "cpp",
+    "__functional_03": "cpp",
+    "future": "cpp",
+    "complex": "cpp"
   },
   "editor.formatOnSave": false,
   "editor.wordWrap": "off"
