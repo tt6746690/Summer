@@ -39,8 +39,11 @@ struct TrieNodeEdge
     explicit TrieNodeEdge() : prefix(""), child(nullptr) {}
     explicit TrieNodeEdge(typename NodeType::KeyT k, typename NodeType::PointerT p) : prefix(k), child(p) {}
     friend inline bool operator< (const TrieNodeEdge& lhs, const TrieNodeEdge& rhs) { return lex_cmp<typename NodeType::KeyCharT>(lhs.prefix, rhs.prefix); }
-    friend inline std::ostream& operator<<(std::ostream& os, const TrieNodeEdge& e) { return os << "(" << e.prefix << " -- " << *e.child << ")"; }
+
+    template<typename X>
+    friend std::ostream& operator<<(std::ostream& os, const TrieNodeEdge<X>& e);
 };
+
 
 
 
@@ -90,7 +93,9 @@ class TrieNode
     friend inline bool operator>=(const TrieNode &rhs, const TrieNode &lhs) { return !(rhs < lhs); }
     friend inline bool operator==(const TrieNode &rhs, const TrieNode &lhs) { return !(rhs < lhs) && !(lhs < rhs); }
     friend inline bool operator!=(const TrieNode &rhs, const TrieNode &lhs) { return  (rhs < lhs) ||  (lhs < rhs); }
-    friend std::ostream& operator<<(std::ostream& os, const TrieNode& node);
+
+    template<typename X, typename Y>
+    friend std::ostream& operator<<(std::ostream& os, const TrieNode<X, Y>& node);
 };
 
 template <typename T, typename CharT>
@@ -167,13 +172,6 @@ auto TrieNode<T, CharT>::find_lmp_edges(KeyT query) -> std::pair<EdgesIterator, 
 }
 
 
-template <typename T, typename CharT>
-auto operator<<(std::ostream& os, const TrieNode<T, CharT>& node) -> std::ostream& 
-{
-    return os << "TrieNode(" << node.edges.size() << ")" << '\t' << node.value << eol() 
-              << node.edges << eol();
-}
-
 
 template<typename T, typename CharT>
 class TrieIterator {    
@@ -236,7 +234,7 @@ public:
     NodePointerT  end_node() const  { return const_cast<const NodePointerT>(&end_node_); }    
     NodePointerT &begin_node()      { return begin_node_; }
     NodePointerT  root_node()       { return end_node(); }
-    NodePointerT  root_node() const { return end_node(); }    
+    NodePointerT  root_node() const { return end_node(); }
     SizeT         size() const      { return size_; }
 
     explicit Trie();
@@ -250,7 +248,8 @@ public:
     auto insert(const ValueT& value) -> IteratorT;
 
 public:
-    friend std::ostream& operator<<(const std::ostream& os, const Trie& t);
+    template<typename T1, typename T2, typename T3, typename T4>
+    friend std::ostream& operator<<(const std::ostream& os, const Trie<T1, T2, T3, T4>& t);
 };
 
 
@@ -282,6 +281,8 @@ template<typename T, typename CharT, typename Compare, typename Allocator>
 auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> IteratorT
 {
     NodePointerT cur_node = root_node();
+
+
     const CharT* kstr = value.first.data();
 
     while(cur_node != nullptr) 
@@ -327,11 +328,45 @@ auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> Iterator
 }
 
 
-template <typename T, typename CharT, typename Compare, typename Allocator>
-auto operator<<(std::ostream& os, const Trie<T, CharT, Compare, Allocator>& t) -> std::ostream& 
+
+template<typename T1, typename T2>
+std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
+    return os << "(" << p.first << ", " << p.second << ")" << '\n';
+}
+
+
+template<typename T> 
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& c) {
+    for(const auto& e: c) os << e << eol();
+    return os;
+}
+
+template <typename NodeType> 
+std::ostream& operator<<(std::ostream& os, const TrieNodeEdge<NodeType>& e)
 {
-    return os << "Trie (" << t.size() << ")" << eol()
-              << *t.root_node();
+    return os <<  "|-" << e.prefix << " " << *e.child;
+}
+
+template <typename T, typename CharT>
+std::ostream& operator<<(std::ostream& os, const TrieNode<T, CharT>& node)
+{
+
+    static size_t depth = 0;
+    os << '\t' << "( " << node.value << " )" << eol();
+    if(node.edges.size()) {
+        depth += 2;
+        for(const auto& e: node.edges) {
+            os << std::string(depth, ' ') << e;
+        }
+        depth -= 2;
+    }
+    return os;
+}
+
+template <typename T, typename CharT, typename Compare, typename Allocator>
+std::ostream& operator<<(std::ostream& os, const Trie<T, CharT, Compare, Allocator>& t)
+{
+    return os << "\\" << *t.root_node() << eol() << "size = (" << t.size() << ")" << eol();
 }
 
 

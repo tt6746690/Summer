@@ -18,14 +18,15 @@ using std::vector;
 using std::cout;
 using std::unordered_map;
 
+using ssumap = unordered_map<string, int>;
+
+
 using namespace Summer;
 
 
 
-template<typename T1, typename T2>
-std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
-    return os << "(" << p.first << ", " << p.second << ")" << '\n';
-}
+
+
 
 
 
@@ -33,16 +34,19 @@ TEST_CASE("TrieNode2", "Trie2")
 {
 
     SECTION("operator<<") {
+
+        auto edge = TrieNodeEdge<TrieNode<int, char>>();
+        // cout << edge;
+
         auto node = TrieNode<int, char>();
         node.add_edge("awt", 123);
         node.add_edge("wtf", 123);
         node.add_edge("asf", 123);        
-        cout << node;
+        // cout << node;
     }
 
     SECTION("add_edge + find_lmp_edges") {
 
-        using ssumap = unordered_map<string, int>;
         struct lmp_expect {
             string query;
             int lower_bound;
@@ -115,10 +119,25 @@ TEST_CASE("Trie2", "Trie2")
     }
 
     SECTION("Insertion") {
-        auto t = Trie<int>();
-        t.insert(make_pair("home/", 1));
+
+        auto make_trie = [](const ssumap& insertee) {
+            auto t = Trie<int>();
+            for(const auto& e : insertee) {
+                t.insert({ e.first, e.second });
+            }
+            return t;
+        };
+
+        auto t = make_trie({
+            {"preMACH", 0},
+            {"preUNIX", 1},
+            {"pre", 2}
+        });
 
         cout << t;
+
+        
+
 
     }
     
