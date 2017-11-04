@@ -48,7 +48,9 @@
     "queue": "cpp",
     "__functional_03": "cpp",
     "future": "cpp",
-    "complex": "cpp"
+    "complex": "cpp",
+    "ios": "cpp",
+    "thread": "cpp"
   },
   "editor.formatOnSave": false,
   "editor.wordWrap": "off"
