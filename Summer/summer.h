@@ -13,8 +13,9 @@
 #include "src/Constants.h"
 #include "src/Router.h"
 #include "src/Trie.h"
-#include "src/codec/Codec.h"
+
 #include "src/middlewares/Cors.h"
 #include "src/utilities/StrUtils.h"
+#include "src/utilities/Codec.h"
 
 #endif // __SUMMER_HEADER_INCLUDE__

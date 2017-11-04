@@ -3,7 +3,6 @@ project(Summer)
 
 # include directory and set up lib dependencies
 include_directories(src)
-include_directories(src/codec)
 include_directories(src/middlewares)
 include_directories(src/utilities)
 include_directories(SYSTEM ${HEADER_ONLY_INCLUDE})
@@ -18,8 +17,6 @@ endif()
 file(GLOB SOURCE_FILES
     "./src/*.h"
     "./src/*.cpp"
-    "./src/codec/*.h"
-    "./src/codec/*.cpp"
     "./src/middlewares/*.h"    
     "./src/middlewares/*.cpp"   
     "./src/utilities/*.h"
