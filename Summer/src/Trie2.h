@@ -11,6 +11,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "StrUtils.h"
+
 using std::cout;
 using std::endl; 
 using std::ostream;
@@ -42,16 +44,10 @@ struct TrieNodeEdge
 
 
 
-
-
-
-
-
 template <typename T, typename CharT>
 class TrieNode
 {
   public:
-    using MappedT               = T;
     using KeyCharT              = CharT;
     using KeyT                  = std::basic_string<CharT>;
 
@@ -74,11 +70,18 @@ class TrieNode
     explicit TrieNode(PointerT parent, T value) : parent(parent), value(value) {}
 
     std::size_t edge_size() const { return edges.size(); }
-
+    void sort_edges() { std::sort(edges.begin(), edges.end()); }
+    
     // Store pointer, pointing to newly allocated node, into edges
-    PointerT add_child(KeyT key);
-    PointerT add_child(KeyT key, MappedT value);
+    PointerT add_edge(KeyT key);
+    PointerT add_edge(KeyT key, T value);
+    
+    // Transfers ownership of child node while removing corresponding entry from edges 
+    PointerT yield_child(size_t i);
 
+    // Returns value for  1) this  2) this->edges[i] 
+    T& value();
+    T& child_value(size_t i);
 
 
     friend bool operator< (const TrieNode &rhs, const TrieNode &lhs);
@@ -101,24 +104,38 @@ bool operator<(const TrieNode<T, CharT> &rhs, const TrieNode<T, CharT> &lhs)
 
 
 template<typename T, typename CharT> 
-auto TrieNode<T, CharT>::add_child(KeyT key) -> PointerT 
+auto TrieNode<T, CharT>::add_edge(KeyT key) -> PointerT 
 {
     PointerT new_node = new TrieNode(this);
     edges.emplace_back(key, new_node);
-    std::sort(edges.begin(), edges.end());
     return new_node;
 }
 
 template<typename T, typename CharT> 
-auto TrieNode<T, CharT>::add_child(KeyT key, MappedT value) -> PointerT 
+auto TrieNode<T, CharT>::add_edge(KeyT key, T value) -> PointerT 
 {
     PointerT new_node = new TrieNode(this, value);
     edges.emplace_back(key, new_node);
-    std::sort(edges.begin(), edges.end());
     return new_node;
 }
 
+template<typename T, typename CharT> 
+auto TrieNode<T, CharT>::yield_child(size_t i) -> PointerT
+{
+    return edges[i];
+}
 
+template<typename T, typename CharT>
+auto TrieNode<T, CharT>::value() -> T& 
+{
+    return &value;
+}
+
+template<typename T, typename CharT> 
+auto TrieNode<T, CharT>::child_value(size_t i) -> T&
+{
+    return (edges[i].child)->value();
+}
 
 
 
@@ -155,6 +172,7 @@ template <typename T, typename CharT = char, typename Compare = std::less<CharT>
 class Trie {
 public:
     using KeyT              = std::basic_string<CharT>;
+    using MappedT           = T;
     using KeyCompare        = Compare;
 
     using AllocatorT        = std::allocator_traits<Allocator>;
@@ -167,12 +185,13 @@ public:
     using DifferenceT       = typename AllocatorT::difference_type;
 public: 
     using NodeT             = TrieNode<T, CharT>;
-    using NodePointerT      = typename NodeT::PointerT; 
+    using NodePointerT      = TrieNode<T, CharT> *; 
+    using EdgeT             = typename NodeT::EdgeT;
 
     using IteratorT         = TrieIterator<T, CharT>;
     using ConstIteratorT    = const TrieIterator<T, CharT>;
 private:
-    NodePointerT              begin_node_ = end_node();
+    NodePointerT              begin_node_;
     NodeT                     end_node_;
     SizeT                     size_ = 0;
 public: 
@@ -197,7 +216,10 @@ public:
 
 
 template<typename T, typename CharT, typename Compare, typename Allocator> 
-Trie<T, CharT, Compare, Allocator>::Trie() { }
+Trie<T, CharT, Compare, Allocator>::Trie() 
+{ 
+    begin_node_ = end_node();
+}
 
 
 template<typename T, typename CharT, typename Compare, typename Allocator> 
@@ -219,11 +241,56 @@ void Trie<T, CharT, Compare, Allocator>::destroy(NodePointerT nptr)
 template<typename T, typename CharT, typename Compare, typename Allocator> 
 auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> IteratorT
 {
-    if(!size_) {
-        end_node_.add_child(KeyT());
+    NodePointerT cur_node = root_node();
+    const CharT* kstr = value.first.data();
+
+    while(cur_node != nullptr) 
+    {
+        int longest_prefix_len = 0;
+        int lower_bound = 0;
+
+        for(int i = 0; i < cur_node->edges.size(); ++i) {
+            const auto& edge = cur_node->edges[i];
+
+            int len = find_common_prefix_len(edge.prefix.c_str(), kstr);
+            if(len == strlen(kstr) && len == edge.prefix.size()) return end();  // insertion with duplicate key failed
+
+            // Found a match s.t. edge.prefix is exhausted, go down the tree. 
+            // (There cannot be another edge whose prefix is a longer match)
+            if(len == edge.prefix.size()) {
+                kstr += i;
+                cur_node = edge.child;
+                break;
+            }
+            
+            // Found a match s.t. key is exhausted, 
+            // Create a new node, and move cur_node to be child of the newly added node with updated key
+            if(len == strlen(kstr)) {
+                std::string new_k, updated_k;
+                split_in_half(edges.prefix, len, new_k, updated_k);
+                NodePointerT new_node = cur_node->add_edge(new_k, value.second);
+                new_node->add_edge(updated_k, cur_node->child_value(i));
+                
+                // Erase last...
+                cur_node.erase(cur_node.begin() + i);
+                return;
+            }
+
+            // Found an edge with a longer prefix, start of a range of possibly equally long prefixes 
+            if(len > longest_prefix_len) {
+                longest_prefix_len = len;
+                lower_bound = i;
+            } 
+            
+            // [lower_bound, i] holds a prefix match
+            if(len < longest_prefix_len) {
+
+            }
+        }
+
     }
 
-    // NodePointerT curr_node = root_node();
+    // cur_node is nullptr 
 
     
     return IteratorT();

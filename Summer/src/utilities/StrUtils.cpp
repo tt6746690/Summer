@@ -34,5 +34,12 @@ std::string find_common_prefix(const char* x, const char *y)
 }
 
 
+void split_in_half(const std::string& s, int at, std::string& first, std::string& second) 
+{
+    first = s.substr(0, at);
+    second = s.substr(at, s.size());
+}
+
+
 
 } // namespace Summer

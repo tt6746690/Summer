@@ -10,6 +10,8 @@
 
 using std::string;
 using std::strcmp;
+using std::make_pair;
+using std::pair;
 using namespace Summer;
 
 
@@ -34,6 +36,23 @@ TEST_CASE("strutils")
         check_common_prefix("apple", "banana", "");
         check_common_prefix("coffeecup", "coffee", "coffee");
         check_common_prefix("", "", "");
+    }
+
+
+    SECTION("split") {
+
+        auto check_split = [](const char* s, int at, pair<string, string> expect) {
+            auto cpp_s = string(s, strlen(s));
+
+            string first, second;
+            split_in_half(s, at, first, second);
+            REQUIRE(make_pair(first, second) == expect);
+        };
+
+
+        check_split("12345", 2, make_pair("12", "345"));
+        check_split("12345", 0, make_pair("", "12345"));
+        check_split("12345", 5, make_pair("12345", ""));
     }
         
 }

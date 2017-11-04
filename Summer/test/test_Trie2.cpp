@@ -30,8 +30,8 @@ TEST_CASE("TrieNode2", "[Trie2]")
     }
 
     SECTION("Insertion") {
-        auto t = Trie<int>();
-        t.insert(make_pair("home/", 1));
+        // auto t = Trie<int>();
+        // t.insert(make_pair("home/", 1));
     }
     
 }
