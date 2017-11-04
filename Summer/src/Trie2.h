@@ -35,8 +35,15 @@ struct TrieNodeEdge
 
     explicit TrieNodeEdge() : prefix(""), child(nullptr) {}
     explicit TrieNodeEdge(typename NodeType::KeyT k, typename NodeType::PointerT p) : prefix(k), child(p) {}
-    friend inline bool operator< (const TrieNodeEdge& lhs, const TrieNodeEdge& rhs) { return lex_cmp<NodeType::CharT>(lhs.prefix, rhs.prefix); }
+    friend inline bool operator< (const TrieNodeEdge& lhs, const TrieNodeEdge& rhs) { return lex_cmp<typename NodeType::KeyCharT>(lhs.prefix, rhs.prefix); }
 };
+
+
+
+
+
+
+
 
 
 
@@ -45,6 +52,7 @@ class TrieNode
 {
   public:
     using MappedT               = T;
+    using KeyCharT              = CharT;
     using KeyT                  = std::basic_string<CharT>;
 
     using PointerT              = TrieNode *;
@@ -65,10 +73,13 @@ class TrieNode
     explicit TrieNode(PointerT parent) : parent(parent) {}    
     explicit TrieNode(PointerT parent, T value) : parent(parent), value(value) {}
 
-    auto edge_size() const -> typename EdgesT::size_type { return edges.size(); }
+    std::size_t edge_size() const { return edges.size(); }
 
-    auto add_child(KeyT key) -> PointerT;
-    auto add_child(KeyT key, MappedT value) -> PointerT;
+    // Store pointer, pointing to newly allocated node, into edges
+    PointerT add_child(KeyT key);
+    PointerT add_child(KeyT key, MappedT value);
+
+
 
     friend bool operator< (const TrieNode &rhs, const TrieNode &lhs);
     friend inline bool operator<=(const TrieNode &rhs, const TrieNode &lhs) { return !(lhs < rhs); }
@@ -77,6 +88,16 @@ class TrieNode
     friend inline bool operator==(const TrieNode &rhs, const TrieNode &lhs) { return !(rhs < lhs) && !(lhs < rhs); }
     friend inline bool operator!=(const TrieNode &rhs, const TrieNode &lhs) { return  (rhs < lhs) ||  (lhs < rhs); }
 };
+
+template <typename T, typename CharT>
+bool operator<(const TrieNode<T, CharT> &rhs, const TrieNode<T, CharT> &lhs)
+{
+    if (rhs.value != lhs.value) return rhs.value < lhs.value;
+    else {
+        if (rhs.parent != lhs.parent) return rhs.parent < lhs.parent;
+        else return rhs.edges < lhs.edges;
+    }
+}
 
 
 template<typename T, typename CharT> 
@@ -160,7 +181,7 @@ public:
     NodePointerT  root_node()  { return end_node(); }
     SizeT         size() const { return size_; }
 
-    explicit Trie() {};
+    explicit Trie();
     ~Trie();
 
     void destroy(NodePointerT nptr);
@@ -175,17 +196,8 @@ public:
 
 
 
-
-template <typename T, typename CharT>
-bool operator<(const TrieNode<T, CharT> &rhs, const TrieNode<T, CharT> &lhs)
-{
-    if (rhs.value != lhs.value) return rhs.value < lhs.value;
-    else {
-        if (rhs.parent != lhs.parent) return rhs.parent < lhs.parent;
-        else return rhs.edges < lhs.edges;
-    }
-}
-
+template<typename T, typename CharT, typename Compare, typename Allocator> 
+Trie<T, CharT, Compare, Allocator>::Trie() { }
 
 
 template<typename T, typename CharT, typename Compare, typename Allocator> 
@@ -207,7 +219,14 @@ void Trie<T, CharT, Compare, Allocator>::destroy(NodePointerT nptr)
 template<typename T, typename CharT, typename Compare, typename Allocator> 
 auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> IteratorT
 {
+    if(!size_) {
+        end_node_.add_child(KeyT());
+    }
+
+    // NodePointerT curr_node = root_node();
+
     
+    return IteratorT();
 }
 
 

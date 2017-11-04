@@ -5,6 +5,7 @@ project(Summer)
 include_directories(src)
 include_directories(src/codec)
 include_directories(src/middlewares)
+include_directories(src/utilities)
 include_directories(SYSTEM ${HEADER_ONLY_INCLUDE})
 
 # openssl
@@ -20,7 +21,9 @@ file(GLOB SOURCE_FILES
     "./src/codec/*.h"
     "./src/codec/*.cpp"
     "./src/middlewares/*.h"    
-    "./src/middlewares/*.cpp"        
+    "./src/middlewares/*.cpp"   
+    "./src/utilities/*.h"
+    "./src/utilities/*.cpp" 
 )
 
 # add_library(Summer ${SOURCE_FILES})

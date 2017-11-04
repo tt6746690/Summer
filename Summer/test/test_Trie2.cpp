@@ -2,9 +2,15 @@
 #include <utility>
 #include <stdexcept>
 
+#include <cstring>
+#include <string>
+
 #include "Trie2.h"
 
 using std::make_pair;
+using std::string;
+using std::strcmp;
+
 using namespace Summer;
 
 TEST_CASE("TrieNode2", "[Trie2]")
@@ -14,6 +20,7 @@ TEST_CASE("TrieNode2", "[Trie2]")
         int a;
         int b;
     };
+
 
    
     SECTION("Initialization") {

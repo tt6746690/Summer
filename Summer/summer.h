@@ -15,5 +15,6 @@
 #include "src/Trie.h"
 #include "src/codec/Codec.h"
 #include "src/middlewares/Cors.h"
+#include "src/utilities/StrUtils.h"
 
 #endif // __SUMMER_HEADER_INCLUDE__
