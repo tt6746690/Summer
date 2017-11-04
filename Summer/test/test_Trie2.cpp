@@ -26,10 +26,6 @@ using namespace Summer;
 
 
 
-
-
-
-
 TEST_CASE("TrieNode2", "Trie2") 
 {
 
@@ -128,15 +124,71 @@ TEST_CASE("Trie2", "Trie2")
             return t;
         };
 
-        auto t = make_trie({
-            {"preMACH", 0},
-            {"preUNIX", 1},
-            {"pre", 2}
-        });
+        SECTION("cannot insert elements with duplicate keys") {
+            auto test_no_dup = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    Trie<int>::IteratorT it = t.insert({e.first, e.second});
+                    REQUIRE(it == t.end());
+                }
+            };
 
-        cout << t;
+            auto t = make_trie({ {"pre", 1} });
+            test_no_dup(t, { {"pre", 2} });
+        }
 
-        
+        SECTION("Insert at root if there is no prefix match or neither prefix/query exhausted") {
+            auto test_insert_at_root = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.insert({e.first, e.second});
+                    REQUIRE(it != t.end());
+                    REQUIRE(--it == t.end());
+                }
+            };
+
+            auto t = make_trie({ {"pre", 1} });
+            test_insert_at_root(t, { {"no_shared_prefix_at_all", 2},  {"pr_neither_exhausted", 3} });
+        }
+
+        SECTION("Traverse down a level, if prefix is exhausted, while query string has some chars left") {
+            auto test_go_down = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.insert({e.first, e.second});
+                    REQUIRE(--it != t.end());
+                    REQUIRE(--(--it) == t.end());
+                }
+            };
+
+            auto t = make_trie({ {"banana", 1}, {"apple", 2}, {"application", 3} });
+            test_go_down(t, { {"banananana", 4}, {"apples", 5}, {"applications", 6} });
+        }
+
+        SECTION("Reorganization of nodes if there is a range (len>=1) for which query exhausted") {
+            auto test_reorganize = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.insert({e.first, e.second});
+                    REQUIRE(it != t.end());
+                    REQUIRE(--it == t.end());
+                }
+            };
+
+            auto t = make_trie({ {"happy", 1}, {"happiness", 2}, {"happening", 3} });
+            test_reorganize(t, { {"happ", 4} });
+        }
+
+
+        SECTION("Comprehensive example") {
+
+            auto t = make_trie({ 
+                {"smile", 1}, 
+                {"smiles", 2}, 
+                {"smiling", 3},
+                {"smiled", 4},
+                {"smil", 5}
+            });
+
+            // cout << t;
+        }
+
 
 
     }
