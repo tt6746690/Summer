@@ -89,7 +89,7 @@ std::string Uri::urldecode(const std::string &url)
   return decoded;
 }
 
-ssmap Uri::make_query(const std::string &qstr) 
+ssumap Uri::make_query(const std::string &qstr) 
 {
   constexpr char tok_and = '&';
   constexpr char tok_equal = '=';
@@ -99,7 +99,7 @@ ssmap Uri::make_query(const std::string &qstr)
 
   std::size_t pos = 0;
   std::string token, key, value;
-  ssmap query_map;
+  ssumap query_map;
 
   while ((pos = query.find(tok_and)) != std::string::npos) {
     token = query.substr(0, pos);

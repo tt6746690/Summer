@@ -4,8 +4,9 @@
 #include <iosfwd>
 #include <string>
 
-#include "Constants.h"
+#include "Defines.h"
 #include "StrUtils.h"
+#include "Constants.h"
 
 namespace Summer
 {
@@ -61,7 +62,7 @@ struct Uri
   /**
    * @brief   Convert a query string to a map of key-value pairs
    */
-  auto static make_query(const std::string &query) -> ssmap;
+  auto static make_query(const std::string &query) -> ssumap;
 
   // print
   friend auto operator<<(std::ostream &strm, Uri uri) -> std::ostream &;

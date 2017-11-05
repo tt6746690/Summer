@@ -29,7 +29,7 @@ void start_server(int port){
                        // url query parser
                        ctx.req_.query_ = Uri::make_query(ctx.req_.uri_.query_);
 
-                       json_type urlparse = {
+                       JsonType urlparse = {
                            {"query", ctx.query_}, {"param", ctx.param_},
                        };
                        std::cout << std::setw(4) << urlparse << std::endl;

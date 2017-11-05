@@ -20,8 +20,8 @@ public:
   RequestMethod method_ = RequestMethod::UNDETERMINED;
 
   Uri uri_;
-  ssmap param_;
-  ssmap query_;
+  ssumap param_;
+  ssumap query_;
 
 public:
   constexpr static const char *request_method_to_string(RequestMethod method)

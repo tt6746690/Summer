@@ -1,10 +1,7 @@
 #ifndef __SERVER_H__
 #define __SERVER_H__
 
-#define ASIO_SEPARATE_COMPILATION
-#define ASIO_STANDALONE
 #undef ASIO_HEADER_ONLY
-
 #include "asio.hpp"
 #include "asio/impl/src.hpp"
 #include "asio/ssl.hpp"
@@ -14,6 +11,7 @@
 #include <string>
 #include <utility>
 
+#include "Defines.h"
 #include "Connection.h"
 #include "Router.h"
 

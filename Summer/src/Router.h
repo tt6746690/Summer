@@ -21,70 +21,42 @@ struct Context
 {
   Request &req_;
   Response &res_;
-  ssmap &param_;
-  ssmap &query_;
+  ssumap &param_;
+  ssumap &query_;
 
-  Context(Request &req, Response &res)
-      : req_(req), res_(res), param_(req.param_), query_(req.query_){};
+  Context(Request &req, Response &res) : req_(req), res_(res), param_(req.param_), query_(req.query_){};
 };
 
-/**
- * @brief   Defines rules for giving handler unique ids
- *          template arguments to Handler during instantiation
- */
-class HandlerCounter
-{
-private:
-  int handler_count_;
 
-public:
-  HandlerCounter(int start_from = 1) : handler_count_(start_from){};
-  int operator()() { return handler_count_++; }
-};
 
-// global counter as default Counter to Handler_
-static HandlerCounter global_handler_counter = HandlerCounter();
-
-/**
- * @brief   A Wrapper around a Callable,
- */
-template <typename Counter = HandlerCounter>
-class Handler_
+// A wrapper around a callable that consumes Context
+static int handler_id_counter = 0;
+class Handler 
 {
 public:
-  using HandlerFunc = std::function<void(Context &)>;
-  explicit Handler_() : handler_(nullptr), handler_id_(0){};
-  explicit Handler_(HandlerFunc handler, Counter &count_up = global_handler_counter)
-      : handler_(handler), handler_id_(count_up()){};
+    using HandlerType = std::function<void(Context &)>;
 
-  operator bool() const { return handler_ != nullptr; }
-  void operator()(Context &ctx) { handler_(ctx); }
-  bool operator<(const Handler_<> &rhs) { return handler_id_ < rhs.handler_id_; }
-  bool operator<=(const Handler_<> &rhs) { return !(rhs.handler_id_ < handler_id_); }
-  bool operator==(const Handler_<> &rhs) { return !(rhs.handler_id_ < handler_id_) && !(handler_id_ < rhs.handler_id_); }
-  bool operator!=(const Handler_<> &rhs) { return (rhs.handler_id_ < handler_id_) || (handler_id_ < rhs.handler_id_); }
-  bool operator>(const Handler_<> &rhs) { return rhs.handler_id_ < handler_id_; }
-  bool operator>=(const Handler_<> &rhs) { return !(handler_id_ < rhs.handler_id_); }
-
-  void handle(HandlerFunc handle, Counter &count_up = global_handler_counter)
-  {
-    handler_ = handle;
-    if (!handler_id_)
-      handler_id_ = count_up();
-  }
-
+    explicit Handler() : handler_(nullptr), handler_id_(handler_id_counter++) { } 
+    explicit Handler(HandlerType h) : handler_(h), handler_id_(handler_id_counter++) { }
+protected:
+    HandlerType     handler_;
+    int             handler_id_;
 public:
-  HandlerFunc handler_;
-  int handler_id_;
-
-  friend inline std::ostream &operator<<(std::ostream &strm, Handler_<> &handler)
-  {
-    return strm << "(" << handler.handler_id_ << ")";
-  }
+    // Invoke on context 
+    void operator()(Context& ctx) { handler_(ctx); }
+    operator bool() const { return handler_ != nullptr; }
+    friend inline bool operator< (const Handler& lhs, const Handler& rhs) { return lhs.handler_id_ != rhs.handler_id_; }
+    friend inline bool operator<=(const Handler &rhs, const Handler &lhs) { return !(lhs < rhs); }
+    friend inline bool operator> (const Handler &rhs, const Handler &lhs) { return  (lhs < rhs); }
+    friend inline bool operator>=(const Handler &rhs, const Handler &lhs) { return !(rhs < lhs); }
+    friend inline bool operator==(const Handler &rhs, const Handler &lhs) { return !(rhs < lhs) && !(lhs < rhs); }
+    friend inline bool operator!=(const Handler &rhs, const Handler &lhs) { return  (rhs < lhs) ||  (lhs < rhs); }
+    friend inline std::ostream &operator<<(std::ostream &os, Handler &handler) { return os << "(" << handler.handler_id_ << ")"; }
 };
 
-// use default template specialization
-using Handler = Handler_<>;
+
+
+
 
 /**
  * @brief   A class for constructing routes at compile-time, and

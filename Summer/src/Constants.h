@@ -6,14 +6,10 @@
 
 namespace Summer
 {
+// Type definitions
+using ssumap = std::unordered_map<std::string, std::string>;
 
-/**
- * types
- */
-using ssmap = std::unordered_map<std::string, std::string>;
-using json_type = nlohmann::json;
-
-constexpr char EOL[] = "\r\n";
+constexpr char CRLF[] = "\r\n";
 
 /**
  * Uri

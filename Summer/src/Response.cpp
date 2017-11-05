@@ -42,13 +42,13 @@ std::string Response::to_status_line(StatusCode status_code, int http_version_ma
 {
   return version(http_version_major, http_version_minor) + " " +
          std::to_string(status_code_to_int(status_code)) + " " +
-         status_code_to_reason(status_code) + EOL;
+         status_code_to_reason(status_code) + CRLF;
 }
 
 std::string Response::to_status_line(int status_code, std::string reason, int http_version_major, int http_version_minor)
 {
   return version(http_version_major, http_version_minor) + " " +
-         std::to_string(status_code) + " " + reason + EOL;
+         std::to_string(status_code) + " " + reason + CRLF;
 }
 
 void Response::write_text(std::string data) 
@@ -71,7 +71,7 @@ void Response::write_range(char* data, int start, int end, int total)
   body_ += std::string(data, end-start);
 }
 
-void Response::write_json(json_type data) {
+void Response::write_json(JsonType data) {
   std::string dump = data.dump();
 
   content_type("application/json");

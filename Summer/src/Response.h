@@ -3,6 +3,7 @@
 
 #include <iosfwd>
 
+#include "Defines.h"
 #include "Constants.h"
 #include "Message.h"
 
@@ -57,7 +58,7 @@ public:
    */
   void write_text(std::string data);
   void write_range(char *data, int start, int end, int total);
-  void write_json(json_type data);
+  void write_json(JsonType data);
 
   /**
    * @brief   Clears body and resets size

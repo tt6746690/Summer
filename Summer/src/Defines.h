@@ -3,6 +3,11 @@
 
 #include <cstdio>
 
+
+#include "json.hpp"
+using JsonType = nlohmann::json;
+
+
 #define eol '\n'
 #define MARK_USED(x) (x=x)
 #define __DO_NOTHING__ do{} while(0);

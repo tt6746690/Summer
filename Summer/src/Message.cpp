@@ -51,8 +51,8 @@ std::string Message::flatten_header() const
 {
     std::string headers_flat;
     for (auto &header : headers_)
-        headers_flat += header.first + ": " + header.second + EOL;
-    return headers_flat + EOL;
+        headers_flat += header.first + ": " + header.second + CRLF;
+    return headers_flat + CRLF;
 }
 
 void Message::set_header(HeaderType header)
