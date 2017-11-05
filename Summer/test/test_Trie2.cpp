@@ -101,33 +101,71 @@ TEST_CASE("TrieNode2", "Trie2")
 TEST_CASE("Trie2", "Trie2")
 {
 
-    struct foo { 
-        int a;
-        int b;
-    };
 
+    auto make_trie = [](const ssumap& insertee) {
+        auto t = Trie<int>();
+        for(const auto& e : insertee) {
+            t.insert({ e.first, e.second });
+        }
+        return t;
+    };
 
    
     SECTION("Initialization") {
-        auto t = Trie<foo>();
+        auto t = Trie<int>();
         REQUIRE(t.size() == 0);    
         REQUIRE(t.begin() == t.end());
     }
 
+
+    SECTION("find") {
+
+        auto t = make_trie({ 
+            {"smile", 1}, 
+            {"smiles", 2}, 
+            {"smiling", 3},
+            {"smiled", 4},
+            {"smil", 5}
+        });
+
+
+        SECTION("found") {
+            auto test_found = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.find(e.first);
+                    REQUIRE(it != t.end());
+                    REQUIRE(*it == e.second);
+                }
+            };
+            test_found(t, {
+                {"smile", 1}, 
+                {"smiles", 2}, 
+                {"smiling", 3},
+                {"smiled", 4},
+                {"smil", 5}
+            });
+        }
+
+        SECTION("not found") {
+            auto test_not_found = [](Trie<int>& t, const vector<string>& keys) {
+                for(const auto& k : keys) {
+                    auto it = t.find(k);
+                    REQUIRE(it == t.end());
+                }
+            };
+
+            test_not_found(t, {"s", "sm", "smi", "", "irrelevant"});
+        }
+    }
+
+
     SECTION("Insertion") {
 
-        auto make_trie = [](const ssumap& insertee) {
-            auto t = Trie<int>();
-            for(const auto& e : insertee) {
-                t.insert({ e.first, e.second });
-            }
-            return t;
-        };
 
         SECTION("cannot insert elements with duplicate keys") {
             auto test_no_dup = [](Trie<int>& t, const ssumap& insertee) {
                 for(const auto& e : insertee) {
-                    Trie<int>::IteratorT it = t.insert({e.first, e.second});
+                    auto it = t.insert({e.first, e.second});
                     REQUIRE(it == t.end());
                 }
             };

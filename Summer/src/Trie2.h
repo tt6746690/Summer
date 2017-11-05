@@ -301,7 +301,6 @@ auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> Iterator
                 // No prefix match, or neither prefix/query exhausted
                 cur_node = cur_node->add_edge(kstr, value.second);
                 ++size_;
-
                 return IteratorT(cur_node);
             } else {
                 // Exact match, duplicate key not allowed
@@ -346,13 +345,20 @@ auto  Trie<T, CharT, Compare, Allocator>::find(const KeyT& key) -> IteratorT
         auto range = cur_node->find_lmp_edges(kstr);
         const EdgesT& edges = cur_node->edges;
 
-        if(range.first == range.second && range.first != edges.end()) {
-            return Iterator((range.first)->child);
+        if(range.first == range.second) {
+            return (range.first != edges.end()) ? IteratorT((range.first)->child) : end();
+        } else {
+            EdgesIterator& lower_bound = range.first;
+            int match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
+            if(match_len == lower_bound->prefix.size()) {
+                kstr += match_len;
+                cur_node = lower_bound->child;
+                continue;
+            } else return end();
         }
     }
     return end();
 }
-
 
 
 template<typename T1, typename T2>
