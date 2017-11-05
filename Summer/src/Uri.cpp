@@ -5,7 +5,7 @@
 #include "Uri.h"
 #include "Constants.h"
 #include "RequestParser.h"
-#include "Utilities.h"
+#include "Utils.h"
 
 namespace Summer {
 

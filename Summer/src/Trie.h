@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <cassert>
 
-#include "Utilities.h"
+#include "Utils.h"
 
 namespace Summer
 {

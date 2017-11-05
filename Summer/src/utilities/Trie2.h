@@ -1,24 +1,15 @@
 #ifndef __TRIE2_H__
 #define __TRIE2_H__
 
-#include <cassert>
-#include <memory> // smart pointers
+#include <memory>
 #include <string>
-#include <utility> // pair
+#include <utility>
 #include <vector>
-#include <array>
-#include <map>
 #include <iostream>
 #include <algorithm>
-#include <iostream>
 
+#include "Defines.h"
 #include "StrUtils.h"
-
-using std::cout;
-using std::endl; 
-using std::ostream;
-
-#define eol '\n'
 
 namespace Summer
 {
@@ -316,7 +307,7 @@ auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> Iterator
                 continue;
             } else {
                 // query exhausted, transfer range of node to newly added node's edges                                        
-                assert(match_len == strlen(kstr));
+                ASSERT(match_len == strlen(kstr));
                 NodePointerT new_node = new NodeT(cur_node, value.second);
 
                 std::for_each(range.first, range.second, [&new_node, match_len](const auto& edge){
@@ -361,17 +352,6 @@ auto  Trie<T, CharT, Compare, Allocator>::find(const KeyT& key) -> IteratorT
 }
 
 
-template<typename T1, typename T2>
-std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
-    return os << "(" << p.first << ", " << p.second << ")" << '\n';
-}
-
-
-template<typename T> 
-std::ostream& operator<<(std::ostream& os, const std::vector<T>& c) {
-    for(const auto& e: c) os << e << eol;
-    return os;
-}
 
 template <typename NodeType> 
 std::ostream& operator<<(std::ostream& os, const TrieNodeEdge<NodeType>& e)
@@ -400,8 +380,6 @@ std::ostream& operator<<(std::ostream& os, const Trie<T, CharT, Compare, Allocat
 {
     return os << "\\" << *t.root_node() << eol << "size = (" << t.size() << ")" << eol;
 }
-
-
 
 
 } // namespace Summer

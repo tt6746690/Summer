@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 #include "Message.h"
-#include "Utilities.h"
+#include "Utils.h"
 #include "Response.h"
 
 using namespace Summer;

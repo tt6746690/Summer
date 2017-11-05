@@ -107,7 +107,7 @@ public:
   void handle(RequestMethod method, std::string path, T handler)
   {
     assert(path.front() == '/');
-    auto &route = routes_[etoint(method)];
+    auto &route = routes_[to_underlying_t(method)];
     route.insert({path, handler});
   }
 
@@ -147,7 +147,7 @@ public:
    */
   std::vector<T> resolve(RequestMethod method, std::string path)
   {
-    auto &route = routes_[etoint(method)];
+    auto &route = routes_[to_underlying_t(method)];
     auto found = route.find(path);
     if (found == route.end())
       return {};
@@ -168,7 +168,7 @@ public:
   {
     auto method = req.method_;
     auto path = req.uri_.abs_path_;
-    auto &route = routes_[etoint(method)];
+    auto &route = routes_[to_underlying_t(method)];
 
     std::string param_key, param_value;
     auto found = route.find(path, param_key, param_value);

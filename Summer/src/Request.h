@@ -8,7 +8,7 @@
 #include "Constants.h" // RequestMetho
 #include "Message.h"   // base class
 #include "Uri.h"       // Uri
-#include "Utilities.h" // enum_map
+#include "Utils.h" // enum_map
 
 namespace Summer
 {

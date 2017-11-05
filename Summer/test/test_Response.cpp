@@ -5,7 +5,7 @@
 #include "catch.hpp"
 
 #include "Response.h"
-#include "Utilities.h"
+#include "Utils.h"
 
 using namespace Summer;
 

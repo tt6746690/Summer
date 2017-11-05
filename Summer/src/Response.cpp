@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "Response.h"
-#include "Utilities.h"
+#include "Utils.h"
 
 namespace Summer {
 

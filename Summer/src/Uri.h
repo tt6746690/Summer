@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Constants.h"
+#include "StrUtils.h"
 
 namespace Summer
 {
