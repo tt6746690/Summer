@@ -66,10 +66,10 @@ public:
   /**
    * @brief   Given a header, return its name/value
    */
-  static auto header_name(HeaderType &header) -> HeaderNameType &;
-  static auto header_value(HeaderType &header) -> HeaderValueType &;
+  static auto header_name(const HeaderType &header) -> HeaderNameType &;
+  static auto header_value(const HeaderType &header) -> HeaderValueType &;
 
-  friend auto operator<<(std::ostream &strm, HeaderType) -> std::ostream &;
+  friend std::ostream& operator<<(std::ostream &strm, const HeaderType&);
 };
 
 } // namespace Summer

@@ -64,14 +64,9 @@ class TrieNode
     explicit TrieNode(PointerT parent) : parent(parent) {}    
     explicit TrieNode(PointerT parent, T value) : parent(parent), value(value) {}
 
-    std::size_t edge_size() const { return edges.size(); }
     void sort_edges() { std::sort(edges.begin(), edges.end()); }
 
-    T& child_value(size_t i) { return (edges[i].child)->value;};
-    bool has_child(PointerT node_ptr);
-    
     // Store pointer, pointing to newly allocated node, into edges
-    PointerT add_edge(KeyT key);
     PointerT add_edge(KeyT key, PointerT node_ptr);
     PointerT add_edge(KeyT key, T value);
 
@@ -100,14 +95,6 @@ bool operator<(const TrieNode<T, CharT> &rhs, const TrieNode<T, CharT> &lhs)
     }
 }
 
-template<typename T, typename CharT>
-auto TrieNode<T, CharT>::has_child(PointerT node_ptr) -> bool 
-{
-    for(const auto& edge : edges) {
-        if(edge.child == node_ptr) return true;
-    }
-    return false;
-}
 
 template<typename T, typename CharT>
 auto TrieNode<T, CharT>::add_edge(KeyT key, PointerT node_ptr) -> PointerT 
@@ -116,13 +103,6 @@ auto TrieNode<T, CharT>::add_edge(KeyT key, PointerT node_ptr) -> PointerT
     return node_ptr;
 }
 
-template<typename T, typename CharT> 
-auto TrieNode<T, CharT>::add_edge(KeyT key) -> PointerT 
-{
-    PointerT new_node = new TrieNode(this);
-    edges.emplace_back(key, new_node);
-    return new_node;
-}
 
 template<typename T, typename CharT> 
 auto TrieNode<T, CharT>::add_edge(KeyT key, T value) -> PointerT 
@@ -136,13 +116,13 @@ template<typename T, typename CharT>
 auto TrieNode<T, CharT>::find_lmp_edges(KeyT query) -> std::pair<EdgesIterator, EdgesIterator>
 {
     sort_edges();
-    
-    int longest_prefix_len = 0;
+
+    size_t longest_prefix_len = 0;
     int lower_bound = -1, upper_bound = -1;
 
     for(int i = 0; i < edges.size(); ++i) {
         const auto& edge = edges[i];
-        int len = find_common_prefix_len(edge.prefix.c_str(), query.c_str());
+        size_t len = find_common_prefix_len(edge.prefix.c_str(), query.c_str());
         if(len == query.size() && len == edge.prefix.size()) 
             return std::make_pair(edges.begin() + i, edges.begin() + i);
         // Found an edge with a longer prefix, start of a range of possibly equally long prefixes 
@@ -161,7 +141,7 @@ auto TrieNode<T, CharT>::find_lmp_edges(KeyT query) -> std::pair<EdgesIterator, 
         (query.size() > longest_prefix_len && edges[lower_bound].prefix.size() > longest_prefix_len))
         return std::make_pair(edges.end(), edges.end());
 
-    upper_bound = (upper_bound >= lower_bound) ? upper_bound : edges.size();
+    upper_bound = (upper_bound >= lower_bound) ? upper_bound : static_cast<int>(edges.size());
     return std::make_pair(edges.begin() + lower_bound, edges.begin() + upper_bound);
 }
 
@@ -224,12 +204,13 @@ private:
     NodeT                     end_node_;
     SizeT                     size_ = 0;
 public: 
-    NodePointerT  end_node()        { return static_cast<NodePointerT>(&end_node_); }
-    NodePointerT  end_node() const  { return const_cast<const NodePointerT>(&end_node_); }    
-    NodePointerT &begin_node()      { return begin_node_; }
-    NodePointerT  root_node()       { return end_node(); }
-    NodePointerT  root_node() const { return end_node(); }
-    SizeT         size() const      { return size_; }
+    NodePointerT  end_node()         { return static_cast<NodePointerT>(&end_node_); }
+    NodePointerT  end_node() const   { return const_cast<const NodePointerT>(&end_node_); }
+    NodePointerT &begin_node()       { return begin_node_; }
+    NodePointerT &begin_node() const { return begin_node_; }
+    NodePointerT  root_node()        { return end_node(); }
+    NodePointerT  root_node() const  { return end_node(); }
+    SizeT         size() const       { return size_; }
 
     explicit Trie();
     ~Trie();
@@ -244,27 +225,27 @@ public:
     auto find(const KeyT& key) -> IteratorT;
 
 public:
-    template<typename T1, typename T2, typename T3, typename T4>
-    friend std::ostream& operator<<(const std::ostream& os, const Trie<T1, T2, T3, T4>& t);
+    template <typename T1, typename T2, typename T3, typename T4>
+    friend std::ostream& operator<<(std::ostream& os, const Trie<T1, T2, T3, T4>& t);
 };
 
 
 
-template<typename T, typename CharT, typename Compare, typename Allocator> 
-Trie<T, CharT, Compare, Allocator>::Trie() 
-{ 
+template<typename T, typename CharT, typename Compare, typename Allocator>
+Trie<T, CharT, Compare, Allocator>::Trie()
+{
     begin_node_ = end_node();
 }
 
 
-template<typename T, typename CharT, typename Compare, typename Allocator> 
+template<typename T, typename CharT, typename Compare, typename Allocator>
 Trie<T, CharT, Compare, Allocator>::~Trie()
 {
     destroy(root_node());
 }
 
-template<typename T, typename CharT, typename Compare, typename Allocator> 
-void Trie<T, CharT, Compare, Allocator>::destroy(NodePointerT nptr) 
+template<typename T, typename CharT, typename Compare, typename Allocator>
+void Trie<T, CharT, Compare, Allocator>::destroy(NodePointerT nptr)
 {
     if(nptr != nullptr) {
         for(typename Trie::NodeT::EdgeT& edge : nptr->edges) {
@@ -299,7 +280,7 @@ auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> Iterator
             }
         } else {
             EdgesIterator& lower_bound = range.first;
-            int match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
+            size_t match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
             if(match_len == lower_bound->prefix.size()) {
                 // prefix exhausted, go down next level
                 kstr += match_len;
@@ -308,7 +289,7 @@ auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> Iterator
             } else {
                 // query exhausted, transfer range of node to newly added node's edges                                        
                 ASSERT(match_len == strlen(kstr));
-                NodePointerT new_node = new NodeT(cur_node, value.second);
+                NodePointerT new_node = new TrieNode<T, CharT>(cur_node, value.second);
 
                 std::for_each(range.first, range.second, [&new_node, match_len](const auto& edge){
                     new_node->add_edge(edge.prefix.substr(match_len, edge.prefix.size()), edge.child);
@@ -340,7 +321,7 @@ auto  Trie<T, CharT, Compare, Allocator>::find(const KeyT& key) -> IteratorT
             return (range.first != edges.end()) ? IteratorT((range.first)->child) : end();
         } else {
             EdgesIterator& lower_bound = range.first;
-            int match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
+            size_t match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
             if(match_len == lower_bound->prefix.size()) {
                 kstr += match_len;
                 cur_node = lower_bound->child;
@@ -378,7 +359,7 @@ std::ostream& operator<<(std::ostream& os, const TrieNode<T, CharT>& node)
 template <typename T, typename CharT, typename Compare, typename Allocator>
 std::ostream& operator<<(std::ostream& os, const Trie<T, CharT, Compare, Allocator>& t)
 {
-    return os << "\\" << *t.root_node() << eol << "size = (" << t.size() << ")" << eol;
+    return os << std::string("\\") << *t.root_node() << eol << "size = (" << t.size() << ")" << eol;
 }
 
 

@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "InfiniteRecursion"
 #ifndef __SERVER_H__
 #define __SERVER_H__
 
@@ -59,8 +61,8 @@ public:
   /**
    * @brief   Getting server address fields
    */
-  std::string host() const { return std::get<std::string>(server_address_); }
-  int port() const { return std::get<int>(server_address_); }
+  std::string host() const { return std::get<0>(server_address_); }
+  uint16_t port() const { return std::get<1>(server_address_); }
 
   /**
    * @brief   Scheme + authourity of server
@@ -72,7 +74,7 @@ public:
   }
 
 public:
-  Router<Handler> router_;
+  Router router_;
   ServerAddr server_address_; // (host, port) pair
   asio::io_service io_service_;
   asio::ip::tcp::acceptor acceptor_; // tcp acceptor
@@ -180,3 +182,4 @@ private:
 
 } // namespace Summer
 #endif // __SERVER_H__
+#pragma clang diagnostic pop

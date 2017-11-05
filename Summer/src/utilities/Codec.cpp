@@ -61,22 +61,24 @@ BYTE_STRING Base64Codec::encode(const BYTE_STRING &input)
 
     switch (len % 3)
     {
-    case 1:
-    {
-        encoded += encode_table[enc1(ptr)];
-        encoded += encode_table[enc2(ptr)];
-        encoded += base64_pad;
-        encoded += base64_pad;
-        break;
-    }
-    case 2:
-    {
-        encoded += encode_table[enc1(ptr)];
-        encoded += encode_table[enc2(ptr)];
-        encoded += encode_table[enc3(ptr)];
-        encoded += base64_pad;
-        break;
-    }
+        case 1:
+        {
+            encoded += encode_table[enc1(ptr)];
+            encoded += encode_table[enc2(ptr)];
+            encoded += base64_pad;
+            encoded += base64_pad;
+            break;
+        }
+        case 2:
+        {
+            encoded += encode_table[enc1(ptr)];
+            encoded += encode_table[enc2(ptr)];
+            encoded += encode_table[enc3(ptr)];
+            encoded += base64_pad;
+            break;
+        }
+        default:
+            break;
     }
 
     return encoded;

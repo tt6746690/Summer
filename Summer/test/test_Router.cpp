@@ -1,14 +1,30 @@
 #include "catch.hpp"
 #include <utility>
 #include <stdexcept>
+#include <iostream> 
 
-#include "Trie.h"
+#include "Trie2.h"
 #include "Router.h"
 #include "Constants.h"
+
+using std::cout;
 
 using namespace Summer;
 
 
+TEST_CASE("Router") 
+{
+
+    // auto init_router =  [](){
+
+    // }
+
+    // SECTION("handle") 
+    // {
+
+    // }
+
+}
 
 
 

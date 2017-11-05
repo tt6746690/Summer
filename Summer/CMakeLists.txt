@@ -32,5 +32,5 @@ file(GLOB TEST_FILES
     "./test/*.cpp"
 )
 
-add_executable(test main-test.cpp  ${TEST_FILES} ${SOURCE_FILES})
+add_executable(testing main-test.cpp  ${TEST_FILES} ${SOURCE_FILES})
 

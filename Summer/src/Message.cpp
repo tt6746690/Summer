@@ -1,9 +1,8 @@
 #include "Message.h"
 #include "Constants.h"
 
-#include <ostream>
 #include <cassert>
-#include <algorithm>
+#include <utility>
 
 
 namespace Summer
@@ -25,13 +24,13 @@ void Message::build_header_value(char c)
     header_value(headers_.back()).push_back(c);
 }
 
-Message::HeaderNameType& Message::header_name(HeaderType &header)
+Message::HeaderNameType& Message::header_name(const HeaderType &header)
 {
-    return std::get<0>(header);
+    return std::get<0>(const_cast<HeaderType&>(header));
 }
-Message::HeaderValueType& Message::header_value(HeaderType &header)
+Message::HeaderValueType& Message::header_value(const HeaderType &header)
 {
-    return std::get<1>(header);
+    return std::get<1>(const_cast<HeaderType&>(header));
 }
 
 std::pair<Message::HeaderValueType, bool> Message::get_header(HeaderNameType name)
@@ -112,7 +111,7 @@ void Message::content_type(HeaderValueType value)
     set_header({"Content-Type", value});
 }
 
-std::ostream& operator<<(std::ostream& os, Message::HeaderType& header)
+std::ostream& operator<<(std::ostream& os, const Message::HeaderType& header)
 {
     return os << Message::header_name(header) << ": " << Message::header_value(header) << std::endl;
 }

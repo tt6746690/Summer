@@ -1,5 +1,8 @@
 
+# ide
+cmake-build-debug/
 
+# logs
 log 
 
 

@@ -33,8 +33,8 @@ public:
   static constexpr auto max_time = ClockType::duration::max();
   static constexpr auto read_timeout = std::chrono::seconds(2);
 
-  explicit Connection(asio::io_service &io_service, Router<Handler> &router);
-  explicit Connection(asio::io_service &io_service, asio::ssl::context &context, Router<Handler> &router);
+  explicit Connection(asio::io_service &io_service, Router& router);
+  explicit Connection(asio::io_service &io_service, asio::ssl::context &context, Router& router);
 
   /**
    * @brief   Starts reading asynchronously
@@ -82,24 +82,26 @@ private:
   DeadlineTimer read_deadline_;
   Request request_;
   Response response_;
-  Context context_{request_, response_};
+  Context context_;
   RequestParser request_parser_;
-  Router<Handler> &router_;
+  Router &router_;
 };
 
 template <typename SocketType>
-inline Connection<SocketType>::Connection(asio::io_service &io_service, Router<Handler> &router)
+Connection<SocketType>::Connection(asio::io_service &io_service, Router &router)
     : socket_(io_service),
       read_deadline_(io_service),
+      context_{request_, response_},
       router_(router)
 {
   read_deadline_.expires_from_now(max_time);
 };
 
 template <typename SocketType>
-inline Connection<SocketType>::Connection(asio::io_service &io_service, asio::ssl::context &context, Router<Handler> &router)
+Connection<SocketType>::Connection(asio::io_service &io_service, asio::ssl::context &context, Router &router)
     : socket_(io_service, context),
       read_deadline_(io_service),
+      context_{request_, response_},
       router_(router)
 {
   read_deadline_.expires_from_now(max_time);

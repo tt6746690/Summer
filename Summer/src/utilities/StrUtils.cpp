@@ -17,7 +17,7 @@ find_common_prefix(const std::string& x, const std::string& y)
     return std::string(x.begin(), x_it);
 }
 
-int 
+size_t
 find_common_prefix_len(const char* x, const char* y) 
 {
     const char *begin = x;
@@ -32,13 +32,13 @@ find_common_prefix_len(const char* x, const char* y)
 std::string 
 find_common_prefix(const char* x, const char *y)
 {
-    int len = find_common_prefix_len(x, y);
+    size_t len = find_common_prefix_len(x, y);
     return std::string(x, len);
 }
 
 
 void 
-split_in_half(const std::string& s, int at, std::string& first, std::string& second) 
+split_in_half(const std::string& s, size_t at, std::string& first, std::string& second)
 {
     first = s.substr(0, at);
     second = s.substr(at, s.size());

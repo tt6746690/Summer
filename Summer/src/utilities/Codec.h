@@ -31,10 +31,10 @@ private:
   /**
    * @brief   Converts from a 3 1b (BYTE) to 4 1b base64
    */
-  static constexpr BYTE enc1(const BYTE *pos) { return (pos[0] >> 2); }
-  static constexpr BYTE enc2(const BYTE *pos) { return ((pos[0] & 0x03) << 4) | (pos[1] >> 4); }
-  static constexpr BYTE enc3(const BYTE *pos) { return ((pos[1] & 0x0f) << 2) | (pos[2] >> 6); }
-  static constexpr BYTE enc4(const BYTE *pos) { return (pos[2] & 0x3f); }
+  static constexpr BYTE enc1(const BYTE *pos) { return (BYTE)(pos[0] >> 2); }
+  static constexpr BYTE enc2(const BYTE *pos) { return (BYTE)((pos[0] & 0x03) << 4) | (pos[1] >> 4); }
+  static constexpr BYTE enc3(const BYTE *pos) { return (BYTE)((pos[1] & 0x0f) << 2) | (pos[2] >> 6); }
+  static constexpr BYTE enc4(const BYTE *pos) { return (BYTE)(pos[2] & 0x3f); }
   /**
    * @brief   Converts from 4 1b base 64 (i.e. 0~63) to a 3 1b (BYTE)
    */

@@ -5,6 +5,7 @@
 
 #include "Constants.h"
 #include "Server.h"
+#include "Router.h"
 
 using namespace std;
 using namespace asio;

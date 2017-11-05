@@ -50,8 +50,8 @@ enum class RequestMethod
   UNDETERMINED
 };
 
-constexpr int method_count = static_cast<int>(RequestMethod::UNDETERMINED) -
-                             static_cast<int>(RequestMethod::GET);
+constexpr size_t method_count = static_cast<size_t>(RequestMethod::UNDETERMINED) -
+                                static_cast<size_t>(RequestMethod::GET);
 
 constexpr static char *request_methods[] = {
     (char *)"GET", (char *)"HEAD", (char *)"POST",

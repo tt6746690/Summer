@@ -48,10 +48,10 @@ int main(int argc, char**argv) {
   try {
 
     std::thread httpserver_task(start_server<HttpServer>, 8888);
-    std::thread httpsserver_task(start_server<HttpsServer>, 8889);
+//    std::thread httpsserver_task(start_server<HttpsServer>, 8889);
 
     httpserver_task.join();
-    httpsserver_task.join();
+//    httpsserver_task.join();
 
   } catch (const std::exception e) {
     std::cerr << e.what() << std::endl;

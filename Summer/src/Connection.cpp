@@ -4,6 +4,9 @@
 #include "Connection.h"
 #include <iostream>
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "InfiniteRecursion"
+
 using namespace std;
 
 namespace Summer {
@@ -58,7 +61,7 @@ void Connection<SslSocket>::start(){
           read();
           read_deadline_.async_wait(
             [this, self=this->shared_from_this()]
-              (std::error_code ec){
+              (std::error_code ecc){
               check_read_deadline();
           });
         }
@@ -116,32 +119,30 @@ void Connection<SocketType>::read() {
         *        request has malformed syntax, send 400
         */
         switch (parse_status) {
-        case ParseStatus::in_progress: {
-          read();
-          break;
-        }
-        case ParseStatus::accept: {
-          response_.status_code(StatusCode::OK);
-          response_.version_major_ = request_.version_major_;
-          response_.version_minor_ = request_.version_minor_;
-          request_.query_ = Uri::make_query(request_.uri_.query_);
+            case ParseStatus::in_progress: {
+              read();
+              break;
+            }
+            case ParseStatus::accept: {
+              response_.status_code(StatusCode::OK);
+              response_.version_major_ = request_.version_major_;
+              response_.version_minor_ = request_.version_minor_;
+              request_.query_ = Uri::make_query(request_.uri_.query_);
 
-          auto handlers = router_.resolve(request_);
-          for (auto &handler : handlers) {
-            handler(context_);
-          }
+              auto handlers = router_.resolve(request_);
+              for (auto &handler : handlers) {
+                handler(context_);
+              }
 
-          write();
-          break;
-        }
+              write();
+              break;
+            }
 
-        case ParseStatus::reject: {
-          response_.status_code(StatusCode::Bad_Request);
-          write();
-          break;
-        }
-        default:
-          break;
+            case ParseStatus::reject: {
+              response_.status_code(StatusCode::Bad_Request);
+              write();
+              break;
+            }
         }
       } 
     });
@@ -167,3 +168,5 @@ void Connection<SocketType>::write() {
 
 
 }
+
+#pragma clang diagnostic pop
