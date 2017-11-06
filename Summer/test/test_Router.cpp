@@ -12,19 +12,27 @@ using std::cout;
 using namespace Summer;
 
 
-TEST_CASE("Router") 
-{
+// TEST_CASE("Router") 
+// {
 
-    // auto init_router =  [](){
+//     Response res;
+//     Request req; 
+//     Context ctx(req, res);
 
-    // }
+//     auto init_router =  [ctx](){
 
-    // SECTION("handle") 
-    // {
+//         Router r; 
 
-    // }
+//         REQUIRE(r.routing_tables.size() == method_count);
+//         for(const )
+//     };
 
-}
+//     SECTION("handle") 
+//     {
+
+//     }
+
+// }
 
 
 

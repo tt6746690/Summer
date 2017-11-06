@@ -6,6 +6,7 @@
 #include <string>
 #include <typeinfo>
 #include <utility>
+#include <algorithm>
 #include <type_traits>
 
 #include "Defines.h"
@@ -14,6 +15,7 @@ namespace Summer
 {
 
 // operator<<
+
 template<typename T1, typename T2>
 std::ostream& operator<<(std::ostream& os, const std::pair<T1, T2>& p) {
     return os << "(" << p.first << ", " << p.second << ")" << eol;
@@ -24,8 +26,52 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& c) {
     return os;
 }
 
+// Compile-time Integer Range
+
+template<int ...Ns>
+struct sequence {
+    static constexpr int data[sizeof...(Ns)]=  { Ns... };
+};
+
+template<int ...Ns>
+struct gen_seq {};
+
+template<int Step, int Start, int End, int ...Ns>
+struct gen_seq<Step, Start, End, Ns...> {
+    using type = typename gen_seq<Step, Start, End-Step, End-Step, Ns...>::type;
+};
+
+template<int Step, int Start, int ...Ns>
+struct gen_seq<Step, Start, Start, Ns...> {
+    using type = sequence<Ns...>;
+};
+
+template<int Start, int End, int Step>
+using sequence_t = typename gen_seq<Step, Start, End>::type;
+
+
+template<int Start, int End, int Step>
+constexpr auto irange() -> std::add_lvalue_reference_t<decltype(sequence_t<Start, End + (End-Start)%Step, Step>::data)>
+{
+    static_assert(Start < End, "Start >= End not allowed");
+    return sequence_t<Start, End + (End-Start)%Step, Step>::data;
+}
+
+template<int End>
+constexpr auto irange() -> std::add_lvalue_reference_t<decltype(sequence_t<0, End, 1>::data)>
+{
+    return irange<0, End, 1>();
+}
+
+template<int Start, int End>
+constexpr auto irange() -> std::add_lvalue_reference_t<decltype(sequence_t<Start, End, 1>::data)>
+{
+    return irange<Start, End, 1>();
+};
+
 
 // Enumerations
+
 template <typename T,
           typename = std::enable_if_t<std::is_enum_v<T>>>
 auto constexpr to_underlying_t(const T value) -> std::underlying_type_t<T>
@@ -52,6 +98,8 @@ auto constexpr enum_map(const A &array, T e) -> decltype(auto)
   auto idx = to_underlying_t(std::move(e));
   return array[idx];
 }
+
+
 
 
 

@@ -78,7 +78,7 @@ public:
     RouteType resolve(Request& request);
 
     friend std::ostream& operator<<(std::ostream& os, const Router& r);
-private:
+public:
     RoutingTables routing_tables;
 };
 
