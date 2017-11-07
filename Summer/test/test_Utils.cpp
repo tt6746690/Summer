@@ -6,6 +6,7 @@
 #include <cstring> 
 #include <string> 
 #include <iostream>
+#include <functional>
 
 #include "Utils.h"
 #include "StrUtils.h"
@@ -15,11 +16,73 @@ using namespace std;
 using namespace Summer;
 
 
+// Iterator 
+
+template <typename It> 
+using IteratorCategory = typename iterator_traits<It>::iterator_category;
+
+template <typename It> 
+using SameAsRandomAccessIterator = std::is_same<IteratorCategory<It>, random_access_iterator_tag>;
+template <typename It> 
+using IsRandomAccessIterator = std::enable_if_t<SameAsRandomAccessIterator<It>::value>;
+
+template <typename It> 
+using SameAsForwardIterator = std::is_same<IteratorCategory<It>, forward_iterator_tag>;
+template <typename It> 
+using IsForwardIterator = std::enable_if_t<SameAsForwardIterator<It>::value>;
+
+// decay 
+
+// strips cv qualifier, function pointer and array pointer decay
+template <typename X, typename Y> 
+using SameOnDecay = std::is_same<std::decay_t<X>, std::decay_t<Y>>;
+
+template <typename X, typename Y> 
+using IsSameOnDecay = std::enable_if_t<SameOnDecay<X, Y>::value>;
+
+template <typename X, typename Y> 
+using IsNotSameOnDecay = std::enable_if_t<!SameOnDecay<X, Y>::value>;
+
+
+// Composing predicates 
+
+template <template <typename ...> class... Preds>
+struct Compose {
+    template <typename T>
+    static constexpr auto eval() {
+        auto results = { Preds<T>::value ...};
+        auto result = true;
+        for(auto e: results) result &= e;
+        return result;
+    }
+};
+
+template <typename T, template <typename> class... Ts>
+inline constexpr auto satisfies_all = (... && Ts<T>::value);
+
+template <typename T, template <typename> class... Ts>
+inline constexpr auto satisfies_some = (... || Ts<T>::value);
+
+template <typename T, template <typename> class... Ts>
+inline constexpr auto satisfies_none = (... && !Ts<T>::value);
+
+
+// Callable types 
+
+template <typename F, typename ...Args> 
+using CallableReturnVoid = std::is_same<std::invoke_result_t<F, Args...>, void>;
+
+// template<typename T> 
+// using EmtpyArgCallable = std::enable_if_t< decltype() >
+
+
 
 
 
 TEST_CASE("Utils")
 {
+
+    
 
 
     SECTION("Enumerations")
@@ -74,8 +137,6 @@ TEST_CASE("Utils")
 
     }
 }
-
-
 
 
 TEST_CASE("StrUtils")

@@ -72,15 +72,19 @@ constexpr auto irange() -> std::add_lvalue_reference_t<decltype(sequence_t<Start
 
 // Enumerations
 
-template <typename T,
-          typename = std::enable_if_t<std::is_enum_v<T>>>
+template <typename T> 
+using IsEnum = typename std::enable_if_t<std::is_enum_v<T>>;
+
+template <typename T> 
+using IsArray = typename std::enable_if_t<std::is_array_v<T>>;
+
+template <typename T, typename = IsEnum<T>>
 auto constexpr to_underlying_t(const T value) -> std::underlying_type_t<T>
 {
   return static_cast<std::underlying_type_t<T>>(value);
 }
 
-template <typename T,
-          typename = std::enable_if_t<std::is_enum_v<T>>>
+template <typename T, typename = IsEnum<T>>
 std::ostream & operator<<(std::ostream &os, const T &e) { return os << std::to_string(to_underlying_t(e)); }
 
 /**
@@ -91,8 +95,8 @@ std::ostream & operator<<(std::ostream &os, const T &e) { return os << std::to_s
  *
  * @precondition    enum index starting from 0
  */
-template <typename A, typename T,
-          typename = std::enable_if_t<std::is_array_v<A> && std::is_enum_v<T>> >
+template <typename A, typename T, 
+          typename = IsArray<A>, typename = IsEnum<T>>
 auto constexpr enum_map(const A &array, T e) -> decltype(auto)
 {
   auto idx = to_underlying_t(std::move(e));
