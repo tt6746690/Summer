@@ -26,6 +26,57 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& c) {
     return os;
 }
 
+
+// Iterator 
+
+template <typename It> 
+using IteratorCategory = typename std::iterator_traits<It>::iterator_category;
+
+template <typename It> 
+using SameAsRandomAccessIterator = std::is_same<IteratorCategory<It>, std::random_access_iterator_tag>;
+template <typename It> 
+using IsRandomAccessIterator = std::enable_if_t<SameAsRandomAccessIterator<It>::value>;
+
+template <typename It> 
+using SameAsForwardIterator = std::is_same<IteratorCategory<It>, std::forward_iterator_tag>;
+template <typename It> 
+using IsForwardIterator = std::enable_if_t<SameAsForwardIterator<It>::value>;
+
+// decay 
+
+// strips cv qualifier, function pointer and array pointer decay
+template <typename X, typename Y> 
+using SameOnDecay = std::is_same<std::decay_t<X>, std::decay_t<Y>>;
+
+template <typename X, typename Y> 
+using IsSameOnDecay = std::enable_if_t<SameOnDecay<X, Y>::value>;
+
+template <typename X, typename Y> 
+using IsNotSameOnDecay = std::enable_if_t<!SameOnDecay<X, Y>::value>;
+
+
+// Composing predicates 
+
+template <template <typename ...> class... Preds>
+struct Compose {
+    template <typename T>
+    static constexpr auto eval() {
+        auto results = { Preds<T>::value ...};
+        auto result = true;
+        for(auto e: results) result &= e;
+        return result;
+    }
+};
+
+template <typename T, template <typename> class... Ts>
+inline constexpr auto satisfies_all = (... && Ts<T>::value);
+
+template <typename T, template <typename> class... Ts>
+inline constexpr auto satisfies_some = (... || Ts<T>::value);
+
+template <typename T, template <typename> class... Ts>
+inline constexpr auto satisfies_none = (... && !Ts<T>::value);
+
 // Compile-time Integer Range
 
 template<int ...Ns>

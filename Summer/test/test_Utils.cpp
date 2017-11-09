@@ -6,6 +6,8 @@
 #include <cstring> 
 #include <string> 
 #include <iostream>
+#include <list>
+#include <vector>
 #include <functional>
 
 #include "Utils.h"
@@ -15,74 +17,69 @@
 using namespace std;
 using namespace Summer;
 
-
-// Iterator 
-
-template <typename It> 
-using IteratorCategory = typename iterator_traits<It>::iterator_category;
-
-template <typename It> 
-using SameAsRandomAccessIterator = std::is_same<IteratorCategory<It>, random_access_iterator_tag>;
-template <typename It> 
-using IsRandomAccessIterator = std::enable_if_t<SameAsRandomAccessIterator<It>::value>;
-
-template <typename It> 
-using SameAsForwardIterator = std::is_same<IteratorCategory<It>, forward_iterator_tag>;
-template <typename It> 
-using IsForwardIterator = std::enable_if_t<SameAsForwardIterator<It>::value>;
-
-// decay 
-
-// strips cv qualifier, function pointer and array pointer decay
-template <typename X, typename Y> 
-using SameOnDecay = std::is_same<std::decay_t<X>, std::decay_t<Y>>;
-
-template <typename X, typename Y> 
-using IsSameOnDecay = std::enable_if_t<SameOnDecay<X, Y>::value>;
-
-template <typename X, typename Y> 
-using IsNotSameOnDecay = std::enable_if_t<!SameOnDecay<X, Y>::value>;
+// Overloading macros for prepending template argument types
+#define PREPEND_TYPENAMES1(T)               typename T
+#define PREPEND_TYPENAMES2(X, Y)            typename X, typename Y
+#define PREPEND_TYPENAMES3(X, Y, Z)         typename X, typename Y, typename Z
+#define GET_PREPEND_TYPENAMES_MACRO(_1, _2, _3, NAME, ...) NAME
+#define PREPEND_TYPENAMES(...)  GET_PREPEND_TYPENAMES_MACRO(__VA_ARGS__, PREPEND_TYPENAMES3, PREPEND_TYPENAMES2, PREPEND_TYPENAMES1)(__VA_ARGS__)
 
 
-// Composing predicates 
+// Macros for defining SFINAE checks for a given enable_if_t instance IsT
+#define __DEFINE_SFINAE_CHECK(IsT, ...) \
+    template < PREPEND_TYPENAMES(__VA_ARGS__) , typename = void> \
+    struct sfinae_check_##IsT : std::false_type {}; \
+    template < PREPEND_TYPENAMES(__VA_ARGS__) > \
+    struct sfinae_check_##IsT<__VA_ARGS__, IsT<__VA_ARGS__>> : std::true_type {}
 
-template <template <typename ...> class... Preds>
-struct Compose {
-    template <typename T>
-    static constexpr auto eval() {
-        auto results = { Preds<T>::value ...};
-        auto result = true;
-        for(auto e: results) result &= e;
-        return result;
-    }
-};
+#define DEFINE_SFINAE_CHECK(IsSomething, ...)           __DEFINE_SFINAE_CHECK(IsSomething, __VA_ARGS__)
+#define DEFINE_SFINAE_CHECK_ONE_TARG(IsSomething)       DEFINE_SFINAE_CHECK(IsSomething, T)
+#define DEFINE_SFINAE_CHECK_TWO_TARG(IsSomething)       DEFINE_SFINAE_CHECK(IsSomething, X, Y)
+#define DEFINE_SFINAE_CHECK_THREE_TARG(IsSomething)     DEFINE_SFINAE_CHECK(IsSomething, X, Y, Z)
 
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_all = (... && Ts<T>::value);
 
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_some = (... || Ts<T>::value);
-
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_none = (... && !Ts<T>::value);
+#define SFINAE_CHECK_IS_T(IsSomething, ...)             REQUIRE(sfinae_check_##IsSomething<__VA_ARGS__>() == true)
+#define SFINAE_CHECK_IS_F(IsSomething, ...)             REQUIRE(sfinae_check_##IsSomething<__VA_ARGS__>() == false)
 
 
 // Callable types 
 
 template <typename F, typename ...Args> 
-using CallableReturnVoid = std::is_same<std::invoke_result_t<F, Args...>, void>;
+using CallableReturnVoid = std::is_same<std::invoke_result<F, Args...>::type, void>;
 
 // template<typename T> 
 // using EmtpyArgCallable = std::enable_if_t< decltype() >
 
 
+DEFINE_SFINAE_CHECK_ONE_TARG(IsRandomAccessIterator);
+DEFINE_SFINAE_CHECK_ONE_TARG(IsForwardIterator);
+DEFINE_SFINAE_CHECK_TWO_TARG(IsSameOnDecay);
 
 
 
 TEST_CASE("Utils")
 {
+    SECTION("SFINAE shorthand") 
+    {
+
+        SECTION("iterator")
+        {
+            SFINAE_CHECK_IS_T(IsRandomAccessIterator, vector<int>::iterator);
+            SFINAE_CHECK_IS_F(IsRandomAccessIterator, list<int>::iterator);        
+            SFINAE_CHECK_IS_F(IsForwardIterator, list<int>::iterator);
+        }
+
+
+        SECTION("decay") 
+        {
+             SFINAE_CHECK_IS_T(IsSameOnDecay, int[2], int*);
+             SFINAE_CHECK_IS_T(IsSameOnDecay, const int&, int);
+             SFINAE_CHECK_IS_T(IsSameOnDecay, int&, int);
+        }
+    }
 
     
+
 
 
     SECTION("Enumerations")
