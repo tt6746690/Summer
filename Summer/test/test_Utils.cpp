@@ -12,6 +12,7 @@
 
 #include "Utils.h"
 #include "StrUtils.h"
+#include "Router.h"
 
 
 using namespace std;
@@ -42,18 +43,11 @@ using namespace Summer;
 #define SFINAE_CHECK_IS_F(IsSomething, ...)             REQUIRE(sfinae_check_##IsSomething<__VA_ARGS__>() == false)
 
 
-// Callable types 
-
-template <typename F, typename ...Args> 
-using CallableReturnVoid = std::is_same<std::invoke_result<F, Args...>::type, void>;
-
-// template<typename T> 
-// using EmtpyArgCallable = std::enable_if_t< decltype() >
-
-
+// Define SFINAE checks
 DEFINE_SFINAE_CHECK_ONE_TARG(IsRandomAccessIterator);
 DEFINE_SFINAE_CHECK_ONE_TARG(IsForwardIterator);
 DEFINE_SFINAE_CHECK_TWO_TARG(IsSameOnDecay);
+
 
 
 
@@ -75,6 +69,24 @@ TEST_CASE("Utils")
              SFINAE_CHECK_IS_T(IsSameOnDecay, int[2], int*);
              SFINAE_CHECK_IS_T(IsSameOnDecay, const int&, int);
              SFINAE_CHECK_IS_T(IsSameOnDecay, int&, int);
+        }
+
+        SECTION("is_callable_with")
+        {
+            auto add1 = [](int x) { return x + 1; };
+            REQUIRE(is_callable_with<int>(add1) == true);
+            REQUIRE(is_callable_with<std::ostream>(add1) == false);
+
+            auto h1 = [](const Context& ctx) { return; };
+            REQUIRE(is_callable_with<Context>(h1) == true);
+            REQUIRE(is_callable_with<Request>(h1) == false);
+            REQUIRE(is_callable_with<>(h1) == false);
+
+
+            auto h2 = []() { return 1; };
+            REQUIRE(is_callable_with<Context>(h2) == false);
+            REQUIRE(is_callable_with<>(h2) == true);
+
         }
     }
 
