@@ -45,18 +45,17 @@ using namespace Summer;
 
 
 
+
+template <typename F>
+using IsHandlerType = std::enable_if_t<callable_with<F, Context&>() || callable_with<F>()>;
+
+
 // Define SFINAE checks
 DEFINE_SFINAE_CHECK_ONE_TARG(IsRandomAccessIterator);
 DEFINE_SFINAE_CHECK_ONE_TARG(IsForwardIterator);
 DEFINE_SFINAE_CHECK_TWO_TARG(IsSameOnDecay);
 DEFINE_SFINAE_CHECK_ONE_TARG(IsHandlerType);
 
-// Define test functions outside of TEST_CASE
-auto IsHandleFunc1 = [](){ int x = 1; return x; };
-struct IsHandleFunc2 {
-    bool operator()(const Context&) { return 1; }
-};
-int IsHandleFunc3(const Context&) { return 1; }
 
 
 TEST_CASE("Utils")
@@ -123,9 +122,17 @@ TEST_CASE("Utils")
 
         SECTION("IsHandlerType")
         {
+
+            auto IsHandleFunc1 = [](){ int x = 1; return x; };
+            struct IsHandleFunc2 {
+                bool operator()(const Context&) { return 1; }
+            };
+            auto IsHandleFunc3 = [](Context& ) { return 1; };
+
             SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc1));
             SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc2()));
             SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc3));
+
         }
 
         SECTION("!IsHandlerType")

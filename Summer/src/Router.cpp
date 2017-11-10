@@ -12,30 +12,6 @@ std::ostream& operator<<(std::ostream& os, const Handler& handler)
 }
 
 
-
-void Router::handle(RequestMethod method, const std::string& path, HandlerType handler)
-{
-    auto &t = routing_tables[to_underlying_t(method)];
-    t.insert({path, handler});
-}
-
-
-template <typename RequestMethods>
-void Router::handle(RequestMethods methods, const std::string& path, const HandlerType& handler)
-{
-    for (const auto &method : methods) handle(method, path, handler);
-}
-
-void  Router::get(const std::string& path, const HandlerType& handler) { handle(RequestMethod::GET, path, handler); }
-void  Router::post(const std::string& path, const HandlerType& handler) { handle(RequestMethod::POST, path, handler); }
-void  Router::put(const std::string& path, const HandlerType& handler) { handle(RequestMethod::PUT, path, handler); }
-void  Router::use(const std::string& path, const HandlerType& handler)
-{
-    for(auto i = to_underlying_t(RequestMethod::GET); i != to_underlying_t(RequestMethod::UNDETERMINED); ++i)
-        handle(static_cast<RequestMethod>(i), path, handler);
-}
-
-
 auto Router::resolve(RequestMethod method, std::string& path) -> RouteType
 {
     auto &t = routing_tables[to_underlying_t(method)];

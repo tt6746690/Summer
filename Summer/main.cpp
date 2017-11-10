@@ -25,7 +25,7 @@ void start_server(int port){
         std::make_pair("127.0.0.2", port);
     auto app = std::make_unique<ServerType>(server_address);
 
-    app->router_.get("/r", Handler([](Context &ctx) {
+    app->router_.handle(RequestMethod::GET, "/r", [](Context &ctx) {
                        // url query parser
                        ctx.req_.query_ = Uri::make_query(ctx.req_.uri_.query_);
 
@@ -33,7 +33,7 @@ void start_server(int port){
                            {"query", ctx.query_}, {"param", ctx.param_},
                        };
                        std::cout << std::setw(4) << urlparse << std::endl;
-                     }));
+                     });
 
     std::cout << "app starts running on " << 
       app->host() << std::to_string(app->port()) << std::endl;

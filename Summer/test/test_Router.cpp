@@ -7,8 +7,7 @@
 #include "Router.h"
 #include "Constants.h"
 
-using std::cout;
-
+using namespace std;
 using namespace Summer;
 
 
@@ -24,7 +23,11 @@ TEST_CASE("Router")
 
     SECTION("handle") 
     {
-        r.handle2(RequestMethod::GET, "/home", [](){ return 1; });
+        r.handle(RequestMethod::GET, "/home",
+            [](){ cout << "lambda 1" << endl; },
+            [](){ cout << "lambda 2" << endl; });
+
+        cout << r << endl;
     }
 
 }

@@ -52,7 +52,9 @@
     "ios": "cpp",
     "thread": "cpp",
     "string_view": "cpp",
-    "__nullptr": "cpp"
+    "__nullptr": "cpp",
+    "istream": "cpp",
+    "ostream": "cpp"
   },
   "editor.formatOnSave": false,
   "editor.wordWrap": "off"

@@ -74,6 +74,34 @@ constexpr auto is_callable_with(F &&) -> callable_with<F, Args...> {
     return callable_with<F(Args...)>{};
 }
 
+//// SFINAE aliases
+
+// Iterator 
+
+template <typename It> 
+using IteratorCategory = typename std::iterator_traits<It>::iterator_category;
+
+template <typename It> 
+using SameAsRandomAccessIterator = std::is_same<IteratorCategory<It>, std::random_access_iterator_tag>;
+template <typename It> 
+using IsRandomAccessIterator = std::enable_if_t<SameAsRandomAccessIterator<It>::value>;
+
+template <typename It> 
+using SameAsForwardIterator = std::is_same<IteratorCategory<It>, std::forward_iterator_tag>;
+template <typename It> 
+using IsForwardIterator = std::enable_if_t<SameAsForwardIterator<It>::value>;
+
+// decay 
+
+// strips cv qualifier, function pointer and array pointer decay
+template <typename X, typename Y> 
+using SameOnDecay = std::is_same<std::decay_t<X>, std::decay_t<Y>>;
+
+template <typename X, typename Y> 
+using IsSameOnDecay = std::enable_if_t<SameOnDecay<X, Y>::value>;
+
+template <typename X, typename Y> 
+using IsNotSameOnDecay = std::enable_if_t<!SameOnDecay<X, Y>::value>;
 
 
 
