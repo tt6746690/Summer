@@ -1,14 +1,13 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include <cstddef>
+
 #include <iosfwd>
 #include <string>
-#include <typeinfo>
-#include <utility>
 #include <algorithm>
 #include <type_traits>
 
+#include "Traits.h"
 #include "Defines.h"
 
 namespace Summer
@@ -53,53 +52,6 @@ using IsSameOnDecay = std::enable_if_t<SameOnDecay<X, Y>::value>;
 
 template <typename X, typename Y> 
 using IsNotSameOnDecay = std::enable_if_t<!SameOnDecay<X, Y>::value>;
-
-
-// Composing predicates 
-
-template <template <typename ...> class... Preds>
-struct Compose {
-    template <typename T>
-    static constexpr auto eval() {
-        auto results = { Preds<T>::value ...};
-        auto result = true;
-        for(auto e: results) result &= e;
-        return result;
-    }
-};
-
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_all = (... && Ts<T>::value);
-
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_some = (... || Ts<T>::value);
-
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_none = (... && !Ts<T>::value);
-
-
-// Is callable with 
-
-struct is_callable_with_test
-{
-    template <typename F, typename... Args> 
-    static decltype(std::declval<F>()( std::declval<Args>()... ), std::true_type() )
-    f(int);
-
-    template <typename F, typename... Args> 
-    static std::false_type f(...);
-};
-
-template <typename F, typename... Args> 
-struct is_callable_with_impl : decltype( is_callable_with_test::f<F, Args...>(0) ) {};
-
-template <typename F, typename... Args>
-struct is_callable_with_impl<F(Args...)> : is_callable_with_impl<F, Args...> { };
-
-template <typename... Args, typename F>
-constexpr auto is_callable_with(F &&) -> is_callable_with_impl<F, Args...> {
-    return is_callable_with_impl<F(Args...)>{};
-}
 
 
 // Compile-time Integer Range

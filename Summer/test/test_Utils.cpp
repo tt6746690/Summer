@@ -13,6 +13,7 @@
 #include "Utils.h"
 #include "StrUtils.h"
 #include "Router.h"
+#include "Traits.h"
 
 
 using namespace std;
@@ -43,16 +44,48 @@ using namespace Summer;
 #define SFINAE_CHECK_IS_F(IsSomething, ...)             REQUIRE(sfinae_check_##IsSomething<__VA_ARGS__>() == false)
 
 
+
 // Define SFINAE checks
 DEFINE_SFINAE_CHECK_ONE_TARG(IsRandomAccessIterator);
 DEFINE_SFINAE_CHECK_ONE_TARG(IsForwardIterator);
 DEFINE_SFINAE_CHECK_TWO_TARG(IsSameOnDecay);
+DEFINE_SFINAE_CHECK_ONE_TARG(IsHandlerType);
 
-
+// Define test functions outside of TEST_CASE
+auto IsHandleFunc1 = [](){ int x = 1; return x; };
+struct IsHandleFunc2 {
+    bool operator()(const Context&) { return 1; }
+};
+int IsHandleFunc3(const Context&) { return 1; }
 
 
 TEST_CASE("Utils")
 {
+    SECTION("Traits")
+    {
+        SECTION("is_callable_with")
+        {
+            auto add1 = [](int x) { return x + 1; };
+            REQUIRE(is_callable_with<int>(add1) == true);
+            REQUIRE(is_callable_with<std::ostream>(add1) == false);
+
+            auto h1 = [](const Context& ctx) { return; };
+            REQUIRE(is_callable_with<Context>(h1) == true);
+            REQUIRE(is_callable_with<Context&>(h1) == true);
+            REQUIRE(is_callable_with<const Context&>(h1) == true);
+            REQUIRE(is_callable_with<Request>(h1) == false);
+            REQUIRE(is_callable_with<>(h1) == false);
+
+
+            auto h2 = []() { return 1; };
+            REQUIRE(is_callable_with<Context>(h2) == false);
+            REQUIRE(is_callable_with<>(h2) == true);
+
+            REQUIRE(callable_with<decltype(h2)>() == true);
+            REQUIRE(callable_with<decltype(h1)(Context)>() == true);
+        }
+    }
+
     SECTION("SFINAE shorthand") 
     {
 
@@ -63,30 +96,26 @@ TEST_CASE("Utils")
             SFINAE_CHECK_IS_F(IsForwardIterator, list<int>::iterator);
         }
 
-
         SECTION("decay") 
         {
-             SFINAE_CHECK_IS_T(IsSameOnDecay, int[2], int*);
-             SFINAE_CHECK_IS_T(IsSameOnDecay, const int&, int);
-             SFINAE_CHECK_IS_T(IsSameOnDecay, int&, int);
+            SFINAE_CHECK_IS_T(IsSameOnDecay, int[2], int*);
+            SFINAE_CHECK_IS_T(IsSameOnDecay, const int&, int);
+            SFINAE_CHECK_IS_T(IsSameOnDecay, int&, int);
         }
 
-        SECTION("is_callable_with")
+        SECTION("IsHandlerType")
         {
-            auto add1 = [](int x) { return x + 1; };
-            REQUIRE(is_callable_with<int>(add1) == true);
-            REQUIRE(is_callable_with<std::ostream>(add1) == false);
+            SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc1));
+            SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc2()));            
+            SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc3));
+        }
 
-            auto h1 = [](const Context& ctx) { return; };
-            REQUIRE(is_callable_with<Context>(h1) == true);
-            REQUIRE(is_callable_with<Request>(h1) == false);
-            REQUIRE(is_callable_with<>(h1) == false);
-
-
-            auto h2 = []() { return 1; };
-            REQUIRE(is_callable_with<Context>(h2) == false);
-            REQUIRE(is_callable_with<>(h2) == true);
-
+        SECTION("!IsHandlerType")
+        {
+            auto f1 = [](int x) { return x; };
+            auto f2 = [f1](Request req) { return 1; };
+            SFINAE_CHECK_IS_F(IsHandlerType, decltype(f1));
+            SFINAE_CHECK_IS_F(IsHandlerType, decltype(f2));
         }
     }
 

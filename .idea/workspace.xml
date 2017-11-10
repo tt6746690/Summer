@@ -13,7 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a608ba20-fa39-49ad-984f-c4aa3deedc50" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Summer/src/Router.cpp" afterPath="$PROJECT_DIR$/Summer/src/Router.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Summer/src/Router.h" afterPath="$PROJECT_DIR$/Summer/src/Router.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Summer/src/utilities/Utils.h" afterPath="$PROJECT_DIR$/Summer/src/utilities/Utils.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Summer/test/test_Router.cpp" afterPath="$PROJECT_DIR$/Summer/test/test_Router.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Summer/test/test_Utils.cpp" afterPath="$PROJECT_DIR$/Summer/test/test_Utils.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -29,14 +33,90 @@
     <favorites_list name="Summer" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="test_Utils.cpp" pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="test_Utils.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Summer/test/test_Utils.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="452">
-              <caret line="67" column="9" lean-forward="true" selection-start-line="67" selection-start-column="9" selection-end-line="67" selection-end-column="9" />
+            <state relative-caret-position="264">
+              <caret line="96" column="9" lean-forward="false" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
               <folding>
-                <element signature="e#0#20#0" expanded="true" />
+                <marker date="1510249650000" expanded="true" signature="2134:2187" ph="{...}" />
+                <marker date="1510249650000" expanded="true" signature="2258:5609" ph="{...}" />
+                <marker date="1510249650000" expanded="true" signature="5634:6874" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Traits.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Traits.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="516">
+              <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+              <folding>
+                <element signature="e#1074#1104#0" expanded="true" />
+                <element signature="e#1192#1222#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Router.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Summer/src/Router.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="531">
+              <caret line="58" column="14" lean-forward="false" selection-start-line="58" selection-start-column="14" selection-end-line="58" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Router.h" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Summer/src/Router.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="915">
+              <caret line="69" column="96" lean-forward="true" selection-start-line="69" selection-start-column="96" selection-end-line="69" selection-end-column="96" />
+              <folding>
+                <element signature="e#434#446#0" expanded="true" />
+                <element signature="e#548#560#0" expanded="true" />
+                <element signature="e#669#681#0" expanded="true" />
+                <element signature="e#3589#3605#0" expanded="true" />
+                <marker date="1510252158000" expanded="false" signature="2540:2565" ph="&lt;...Fs&gt;" />
+                <marker date="1510252158000" expanded="false" signature="2799:2862" ph="&lt;RequestMethods=std::vector&lt;RequestMethod&gt;&gt;" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Trie2.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Trie2.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5280">
+              <caret line="361" column="14" lean-forward="false" selection-start-line="361" selection-start-column="14" selection-end-line="361" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Utils.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Utils.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="24" column="14" lean-forward="false" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+              <folding>
+                <marker date="1510249591000" expanded="false" signature="1529:1548" ph="&lt;int...Ns&gt;" />
+                <marker date="1510249591000" expanded="false" signature="1629:1648" ph="&lt;int...Ns&gt;" />
+                <marker date="1510249591000" expanded="false" signature="1669:1718" ph="&lt;int Step,int Start,int End,int...Ns&gt;" />
+                <marker date="1510249591000" expanded="false" signature="1846:1886" ph="&lt;int Step,int Start,int...Ns&gt;" />
+                <marker date="1510249591000" expanded="false" signature="1969:2007" ph="&lt;int Start,int End,int Step&gt;" />
+                <marker date="1510249591000" expanded="false" signature="2071:2109" ph="&lt;int Start,int End,int Step&gt;" />
+                <marker date="1510249591000" expanded="false" signature="2361:2378" ph="&lt;int End&gt;" />
+                <marker date="1510249591000" expanded="false" signature="2510:2538" ph="&lt;int Start,int End&gt;" />
+                <marker date="1510249591000" expanded="false" signature="2697:2718" ph="&lt;T&gt;" />
+                <marker date="1510249591000" expanded="false" signature="2782:2803" ph="&lt;T&gt;" />
+                <marker date="1510249591000" expanded="false" signature="2869:2912" ph="&lt;T,=IsEnum&lt;T&gt;&gt;" />
+                <marker date="1510249591000" expanded="false" signature="3049:3092" ph="&lt;T,=IsEnum&lt;T&gt;&gt;" />
+                <marker date="1510249591000" expanded="false" signature="3437:3526" ph="&lt;A,T,=IsArray&lt;A&gt;,=IsEnum&lt;T&gt;&gt;" />
               </folding>
             </state>
           </provider>
@@ -65,7 +145,6 @@
         <option value="$PROJECT_DIR$/Summer/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/Summer/src/utilities/Codec.h" />
         <option value="$PROJECT_DIR$/Summer/src/Constants.h" />
-        <option value="$PROJECT_DIR$/Summer/src/Router.h" />
         <option value="$PROJECT_DIR$/Summer/src/utilities/StrUtils.cpp" />
         <option value="$PROJECT_DIR$/Summer/src/utilities/StrUtils.h" />
         <option value="$PROJECT_DIR$/Summer/src/utilities/Codec.cpp" />
@@ -83,8 +162,9 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/Summer/main.cpp" />
         <option value="$PROJECT_DIR$/Summer/src/Request.h" />
-        <option value="$PROJECT_DIR$/Summer/src/utilities/Utils.h" />
         <option value="$PROJECT_DIR$/Summer/test/test_Utils.cpp" />
+        <option value="$PROJECT_DIR$/Summer/src/utilities/Utils.h" />
+        <option value="$PROJECT_DIR$/Summer/src/Router.h" />
       </list>
     </option>
   </component>
@@ -96,9 +176,9 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="20" />
-    <option name="y" value="40" />
-    <option name="width" value="932" />
-    <option name="height" value="1020" />
+    <option name="y" value="41" />
+    <option name="width" value="2520" />
+    <option name="height" value="1380" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -451,22 +531,24 @@
       <workItem from="1509941381256" duration="10374000" />
       <workItem from="1509952200219" duration="264000" />
       <workItem from="1510204481231" duration="5143000" />
+      <workItem from="1510247273162" duration="4328000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20615000" />
+    <option name="totallyTimeSpent" value="24943000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="20" y="40" width="932" height="1020" extended-state="0" />
+    <frame x="20" y="41" width="2520" height="1380" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27752808" sideWeight="0.493994" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27966103" sideWeight="0.493994" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24461207" sideWeight="0.65397173" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36801243" sideWeight="0.61702985" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2823276" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22090517" sideWeight="0.60786515" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36801243" sideWeight="0.38297012" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22090517" sideWeight="0.39213485" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34937888" sideWeight="0.3724778" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13166486" sideWeight="0.506006" order="0" side_tool="true" content_ui="tabs" />
@@ -503,10 +585,24 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Summer/test/test_Utils.cpp">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1510249650000" expanded="true" signature="2134:2187" ph="{...}" />
+            <marker date="1510249650000" expanded="true" signature="2258:5609" ph="{...}" />
+            <marker date="1510249650000" expanded="true" signature="5634:6874" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Summer/test/test_Utils.cpp">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1815">
           <caret line="121" column="0" lean-forward="true" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
+            <marker date="1510249650000" expanded="true" signature="2134:2187" ph="{...}" />
+            <marker date="1510249650000" expanded="true" signature="2258:5609" ph="{...}" />
+            <marker date="1510249650000" expanded="true" signature="5634:6874" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -515,9 +611,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding>
-            <element signature="e#41#59#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -613,13 +707,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Trie2.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="361" column="14" lean-forward="false" selection-start-line="361" selection-start-column="14" selection-end-line="361" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Summer/src/Message.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -704,30 +791,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Summer/src/Router.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="58" column="14" lean-forward="false" selection-start-line="58" selection-start-column="14" selection-end-line="58" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Summer/src/Router.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="18" column="16" lean-forward="false" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Utils.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="53" column="47" lean-forward="true" selection-start-line="53" selection-start-column="47" selection-end-line="53" selection-end-column="47" />
-          <folding>
-            <element signature="e#41#59#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="231">
@@ -736,12 +799,78 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Trie2.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5280">
+          <caret line="361" column="14" lean-forward="false" selection-start-line="361" selection-start-column="14" selection-end-line="361" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Utils.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="24" column="14" lean-forward="false" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+          <folding>
+            <marker date="1510249591000" expanded="false" signature="1529:1548" ph="&lt;int...Ns&gt;" />
+            <marker date="1510249591000" expanded="false" signature="1629:1648" ph="&lt;int...Ns&gt;" />
+            <marker date="1510249591000" expanded="false" signature="1669:1718" ph="&lt;int Step,int Start,int End,int...Ns&gt;" />
+            <marker date="1510249591000" expanded="false" signature="1846:1886" ph="&lt;int Step,int Start,int...Ns&gt;" />
+            <marker date="1510249591000" expanded="false" signature="1969:2007" ph="&lt;int Start,int End,int Step&gt;" />
+            <marker date="1510249591000" expanded="false" signature="2071:2109" ph="&lt;int Start,int End,int Step&gt;" />
+            <marker date="1510249591000" expanded="false" signature="2361:2378" ph="&lt;int End&gt;" />
+            <marker date="1510249591000" expanded="false" signature="2510:2538" ph="&lt;int Start,int End&gt;" />
+            <marker date="1510249591000" expanded="false" signature="2697:2718" ph="&lt;T&gt;" />
+            <marker date="1510249591000" expanded="false" signature="2782:2803" ph="&lt;T&gt;" />
+            <marker date="1510249591000" expanded="false" signature="2869:2912" ph="&lt;T,=IsEnum&lt;T&gt;&gt;" />
+            <marker date="1510249591000" expanded="false" signature="3049:3092" ph="&lt;T,=IsEnum&lt;T&gt;&gt;" />
+            <marker date="1510249591000" expanded="false" signature="3437:3526" ph="&lt;A,T,=IsArray&lt;A&gt;,=IsEnum&lt;T&gt;&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Summer/test/test_Utils.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="452">
-          <caret line="67" column="9" lean-forward="true" selection-start-line="67" selection-start-column="9" selection-end-line="67" selection-end-column="9" />
+        <state relative-caret-position="264">
+          <caret line="96" column="9" lean-forward="false" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
+            <marker date="1510249650000" expanded="true" signature="2134:2187" ph="{...}" />
+            <marker date="1510249650000" expanded="true" signature="2258:5609" ph="{...}" />
+            <marker date="1510249650000" expanded="true" signature="5634:6874" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Traits.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="516">
+          <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding>
+            <element signature="e#1074#1104#0" expanded="true" />
+            <element signature="e#1192#1222#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Summer/src/Router.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="531">
+          <caret line="58" column="14" lean-forward="false" selection-start-line="58" selection-start-column="14" selection-end-line="58" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Summer/src/Router.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="915">
+          <caret line="69" column="96" lean-forward="true" selection-start-line="69" selection-start-column="96" selection-end-line="69" selection-end-column="96" />
+          <folding>
+            <element signature="e#434#446#0" expanded="true" />
+            <element signature="e#548#560#0" expanded="true" />
+            <element signature="e#669#681#0" expanded="true" />
+            <element signature="e#3589#3605#0" expanded="true" />
+            <marker date="1510252158000" expanded="false" signature="2540:2565" ph="&lt;...Fs&gt;" />
+            <marker date="1510252158000" expanded="false" signature="2799:2862" ph="&lt;RequestMethods=std::vector&lt;RequestMethod&gt;&gt;" />
           </folding>
         </state>
       </provider>

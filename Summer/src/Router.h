@@ -1,18 +1,19 @@
 #ifndef __ROUTER_H__
 #define __ROUTER_H__
 
-
 #include <functional>
 #include <iosfwd>
 #include <string>
 #include <vector>
 
-
+#include "Traits.h"
 #include "Request.h"
 #include "Response.h"
 #include "Trie2.h"
 
 namespace Summer {
+
+
 
 struct Context
 {
@@ -25,15 +26,35 @@ struct Context
 };
 
 
+
+template <typename F>
+using IsHandlerType = std::enable_if_t<callable_with<F, Context>() || callable_with<F>()>;
+
+template <typename F>
+using IsHandlerWithNoArgs = std::enable_if_t<!callable_with<F, Context>() || callable_with<F>()>;
+
+template <typename F>
+using IsHandlerWithContext = std::enable_if_t<callable_with<F(Context)>::value>;  // most vexing parse !
+
+
+
 // A wrapper around a callable that consumes Context
 static int handler_id_counter = 0;
 class Handler 
 {
 public:
     using HandlerType = std::function<void(Context &)>;
+    explicit Handler(HandlerType f) : handler_(f), handler_id_(handler_id_counter++) {}
 
-    explicit Handler() : handler_(nullptr), handler_id_(handler_id_counter++) { } 
-    explicit Handler(HandlerType h) : handler_(h), handler_id_(handler_id_counter++) { }
+
+//    template <typename F, typename = IsHandlerWithNoArgs<F>>
+//    explicit Handler(F f) : handler_id_(handler_id_counter++) { handler_ = [](const Context&) { f(); }; }
+//
+//
+//    template <typename... Fs>
+//    explicit Handler(Fs... fs)
+//
+
 protected:
     HandlerType     handler_;
     int             handler_id_;
@@ -62,6 +83,8 @@ public:
 public:
     explicit Router() : routing_tables(method_count) {}
 
+    template <typename... Fs> 
+    void handle2(RequestMethod method, const std::string& path, Fs... handlers);
     // Register handler for provided (path, handler_callable)
     void handle(RequestMethod method, const std::string& path, HandlerType handler);
     template <typename RequestMethods = std::vector<RequestMethod>>
@@ -81,6 +104,22 @@ public:
 public:
     RoutingTables routing_tables;
 };
+
+
+
+template <typename... Fs> 
+void Router::handle2(RequestMethod method, const std::string& path, Fs... handlers)
+{
+    auto &t = routing_tables[to_underlying_t(method)];
+    std::array<HandlerType, sizeof...(Fs)> Handlers = {handlers...};
+
+    for(const auto& h : Handlers)
+    {
+        t.insert({path, h});
+    }
+}
+
+
 
 
 } // namespace Summer
