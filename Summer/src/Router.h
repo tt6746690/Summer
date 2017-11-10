@@ -17,13 +17,14 @@ namespace Summer {
 
 struct Context
 {
-  Request &req_;
-  Response &res_;
-  ssumap &param_;
-  ssumap &query_;
-
-  Context(Request &req, Response &res) : req_(req), res_(res), param_(req.param_), query_(req.query_){};
+    using MapType = std::unordered_map<std::string, std::string>;
+    Request &req_;
+    Response &res_;
+    MapType &param_;
+    MapType &query_;
+    Context(Request &req, Response &res) : req_(req), res_(res), param_(req.param_), query_(req.query_){};
 };
+
 
 
 
@@ -37,14 +38,21 @@ template <typename F>
 using IsHandlerWithContext = std::enable_if_t<callable_with<F(Context)>::value>;  // most vexing parse !
 
 
-
 // A wrapper around a callable that consumes Context
 static int handler_id_counter = 0;
 class Handler 
 {
 public:
     using HandlerType = std::function<void(Context &)>;
-    explicit Handler(HandlerType f) : handler_(f), handler_id_(handler_id_counter++) {}
+    using HandlersType = std::vector<HandlerType>; 
+
+    // explicit Handler(HandlerType f) : handler_(f), handler_id_(handler_id_counter++) {}
+
+    template <typename... Fs>
+    explicit Handler(Fs... f) : handler_id_(handler_id_counter++) {
+
+        // std::array<HandlerType, sizeof...(Fs)> Handlers = {f...};    
+    }
 
 
 //    template <typename F, typename = IsHandlerWithNoArgs<F>>
@@ -56,12 +64,12 @@ public:
 //
 
 protected:
-    HandlerType     handler_;
+    HandlersType     handler_;
     int             handler_id_;
 public:
     // Invoke on context 
-    void operator()(Context& ctx) { handler_(ctx); }
-    operator bool() const { return handler_ != nullptr; }
+//    void operator()(Context& ctx) { handler_(ctx); }
+//    operator bool() const { return handler_ != nullptr; }
     friend inline bool operator< (const Handler& lhs, const Handler& rhs) { return lhs.handler_id_ < rhs.handler_id_; }
     friend inline bool operator<=(const Handler &rhs, const Handler &lhs) { return !(lhs < rhs); }
     friend inline bool operator> (const Handler &rhs, const Handler &lhs) { return  (lhs < rhs); }
@@ -110,13 +118,16 @@ public:
 template <typename... Fs> 
 void Router::handle2(RequestMethod method, const std::string& path, Fs... handlers)
 {
-    auto &t = routing_tables[to_underlying_t(method)];
-    std::array<HandlerType, sizeof...(Fs)> Handlers = {handlers...};
 
-    for(const auto& h : Handlers)
-    {
-        t.insert({path, h});
-    }
+    Handler{handlers...};
+
+    // auto &t = routing_tables[to_underlying_t(method)];
+    // std::array<HandlerType, sizeof...(Fs)> Handlers = {handlers...};
+
+    // for(const auto& h : Handlers)
+    // {
+    //     t.insert({path, h});
+    // }
 }
 
 

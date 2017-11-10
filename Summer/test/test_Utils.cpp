@@ -3,8 +3,8 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include <cstring> 
-#include <string> 
+#include <cstring>
+#include <string>
 #include <iostream>
 #include <list>
 #include <vector>
@@ -63,6 +63,24 @@ TEST_CASE("Utils")
 {
     SECTION("Traits")
     {
+        SECTION("satisfies_{all, some, none}")
+        {
+            REQUIRE(satisfies_all<true, true, true> == true);
+            REQUIRE(satisfies_all<true, true, false> == false);
+            REQUIRE(satisfies_all<false, true, true> == false);
+            REQUIRE(satisfies_all<false, false, false> == false);
+
+            REQUIRE(satisfies_some<true, true, true> == true);
+            REQUIRE(satisfies_some<true, true, false> == true);
+            REQUIRE(satisfies_some<false, true, true> == true);
+            REQUIRE(satisfies_some<false, false, false> == false);
+
+            REQUIRE(satisfies_none<true, true, true> == false);
+            REQUIRE(satisfies_none<true, true, false> == false);
+            REQUIRE(satisfies_none<false, true, true> == false);
+            REQUIRE(satisfies_none<false, false, false> == true);
+        }
+
         SECTION("is_callable_with")
         {
             auto add1 = [](int x) { return x + 1; };
@@ -86,17 +104,17 @@ TEST_CASE("Utils")
         }
     }
 
-    SECTION("SFINAE shorthand") 
+    SECTION("SFINAE shorthand")
     {
 
         SECTION("iterator")
         {
             SFINAE_CHECK_IS_T(IsRandomAccessIterator, vector<int>::iterator);
-            SFINAE_CHECK_IS_F(IsRandomAccessIterator, list<int>::iterator);        
+            SFINAE_CHECK_IS_F(IsRandomAccessIterator, list<int>::iterator);
             SFINAE_CHECK_IS_F(IsForwardIterator, list<int>::iterator);
         }
 
-        SECTION("decay") 
+        SECTION("decay")
         {
             SFINAE_CHECK_IS_T(IsSameOnDecay, int[2], int*);
             SFINAE_CHECK_IS_T(IsSameOnDecay, const int&, int);
@@ -106,7 +124,7 @@ TEST_CASE("Utils")
         SECTION("IsHandlerType")
         {
             SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc1));
-            SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc2()));            
+            SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc2()));
             SFINAE_CHECK_IS_T(IsHandlerType, decltype(IsHandleFunc3));
         }
 
@@ -119,7 +137,7 @@ TEST_CASE("Utils")
         }
     }
 
-    
+
 
 
 
@@ -180,7 +198,7 @@ TEST_CASE("Utils")
 TEST_CASE("StrUtils")
 {
     SECTION("common prefix") {
-        
+
         auto check_common_prefix = [](const char* x, const char* y, const char* expect) {
 
             auto cpp_x = string(x, strlen(x));
@@ -189,7 +207,7 @@ TEST_CASE("StrUtils")
 
             auto cpp_prefix = find_common_prefix(cpp_x, cpp_y);
             REQUIRE(cpp_prefix == cpp_expect);
-            
+
             auto prefix = find_common_prefix(x, y);
             REQUIRE(!strcmp(prefix.c_str(), expect));
 
@@ -216,5 +234,5 @@ TEST_CASE("StrUtils")
         check_split("12345", 0, make_pair("", "12345"));
         check_split("12345", 5, make_pair("12345", ""));
     }
-        
+
 }

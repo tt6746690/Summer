@@ -9,28 +9,46 @@
 namespace Summer {
 
 
+// conjunctions and disjunctions on constexpr bools
 
-// Composing predicates 
 
-template <template <typename ...> class... Preds>
-struct Compose {
-    template <typename T>
-    static constexpr auto eval() {
-        auto results = { Preds<T>::value ...};
-        auto result = true;
-        for(auto e: results) result &= e;
-        return result;
-    }
-};
+template <bool Head, bool... Tail>
+struct satisfies_all_impl : std::integral_constant<bool, Head && satisfies_all_impl<Tail...>() > {};
 
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_all = (... && Ts<T>::value);
+template <bool T>
+struct satisfies_all_impl<T> : std::integral_constant<bool, T> {};
 
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_some = (... || Ts<T>::value);
+template <bool... Ts>
+using SatisfiesAll = satisfies_all_impl<Ts...>;
 
-template <typename T, template <typename> class... Ts>
-inline constexpr auto satisfies_none = (... && !Ts<T>::value);
+template <bool... Ts>
+constexpr bool satisfies_all = SatisfiesAll<Ts...>();
+
+
+template <bool Head, bool... Tail>
+struct satisfies_some_impl : std::integral_constant<bool, Head || satisfies_some_impl<Tail...>() > {};
+
+template <bool T>
+struct satisfies_some_impl<T> : std::integral_constant<bool, T> {};
+
+template <bool... Ts>
+using SatisfiesSome = satisfies_some_impl<Ts...>;
+
+template <bool... Ts>
+constexpr bool satisfies_some = SatisfiesSome<Ts...>();
+
+template <bool Head, bool... Tail>
+struct satisfies_none_impl : std::integral_constant<bool, !Head && satisfies_none_impl<Tail...>() > {};
+
+template <bool T>
+struct satisfies_none_impl<T> : std::integral_constant<bool, !T> {};
+
+template <bool... Ts>
+using SatisfiesNone = satisfies_none_impl<Ts...>;
+
+template <bool... Ts>
+constexpr bool satisfies_none = SatisfiesNone<Ts...>();
+
 
 
 // Is callable with 

@@ -131,7 +131,7 @@ void Connection<SocketType>::read() {
 
               auto handlers = router_.resolve(request_);
               for (auto &handler : handlers) {
-                handler(context_);
+//                handler(context_);
               }
 
               write();
