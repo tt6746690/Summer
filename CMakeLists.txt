@@ -3,7 +3,7 @@
 
 # version and project name
 cmake_minimum_required(VERSION 2.6)
-project(Summer)
+project(Theros)
 
 # compiler
 set(CMAKE_CXX_COMPILER_ID "Clang")
@@ -34,7 +34,7 @@ set(HEADER_ONLY_INCLUDE
     ../lib/json/src)
 
 # add subdirectories 
-set(Http_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Summer)
+set(Http_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Theros)
 set(Lib_SOURCE_DIR ${PROJECT_SOURCE_DIR}/lib)
 add_subdirectory(${Http_SOURCE_DIR})
 add_subdirectory(${Lib_SOURCE_DIR})

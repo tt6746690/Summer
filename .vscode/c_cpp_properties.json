@@ -13,9 +13,8 @@
                 "/usr/local/include",
                 "/usr/include",
                 "${workspaceRoot}/lib/Catch/single_include",
-                "${workspaceRoot}/Http/src",
                 "${workspaceRoot}/lib/asio-1.10.6/include",
-                "${workspaceRoot}/Summer/src/utilities"
+                "${workspaceRoot}/Theros/src/utilities"
             ],
             "defines": [],
             "browse": {
