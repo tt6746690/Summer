@@ -27,7 +27,7 @@ void start_server(int port){
 
     app->router_.handle(RequestMethod::GET, "/r", [](Context &ctx) {
                        // url query parser
-                       ctx.req_.query_ = Uri::make_query(ctx.req_.uri_.query_);
+                       ctx.req_.query_ = make_query(ctx.req_.uri_.query_);
 
                        JsonType urlparse = {
                            {"query", ctx.query_}, {"param", ctx.param_},

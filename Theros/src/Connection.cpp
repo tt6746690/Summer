@@ -2,6 +2,7 @@
 #include "asio/ssl.hpp"
 
 #include "Connection.h"
+#include "Url.h"
 #include <iostream>
 
 #pragma clang diagnostic push
@@ -127,7 +128,7 @@ void Connection<SocketType>::read() {
               response_.status_code(StatusCode::OK);
               response_.version_major_ = request_.version_major_;
               response_.version_minor_ = request_.version_minor_;
-              request_.query_ = Uri::make_query(request_.uri_.query_);
+              request_.query_ = make_query(request_.uri_.query_);
 
               auto handlers = router_.resolve(request_);
               for (auto &handler : handlers) {

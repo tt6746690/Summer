@@ -10,28 +10,6 @@ using namespace Theros;
 TEST_CASE("uri encoding/decoding", "[Uri]")
 {
 
-    std::string url;
-
-    SECTION("ctohex")
-    {
-        REQUIRE(ctohex('#') == "23");
-        REQUIRE(ctohex('%') == "25");
-    }
-
-    SECTION("encoding")
-    {
-        url = u8"François";
-        REQUIRE(Uri::urlencode(url) == "Fran%C3%A7ois");
-    }
-
-    SECTION("decoding")
-    {
-        url = "a%20space";
-        REQUIRE(Uri::urldecode(url) == u8"a space");
-
-        url = "Fran%C3%A7ois";
-        REQUIRE(Uri::urldecode(url) == u8"François");
-    }
 
     SECTION("instance decoding")
     {
@@ -49,12 +27,4 @@ TEST_CASE("uri encoding/decoding", "[Uri]")
         REQUIRE(uri.abs_path_ == "/wiki/百分号编码");
     }
 
-    SECTION("make query")
-    {
-        auto query = Uri::make_query("foo=bar&a=d,s,d");
-        REQUIRE_NOTHROW(query.at("foo"));
-        REQUIRE(query["foo"] == "bar");
-        REQUIRE_NOTHROW(query.at("a"));
-        REQUIRE(query["a"] == "d,s,d");
-    }
 }

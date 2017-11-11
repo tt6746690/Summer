@@ -14,9 +14,11 @@
 
 #include "src/middlewares/Cors.h"
 
+#include "src/utilities/Traits.h"
+#include "src/utilities/Utils.h"
 #include "src/utilities/StrUtils.h"
 #include "src/utilities/Codec.h"
-#include "src/utilities/Utils.h"
+#include "src/utilities/Url.h"
 #include "src/utilities/Trie2.h"
 
 #endif // __THEROS_HEADER_INCLUDE__

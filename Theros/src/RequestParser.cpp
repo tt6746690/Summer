@@ -4,6 +4,7 @@
 #include "RequestParser.h"
 #include "Request.h"
 #include "Uri.h" // uri.consume
+#include "Url.h"
 
 namespace Theros {
 

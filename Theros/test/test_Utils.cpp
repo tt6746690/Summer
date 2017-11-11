@@ -1,17 +1,11 @@
 #include "catch.hpp"
-#include <utility>
-#include <stdexcept>
-#include <type_traits>
 
-#include <cstring>
-#include <string>
 #include <iostream>
 #include <list>
-#include <vector>
-#include <functional>
 
 #include "Utils.h"
 #include "StrUtils.h"
+#include "Url.h"
 #include "Router.h"
 #include "Traits.h"
 
@@ -200,6 +194,40 @@ TEST_CASE("Utils")
 
     }
 }
+
+
+TEST_CASE("url encoding/decoding") {
+
+    std::string url;
+
+    SECTION("ctohex") {
+        REQUIRE(ctohex('#') == "23");
+        REQUIRE(ctohex('%') == "25");
+    }
+
+    SECTION("encoding") {
+        url = u8"François";
+        REQUIRE(urlencode(url) == "Fran%C3%A7ois");
+    }
+
+    SECTION("decoding") {
+        url = "a%20space";
+        REQUIRE(urldecode(url) == u8"a space");
+
+        url = "Fran%C3%A7ois";
+        REQUIRE(urldecode(url) == u8"François");
+    }
+
+
+    SECTION("make query") {
+        auto query = make_query("foo=bar&a=d,s,d");
+        REQUIRE_NOTHROW(query.at("foo"));
+        REQUIRE(query["foo"] == "bar");
+        REQUIRE_NOTHROW(query.at("a"));
+        REQUIRE(query["a"] == "d,s,d");
+    }
+}
+
 
 
 TEST_CASE("StrUtils")
