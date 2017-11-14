@@ -60,9 +60,9 @@ class TrieNode
     EdgesT                        edges;
 
   public:
-    explicit TrieNode() : parent(nullptr), value() {}
-    explicit TrieNode(PointerT parent) : parent(parent) {}    
-    explicit TrieNode(PointerT parent, T value) : parent(parent), value(value) {}
+    TrieNode() : parent(nullptr), value() {}
+    TrieNode(PointerT parent) : parent(parent) {}
+    TrieNode(PointerT parent, T value) : parent(parent), value(value) {}
 
     void sort_edges() { std::sort(edges.begin(), edges.end()); }
 
@@ -84,6 +84,7 @@ class TrieNode
     template<typename X, typename Y>
     friend std::ostream& operator<<(std::ostream& os, const TrieNode<X, Y>& node);
 };
+
 
 template <typename T, typename CharT>
 bool operator<(const TrieNode<T, CharT> &rhs, const TrieNode<T, CharT> &lhs)

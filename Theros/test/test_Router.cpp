@@ -1,15 +1,19 @@
 #include "catch.hpp"
 #include <utility>
 #include <stdexcept>
-#include <iostream> 
+#include <iostream>
+#include <iterator>
+#include <algorithm>
 
+#include "Constants.h"
 #include "Trie2.h"
 #include "Router.h"
-#include "Constants.h"
 
 using namespace std;
 using namespace Theros;
 
+#define GET RequestMethod::GET
+#define POST RequestMethod::POST
 
 TEST_CASE("Router") 
 {
@@ -19,16 +23,55 @@ TEST_CASE("Router")
     Context ctx(req, res);
 
     Router r; 
-    REQUIRE(r.routing_tables.size() == method_count);
+
+    SECTION("initialization")
+    {
+        REQUIRE(r.routing_tables.size() == method_count);
+        for(auto& rt : r.routing_tables) {
+            REQUIRE(rt.size() == 0);
+        }
+    }
+
 
     SECTION("handle") 
     {
-        r.handle(RequestMethod::GET, "/home",
-            [](){ cout << "lambda 1" << endl; },
-            [](){ cout << "lambda 2" << endl; });
+        r.handle(GET, "/home",
+                 [](){ cout << "handler 1, lambda 1" << endl; },
+                 [](){ cout << "handler 1, lambda 2" << endl; });
+        r.get("/home/index.html",
+              [](){ cout << "handler 2, lambda 1" << endl; });
+        r.get("/hello",
+              [](){ cout << "handler 3, lambda 1" << endl; });
 
-        cout << r << endl;
+        REQUIRE(r.table(GET).size() == 3);
+
+        SECTION("resolve")
+        {
+            auto test_resolve = [&r](RequestMethod method, const string& path, vector<int> expected_ids)
+            {
+                auto handles = r.resolve(method, path);
+
+                vector<int> handles_ids;
+                transform(handles.begin(), handles.end(), back_inserter(handles_ids),
+                    [](auto h){ return h.id(); });
+                REQUIRE(handles.size() == expected_ids.size());
+                REQUIRE(handles_ids == expected_ids);
+            };
+
+            // good paths
+            test_resolve(GET, "/home", {1});
+            test_resolve(GET, "/home/index.html", {1, 2});
+            test_resolve(GET, "/hello", {3});
+
+            // bad paths
+            test_resolve(GET, "", {});
+            test_resolve(GET, "/", {});
+            test_resolve(GET, "/h", {});
+            test_resolve(GET, "/home/", {});
+        }
     }
+
+
 
 }
 
@@ -49,26 +92,6 @@ TEST_CASE("Router")
 //     SECTION("handle")
 //     {
 
-//         r.handle(RequestMethod::GET, "/home", Handler([](Context &ctx) {
-//                      std::cout << "Handler: GET/home" << std::endl;
-//                  }));
-
-//         auto home_foo_handle = Handler([](Context &ctx) {
-//             std::cout << "Handler: GET/home/foo" << std::endl;
-//         });
-//         r.handle(RequestMethod::GET, "/home/foo", home_foo_handle);
-
-//         auto home_bar_handle = Handler([](Context &ctx) {
-//             std::cout << "Handler: GET/home/bar" << std::endl;
-//         });
-//         r.handle(RequestMethod::GET, "/home/bar", home_bar_handle);
-
-//         SECTION("Simple handle")
-//         {
-//             REQUIRE(r.routes_[0].size() == 3);
-//             REQUIRE(home_foo_handle.handler_id_ == 2);
-//             REQUIRE(home_bar_handle.handler_id_ == 3);
-//         }
 
 //         SECTION("handles multiple methods")
 //         {

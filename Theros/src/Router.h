@@ -32,12 +32,12 @@ template <typename... Fs>
 constexpr bool are_handlers_v = satisfies_all< is_handler_v<Fs>... >;
 
 // A wrapper around a callable that consumes Context
-static int handler_id_counter = 0;
 class Handler 
 {
 public:
     using HandleFunc    = std::function<void(Context &)>;
     using ValueT        = std::vector<HandleFunc>;
+    static int handler_id_counter;
 protected:
     ValueT          handler_;
     int             handler_id_;
@@ -54,6 +54,8 @@ public:
     template <typename F>
     inline HandleFunc wrap(F f, std::true_type) { return [f](Context& ctx){ f(ctx); }; };
 
+    // Gets id of handler
+    inline int id() const { return handler_id_; };
 public:
     // Invoke on context 
     void operator()(Context& ctx) { for(auto& f: handler_) { f(ctx);} }
@@ -74,6 +76,8 @@ public:
     using RoutingTable      = Trie<HandlerType>;
     using RoutingTables     = std::vector<RoutingTable>;
 public:
+    RoutingTables routing_tables;
+public:
     explicit Router() : routing_tables(method_count) {}
 
     // Register handler for provided (path, handler_callable)
@@ -91,12 +95,13 @@ public:
     void  use(const std::string& path, Fs&&... fs);
 
     // Looks up path to yield a sequence of handlers, empty if no matching path found
-    RouteType resolve(RequestMethod method, std::string& path);
-    RouteType resolve(Request& request);
+    RouteType resolve(RequestMethod method, const std::string& path);
+    RouteType resolve(const Request& request);
+
+    // Gets backend table for storing routes
+    RoutingTable& table(RequestMethod method);
 
     friend std::ostream& operator<<(std::ostream& os, const Router& r);
-public:
-    RoutingTables routing_tables;
 };
 
 

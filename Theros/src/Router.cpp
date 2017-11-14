@@ -6,18 +6,21 @@
 namespace Theros {
 
 
+int Handler::handler_id_counter = 0;
+
 std::ostream& operator<<(std::ostream& os, const Handler& handler)
 {
     return os << "(" << handler.handler_id_ << ")";
 }
 
 
-auto Router::resolve(RequestMethod method, std::string& path) -> RouteType
+auto Router::resolve(RequestMethod method, const std::string& path) -> RouteType
 {
-    auto &t = routing_tables[to_underlying_t(method)];
-    auto found = t.find(path);
+    RoutingTable& t = routing_tables[to_underlying_t(method)];
+    Trie::IteratorT found = t.find(path);
 
     RouteType route;
+
     while(found != t.end()) {
         route.push_back(*found);
         --found;
@@ -28,14 +31,19 @@ auto Router::resolve(RequestMethod method, std::string& path) -> RouteType
 }
 
 
-auto Router::resolve(Request& request) -> RouteType
+auto Router::resolve(const Request& request) -> RouteType
 {
     auto method = request.method_;
     auto path = request.uri_.abs_path_;
-    auto &table = routing_tables[to_underlying_t(method)];
-
-    return {};
+    return resolve(method, path);
 }
+
+
+auto Router::table(RequestMethod method) -> RoutingTable&
+{
+    return routing_tables[to_underlying_t(method)];
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Router& r)
 {
