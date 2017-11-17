@@ -288,4 +288,38 @@ TEST_CASE("StrUtils")
         check_split("12345", 5, make_pair("12345", ""));
     }
 
+
+    SECTION("find_route_prefix_unstrict")
+    {
+        using kvpairs = std::vector<std::pair<std::string, std::string>>;
+        auto test_find_route_prefix_unstrict = [](const char* x,
+                                                  const char* y,
+                                                  const string& expected_prefix,
+                                                  kvpairs expected_kvs) {
+            kvpairs kvs;
+            std::string prefix = find_route_prefix_unstrict(x, y, kvs);
+            REQUIRE(kvs == expected_kvs);
+            REQUIRE(prefix == expected_prefix);
+        };
+
+
+        // normal prefix matching
+        test_find_route_prefix_unstrict("", "", "", {});
+        test_find_route_prefix_unstrict("abc", "abcde", "abc", {});
+        test_find_route_prefix_unstrict("apple", "banana", "", {});
+        test_find_route_prefix_unstrict("coffeecup", "coffee", "coffee", {});
+
+        // route path containing placeholders
+        test_find_route_prefix_unstrict("/textbook/<author>", "/textbook/Shakespear",
+                                        "/textbook/<author>", {{"author", "Shakespear"}});
+        test_find_route_prefix_unstrict("/<id>/data", "/123456/data",
+                                        "/<id>/data", {{"id", "123456"}});
+        test_find_route_prefix_unstrict("/<a>/<b>/<c>", "/1/2/3",
+                                        "/<a>/<b>/<c>", {{"a", "1"}, {"b", "2"}, {"c", "3"}});
+        test_find_route_prefix_unstrict("<a>", "1",
+                                        "<a>", {{"a", "1"}});
+        test_find_route_prefix_unstrict("<a>", "1/thingelse",
+                                        "<a>", {{"a", "1"}});
+    }
+
 }

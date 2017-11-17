@@ -35,87 +35,10 @@ auto make_trie = [](const ssumap& insertee) {
 };
 
 
-// Using / as deliminators, find common prefix of x, the route path, and y, the query path
-// /< name >[/] matches with any string /value/ -- (name, value) pair is stored in kvs, common prefix returned
-// Assumptions: y cannot contain '<'; x has balanced brackets
-std::string find_route_prefix_unstrict(const char* x,   // route
-                                       const char* y,   // query path 
-                                       std::vector<std::pair<std::string, std::string>>& kvs) 
-{
-    if (*x == '\0' || *y == '\0') return "";
-
-    const char* prefix = x;
-    const char* name;
-    const char* value;
-    
-    while(*x != '\0' && *y != '\0') 
-    {
-        if (*x == *y) { ++x; ++y; continue; }
-        
-        if (*x == '<') {
-            name  = x+1;
-            value = y++;
-
-            while (*x != '>') { ++x; }
-            while (*y != '\0' && *y != '/') { ++y; }    // check for end of c_string
-
-            std::string k(name, x-name);
-            std::string v(value, y-value);
-            kvs.push_back({k, v});
-
-            // x == '>' and y == '/', advance x by 1
-            ++x;
-        } else {
-            return std::string(prefix, x-prefix);
-        }
-    }
-
-    // cases when either one is exhausted
-    if(*x ^ *y)
-        return std::string(prefix, x-prefix);
-
-    size_t prefix_len =
-            (x-prefix+1 > strlen(prefix)) ? strlen(prefix) : x-prefix+1;
-    return std::string(prefix, prefix_len);
-} 
-
-
 
 TEST_CASE("prefix pattern ", "Trie2")
 {
 
-    SECTION("find_route_prefix_unstrict")
-    {
-        using kvpairs = std::vector<std::pair<std::string, std::string>>;
-        auto test_find_route_prefix_unstrict = [](const char* x,
-                                                  const char* y,
-                                                  const string& expected_prefix,
-                                                  kvpairs expected_kvs) {
-            kvpairs kvs;
-            std::string prefix = find_route_prefix_unstrict(x, y, kvs);
-            REQUIRE(kvs == expected_kvs);
-            REQUIRE(prefix == expected_prefix);
-        };
-
-
-        // normal prefix matching
-        test_find_route_prefix_unstrict("", "", "", {});
-        test_find_route_prefix_unstrict("abc", "abcde", "abc", {});
-        test_find_route_prefix_unstrict("apple", "banana", "", {});
-        test_find_route_prefix_unstrict("coffeecup", "coffee", "coffee", {});
-
-        // route path containing placeholders
-        test_find_route_prefix_unstrict("/textbook/<author>", "/textbook/Shakespear",
-                                        "/textbook/<author>", {{"author", "Shakespear"}});
-        test_find_route_prefix_unstrict("/<id>/data", "/123456/data",
-                                        "/<id>/data", {{"id", "123456"}});
-        test_find_route_prefix_unstrict("/<a>/<b>/<c>", "/1/2/3",
-                                        "/<a>/<b>/<c>", {{"a", "1"}, {"b", "2"}, {"c", "3"}});
-        test_find_route_prefix_unstrict("<a>", "1",
-                                        "<a>", {{"a", "1"}});
-        test_find_route_prefix_unstrict("<a>", "1/thingelse",
-                                        "<a>", {{"a", "1"}});
-    }
 
     SECTION("routing_example")
     {

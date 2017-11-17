@@ -21,6 +21,7 @@ auto lex_cmp = [](const std::basic_string<CharT>& x, const std::basic_string<Cha
 };
 
 
+
 template <typename NodeType>
 struct TrieNodeEdge
 {

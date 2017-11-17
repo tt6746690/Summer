@@ -75,6 +75,47 @@ bool has_balanced_bracket(const char* s, int len)
     return stack.size() == 0;
 }
 
+std::string find_route_prefix_unstrict(const char* x,
+                                       const char* y,
+                                       std::vector<std::pair<std::string, std::string>>& kvs) 
+{
+    if (*x == '\0' || *y == '\0') return "";
+
+    const char* prefix = x;
+    const char* name;
+    const char* value;
+    
+    while(*x != '\0' && *y != '\0') 
+    {
+        if (*x == *y) { ++x; ++y; continue; }
+        
+        if (*x == '<') {
+            name  = x+1;
+            value = y++;
+
+            while (*x != '>') { ++x; }
+            while (*y != '\0' && *y != '/') { ++y; }    // check for end of c_string
+
+            std::string k(name, x-name);
+            std::string v(value, y-value);
+            kvs.push_back({k, v});
+
+            // x == '>' and y == '/', advance x by 1
+            ++x;
+        } else {
+            return std::string(prefix, x-prefix);
+        }
+    }
+
+    // cases when either one is exhausted
+    if(*x ^ *y)
+        return std::string(prefix, x-prefix);
+
+    size_t prefix_len =
+            (x-prefix+1 > strlen(prefix)) ? strlen(prefix) : x-prefix+1;
+    return std::string(prefix, prefix_len);
+} 
+
 
 
 
