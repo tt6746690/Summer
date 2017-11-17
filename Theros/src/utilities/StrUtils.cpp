@@ -6,8 +6,7 @@
 namespace Theros {
 
 
-std::string 
-find_common_prefix(const std::string& x, const std::string& y)
+std::string  find_common_prefix(const std::string& x, const std::string& y)
 {
     typename std::string::const_iterator x_it = x.begin(),  y_it = y.begin();
     while(x_it != x.end() && y_it != y.end()) {
@@ -17,8 +16,7 @@ find_common_prefix(const std::string& x, const std::string& y)
     return std::string(x.begin(), x_it);
 }
 
-size_t
-find_common_prefix_len(const char* x, const char* y) 
+size_t find_common_prefix_len(const char* x, const char* y) 
 {
     const char *begin = x;
     while(*x != '\0' && *y != '\0') {
@@ -29,23 +27,21 @@ find_common_prefix_len(const char* x, const char* y)
 }
 
 
-std::string 
-find_common_prefix(const char* x, const char *y)
+std::string find_common_prefix(const char* x, const char *y)
 {
     size_t len = find_common_prefix_len(x, y);
     return std::string(x, len);
 }
 
 
-void 
-split_in_half(const std::string& s, size_t at, std::string& first, std::string& second)
+void split_in_half(const std::string& s, size_t at, std::string& first, std::string& second)
 {
     first = s.substr(0, at);
     second = s.substr(at, s.size());
 }
 
-std::pair<std::string, std::string> 
-split(std::string& s, char delim)
+
+std::pair<std::string, std::string>  split(std::string& s, char delim)
 {
   auto pos = s.find(delim);
   return pos != std::string::npos ? std::make_pair(s.substr(0, pos), s.substr(pos + 1)) : std::make_pair("", "");
@@ -75,13 +71,19 @@ bool has_balanced_bracket(const char* s, int len)
     return stack.size() == 0;
 }
 
-std::string find_route_prefix_unstrict(const char* x,
-                                       const char* y,
-                                       std::vector<std::pair<std::string, std::string>>& kvs) 
+void find_route_prefix_unstrict(const char* x,
+                                const char* y,
+                                int&        x_prefix_len,
+                                int&        y_prefix_len,
+                                std::vector<std::pair<std::string, std::string>>& kvs) 
 {
-    if (*x == '\0' || *y == '\0') return "";
+    if (*x == '\0' || *y == '\0') {
+        x_prefix_len = 0; y_prefix_len = 0;
+        return;
+    }
 
     const char* prefix = x;
+    const char* query = y;
     const char* name;
     const char* value;
     
@@ -103,18 +105,33 @@ std::string find_route_prefix_unstrict(const char* x,
             // x == '>' and y == '/', advance x by 1
             ++x;
         } else {
-            return std::string(prefix, x-prefix);
+            x_prefix_len = x - prefix;
+            y_prefix_len = y - query;
+            return;
         }
     }
 
     // cases when either one is exhausted
-    if(*x ^ *y)
-        return std::string(prefix, x-prefix);
+    if(*x ^ *y) {
+        x_prefix_len = x - prefix;
+        y_prefix_len = y - query;
+        return;
+    }
 
-    size_t prefix_len =
-            (x-prefix+1 > strlen(prefix)) ? strlen(prefix) : x-prefix+1;
-    return std::string(prefix, prefix_len);
+    x_prefix_len = (x-prefix+1 > strlen(prefix)) ? strlen(prefix) : x-prefix+1;
+    y_prefix_len = y - query;
 } 
+
+
+
+void find_route_prefix_unstrict(std::string x,
+                                std::string y, 
+                                int&        x_prefix_len,
+                                int&        y_prefix_len,
+                                std::vector<std::pair<std::string, std::string>>& kvs) 
+{
+    return find_route_prefix_unstrict(x.c_str(), y.c_str(), x_prefix_len, y_prefix_len, kvs);
+}
 
 
 

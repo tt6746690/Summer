@@ -2,6 +2,7 @@
 #define __STRUTILS_H__
 
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace Theros {
@@ -20,12 +21,24 @@ auto split(std::string& s, char delim) -> std::pair<std::string, std::string>;
 bool has_balanced_bracket(const char* s, int len);
 
 
-// Using / as deliminators, find common prefix of x, the route path, and y, the query path
-// /< name >[/] matches with any string /value/ -- (name, value) pair is stored in kvs, common prefix returned
-// Assumptions: y cannot contain '<'; x has balanced brackets
-std::string find_route_prefix_unstrict(const char* x,   // route
-                                       const char* y,   // query path 
-                                       std::vector<std::pair<std::string, std::string>>& kvs);
+/**
+ *  Find common prefix of x, the route path, and y, the query path
+ *      -- Use / as deliminators, /< name >[/] matches with any string /value/
+ *      -- (name, value) pair is stored in kvs, 
+ *      -- x_prefix_len and y_prefix_len is modified to represent length of string consumed during prefix match
+ *  Assumptions: y cannot contain '<'; x has balanced brackets
+ */
+void find_route_prefix_unstrict(const char* x,              // route
+                                const char* y,              // query path 
+                                int&        x_prefix_len,   // length of x consumed during matching
+                                int&        y_prefix_len,   // length of y consumed during matching
+                                std::vector<std::pair<std::string, std::string>>& kvs);
+
+void find_route_prefix_unstrict(std::string& x,             // route
+                                std::string& y,             // query path 
+                                int&        x_prefix_len,   // length of x consumed during matching
+                                int&        y_prefix_len,   // length of y consumed during matching
+                                std::vector<std::pair<std::string, std::string>>& kvs);
 
 
 

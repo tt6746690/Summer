@@ -73,6 +73,10 @@ class TrieNode
 
     // Finds a range of edge (as idx to edges) with longest matching prefix as query string 
     std::pair<EdgesIterator, EdgesIterator> find_lmp_edges(KeyT query);
+    // Finds a range of edges as before, but instead use unstrict prefix matching,
+    // kvs is populated based on rules given in `find_route_prefix_unstrict`
+    std::pair<EdgesIterator, EdgesIterator> find_lmp_edges(KeyT query, 
+                                                           std::vector<std::pair<std::string, std::string>>& kvs);
 
   public:
     friend bool operator< (const TrieNode &rhs, const TrieNode &lhs);
@@ -146,6 +150,45 @@ auto TrieNode<T, CharT>::find_lmp_edges(KeyT query) -> std::pair<EdgesIterator, 
     upper_bound = (upper_bound >= lower_bound) ? upper_bound : static_cast<int>(edges.size());
     return std::make_pair(edges.begin() + lower_bound, edges.begin() + upper_bound);
 }
+
+template<typename T, typename CharT>
+auto TrieNode<T, CharT>::find_lmp_edges(KeyT query, 
+                                        std::vector<std::pair<std::string, std::string>>& kvs) 
+                                        -> std::pair<EdgesIterator, EdgesIterator>
+{
+    return {};
+    // sort_edges();
+
+    // size_t longest_prefix_len = 0;
+    // int lower_bound = -1, upper_bound = -1;
+
+    // for(int i = 0; i < edges.size(); ++i) {
+    //     const auto& edge = edges[i];
+    //     size_t len = find_route_prefix_unstrict(edge.prefix.c_str(), query.c_str(), kvs);
+
+    //     if(len == query.size() && len == edge.prefix.size()) 
+    //         return std::make_pair(edges.begin() + i, edges.begin() + i);
+    //     // Found an edge with a longer prefix, start of a range of possibly equally long prefixes 
+    //     if(len > longest_prefix_len) {
+    //         longest_prefix_len = len;
+    //         lower_bound = i;
+    //     }         
+    //     // [lower_bound, i) holds a prefix match
+    //     if(len < longest_prefix_len) {
+    //         upper_bound = i;
+    //         break;
+    //     }
+    // }
+
+    // if((lower_bound == -1 && upper_bound == -1) || 
+    //     (query.size() > longest_prefix_len && edges[lower_bound].prefix.size() > longest_prefix_len))
+    //     return std::make_pair(edges.end(), edges.end());
+
+    // upper_bound = (upper_bound >= lower_bound) ? upper_bound : static_cast<int>(edges.size());
+    // return std::make_pair(edges.begin() + lower_bound, edges.begin() + upper_bound);
+}
+
+
 
 
 
