@@ -17,7 +17,7 @@ std::ostream& operator<<(std::ostream& os, const Handler& handler)
 auto Router::resolve(RequestMethod method, const std::string& path) -> RouteType
 {
     RoutingTable& t = routing_tables[to_underlying_t(method)];
-    Trie::IteratorT found = t.find(path);
+    auto found = t.find(path);
 
     RouteType route;
 

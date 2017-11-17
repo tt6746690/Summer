@@ -223,7 +223,11 @@ public:
     auto end()   const -> ConstIteratorT { return IteratorT(end_node()); }
 
     auto insert(const ValueT& value) -> IteratorT;
+    // Find exact matching node given key 
     auto find(const KeyT& key) -> IteratorT;
+    // find exact matching node given key, also update stored_key as prefix stored in trie
+    //      if end() is returned, stored_key value is undefined
+//    auto find(const KeyT& key, std::string& stored_key) -> IteratorT;
 
 public:
     template <typename T1, typename T2, typename T3, typename T4>
@@ -286,7 +290,7 @@ auto Trie<T, CharT, Compare, Allocator>::insert(const ValueT& value) -> Iterator
                 // prefix exhausted, go down next level
                 kstr += match_len;
                 cur_node = lower_bound->child;
-                continue;
+                 continue;
             } else {
                 // query exhausted, transfer range of node to newly added node's edges                                        
                 ASSERT(match_len == strlen(kstr));
@@ -324,14 +328,59 @@ auto  Trie<T, CharT, Compare, Allocator>::find(const KeyT& key) -> IteratorT
             EdgesIterator& lower_bound = range.first;
             size_t match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
             if(match_len == lower_bound->prefix.size()) {
+                // prefix exhausted, go down next level
                 kstr += match_len;
                 cur_node = lower_bound->child;
                 continue;
-            } else return end();
+            } else {
+                // query exhausted, exact match not found                               
+                return end();
+            };
         }
     }
     return end();
 }
+
+//template<typename T, typename CharT, typename Compare, typename Allocator>
+//auto Trie<T, CharT, Compare, Allocator>::find(const KeyT& key, std::string& stored_key) -> IteratorT
+//{
+    // stored_key.clear();
+    // NodePointerT cur_node = root_node();
+    // const CharT* kstr = key.data();
+
+    // while(cur_node != nullptr) 
+    // {
+    //     auto range = cur_node->find_lmp_edges(kstr);
+    //     const EdgesT& edges = cur_node->edges;
+        
+    //     EdgesIterator& lower_bound = range.first;
+    //     size_t match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
+    //     stored_key.append(kstr, match_len);
+
+    //     if(range.first == range.second) {
+            
+    //         if(range.first == edges.end()) {
+    //             // No prefix match, or neither prefix/query exhausted
+    //             return end();
+    //         } else {
+    //             // Exact match, return iterator to matching node
+    //             return IteratorT((range.first)->child);
+    //         }
+    //     } else {
+    //         if(match_len == lower_bound->prefix.size()) {
+    //             // prefix exhausted, go down next level
+    //             kstr += match_len;
+    //             cur_node = lower_bound->child;
+    //             continue;
+    //         } else {
+    //             // query exhausted, exact match not found                               
+    //             return end()
+    //         };
+    //     }
+    // }
+//    return end();
+//}
+
 
 
 

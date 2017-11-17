@@ -14,11 +14,12 @@
   <component name="ChangeListManager">
     <list default="true" id="a608ba20-fa39-49ad-984f-c4aa3deedc50" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.vscode/settings.json" afterPath="$PROJECT_DIR$/.vscode/settings.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/Router.cpp" afterPath="$PROJECT_DIR$/Theros/src/Router.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/Router.h" afterPath="$PROJECT_DIR$/Theros/src/Router.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/utilities/StrUtils.cpp" afterPath="$PROJECT_DIR$/Theros/src/utilities/StrUtils.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/utilities/StrUtils.h" afterPath="$PROJECT_DIR$/Theros/src/utilities/StrUtils.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/utilities/Trie2.h" afterPath="$PROJECT_DIR$/Theros/src/utilities/Trie2.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/test/test_Router.cpp" afterPath="$PROJECT_DIR$/Theros/test/test_Router.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/test/test_Trie2.cpp" afterPath="$PROJECT_DIR$/Theros/test/test_Trie2.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/test/test_Utils.cpp" afterPath="$PROJECT_DIR$/Theros/test/test_Utils.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,8 +40,8 @@
           <file leaf-file-name="test_Router.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Theros/test/test_Router.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="357">
-                  <caret line="56" column="63" lean-forward="true" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+                <state relative-caret-position="710">
+                  <caret line="56" column="63" lean-forward="false" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
                   <folding>
                     <element signature="e#0#20#0" expanded="true" />
                   </folding>
@@ -51,7 +52,7 @@
           <file leaf-file-name="Constants.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Theros/src/Constants.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="230">
+                <state relative-caret-position="570">
                   <caret line="38" column="24" lean-forward="false" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="24" />
                   <folding />
                 </state>
@@ -73,7 +74,7 @@
           <file leaf-file-name="Url.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Theros/src/utilities/Url.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="560">
+                <state relative-caret-position="1350">
                   <caret line="90" column="22" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
                   <folding>
                     <element signature="e#0#17#0" expanded="true" />
@@ -85,39 +86,84 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="Router.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Theros/src/Router.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="234">
-                  <caret line="33" column="26" lean-forward="false" selection-start-line="33" selection-start-column="26" selection-end-line="33" selection-end-column="26" />
+                <state relative-caret-position="284">
+                  <caret line="19" column="30" lean-forward="false" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
                   <folding>
-                    <marker date="1510644710000" expanded="true" signature="93:1224" ph="{...}" />
-                    <marker date="1510644710000" expanded="true" signature="341:347" ph="{...}" />
-                    <marker date="1510644710000" expanded="true" signature="900:912" ph="{...}" />
-                    <marker date="1510644710000" expanded="true" signature="975:1219" ph="{...}" />
-                    <marker date="1510644710000" expanded="true" signature="1225:1938" ph="//..." />
+                    <element signature="e#0#34#0" expanded="true" />
+                    <marker date="1510894335000" expanded="true" signature="341:347" ph="{...}" />
+                    <marker date="1510894335000" expanded="true" signature="889:901" ph="{...}" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Router.h" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Router.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Theros/src/Router.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="333">
-                  <caret line="98" column="28" lean-forward="false" selection-start-line="98" selection-start-column="28" selection-end-line="98" selection-end-column="28" />
+                <state relative-caret-position="151">
+                  <caret line="89" column="29" lean-forward="false" selection-start-line="89" selection-start-column="29" selection-end-line="89" selection-end-column="29" />
                   <folding>
                     <element signature="e#43#64#0" expanded="true" />
-                    <marker date="1510644402000" expanded="false" signature="2668:2693" ph="&lt;...Fs&gt;" />
-                    <marker date="1510644402000" expanded="false" signature="2819:2844" ph="&lt;...Fs&gt;" />
-                    <marker date="1510644402000" expanded="false" signature="2902:2927" ph="&lt;...Fs&gt;" />
-                    <marker date="1510644402000" expanded="false" signature="2984:3009" ph="&lt;...Fs&gt;" />
-                    <marker date="1510644402000" expanded="false" signature="3067:3092" ph="&lt;...Fs&gt;" />
-                    <marker date="1510644402000" expanded="false" signature="3914:3939" ph="&lt;...Fs&gt;" />
-                    <marker date="1510644402000" expanded="false" signature="4059:4084" ph="&lt;...Fs&gt;" />
-                    <marker date="1510644402000" expanded="false" signature="4204:4229" ph="&lt;...Fs&gt;" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Trie2.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Theros/src/utilities/Trie2.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1177">
+                  <caret line="380" column="14" lean-forward="false" selection-start-line="380" selection-start-column="14" selection-end-line="380" selection-end-column="14" />
+                  <folding>
+                    <marker date="1510894269000" expanded="false" signature="12908:12982" ph="&lt;T,CharT,Compare,Allocator&gt;" />
+                    <marker date="1510894269000" expanded="true" signature="13088:14398" ph="{...}" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="test_Trie2.cpp" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Theros/test/test_Trie2.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="265">
+                  <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#0#20#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="catch.hpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/lib/Catch/single_include/catch.hpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="15">
+                  <caret line="9024" column="0" lean-forward="false" selection-start-line="9024" selection-start-column="0" selection-end-line="9024" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="vector" pinned="false" current-in-tab="false">
+            <entry file="file:///Library/Developer/CommandLineTools/usr/include/c++/v1/vector">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="176">
+                  <caret line="1680" column="0" lean-forward="false" selection-start-line="1680" selection-start-column="0" selection-end-line="1680" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="algorithm" pinned="false" current-in-tab="false">
+            <entry file="file:///Library/Developer/CommandLineTools/usr/include/c++/v1/algorithm">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="171">
+                  <caret line="1869" column="0" lean-forward="false" selection-start-line="1869" selection-start-column="0" selection-end-line="1869" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -125,7 +171,7 @@
           <file leaf-file-name="Request.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Theros/src/Request.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="120">
+                <state relative-caret-position="225">
                   <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
                   <folding />
                 </state>
@@ -138,7 +184,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>NodeT</find>
       <find>child_value</find>
       <find>scheme</find>
       <find>pos</find>
@@ -168,6 +213,7 @@
       <find>s</find>
       <find>make_query</find>
       <find>s_uri</find>
+      <find>start</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -220,10 +266,11 @@
         <option value="$PROJECT_DIR$/Theros/theros.h" />
         <option value="$PROJECT_DIR$/Theros/src/RequestParser.cpp" />
         <option value="$PROJECT_DIR$/Theros/src/utilities/Url.cpp" />
-        <option value="$PROJECT_DIR$/Theros/src/utilities/Trie2.h" />
         <option value="$PROJECT_DIR$/Theros/test/test_Router.cpp" />
-        <option value="$PROJECT_DIR$/Theros/src/Router.cpp" />
         <option value="$PROJECT_DIR$/Theros/src/Router.h" />
+        <option value="$PROJECT_DIR$/Theros/src/utilities/Trie2.h" />
+        <option value="$PROJECT_DIR$/Theros/src/Router.cpp" />
+        <option value="$PROJECT_DIR$/Theros/test/test_Trie2.cpp" />
       </list>
     </option>
   </component>
@@ -582,11 +629,12 @@
       <workItem from="1510381722383" duration="1239000" />
       <workItem from="1510382987564" duration="2798000" />
       <workItem from="1510640073505" duration="3963000" />
+      <workItem from="1510892542780" duration="7611000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44142000" />
+    <option name="totallyTimeSpent" value="51753000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -603,14 +651,14 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14635473" sideWeight="0.493994" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33405173" sideWeight="0.7487479" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2349138" sideWeight="0.7487479" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2808642" sideWeight="0.4966611" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27314815" sideWeight="0.55676126" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27262932" sideWeight="0.44323874" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27262932" sideWeight="0.44323874" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39978448" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13166486" sideWeight="0.506006" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297162" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -624,13 +672,13 @@
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33405173" sideWeight="0.7487479" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33405173" sideWeight="0.7487479" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2808642" sideWeight="0.4966611" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27314815" sideWeight="0.55676126" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27262932" sideWeight="0.44323874" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27262932" sideWeight="0.44323874" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14635473" sideWeight="0.493994" order="1" side_tool="false" content_ui="combo" />
@@ -658,14 +706,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="9" />
+      <option name="time" value="18" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Summer/src/middlewares/Cors.h" />
-    <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Trie2.h" />
-    <entry file="file://$PROJECT_DIR$/Summer/src/utilities/Traits.h" />
     <entry file="file://$PROJECT_DIR$/Summer/src/Router.cpp" />
     <entry file="file://$PROJECT_DIR$/Summer/test/test_Utils.cpp" />
     <entry file="file://$PROJECT_DIR$/Summer/test/test_Server.cpp" />
@@ -700,7 +745,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-852">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -739,9 +783,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -749,16 +790,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#20#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Theros/test/test_Trie2.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="18" lean-forward="true" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
           <folding>
             <element signature="e#0#20#0" expanded="false" />
           </folding>
@@ -786,7 +817,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -802,9 +832,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="287">
           <caret line="31" column="1" lean-forward="true" selection-start-line="31" selection-start-column="1" selection-end-line="31" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#20#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -868,7 +895,7 @@
         <state relative-caret-position="1425">
           <caret line="95" column="53" lean-forward="false" selection-start-line="95" selection-start-column="53" selection-end-line="95" selection-end-column="53" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#0#20#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -884,9 +911,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" column="9" lean-forward="false" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
-          <folding>
-            <element signature="e#37#54#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -914,7 +938,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="23" lean-forward="false" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -931,7 +954,7 @@
         <state relative-caret-position="242">
           <caret line="130" column="32" lean-forward="false" selection-start-line="130" selection-start-column="32" selection-end-line="130" selection-end-column="32" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -940,7 +963,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -956,7 +978,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Theros/src/utilities/Url.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
+        <state relative-caret-position="1350">
           <caret line="90" column="22" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
@@ -964,52 +986,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Theros/src/utilities/Trie2.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="130" column="28" lean-forward="false" selection-start-line="130" selection-start-column="28" selection-end-line="130" selection-end-column="28" />
-          <folding>
-            <element signature="e#3117#3145#0" expanded="false" />
-            <element signature="e#3429#3457#0" expanded="false" />
-            <element signature="e#3608#3636#0" expanded="false" />
-            <element signature="e#3828#3856#0" expanded="false" />
-            <element signature="e#5132#5160#0" expanded="false" />
-            <element signature="e#6369#6534#0" expanded="false" />
-            <element signature="e#8700#8752#0" expanded="false" />
-            <element signature="e#8853#8919#0" expanded="false" />
-            <marker date="1510642175000" expanded="false" signature="9435:9509" ph="&lt;T,CharT,Compare,Allocator&gt;" />
-            <marker date="1510642175000" expanded="false" signature="11554:11628" ph="&lt;T,CharT,Compare,Allocator&gt;" />
-            <marker date="1510642175000" expanded="false" signature="12459:12487" ph="&lt;NodeType&gt;" />
-            <marker date="1510642175000" expanded="false" signature="12625:12662" ph="&lt;T,CharT&gt;" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Theros/src/Constants.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
+        <state relative-caret-position="570">
           <caret line="38" column="24" lean-forward="false" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Theros/src/Router.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="33" column="26" lean-forward="false" selection-start-line="33" selection-start-column="26" selection-end-line="33" selection-end-column="26" />
-          <folding>
-            <marker date="1510644710000" expanded="true" signature="93:1224" ph="{...}" />
-            <marker date="1510644710000" expanded="true" signature="341:347" ph="{...}" />
-            <marker date="1510644710000" expanded="true" signature="900:912" ph="{...}" />
-            <marker date="1510644710000" expanded="true" signature="975:1219" ph="{...}" />
-            <marker date="1510644710000" expanded="true" signature="1225:1938" ph="//..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Theros/src/Request.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
+        <state relative-caret-position="225">
           <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
           <folding />
         </state>
@@ -1017,26 +1004,75 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Theros/src/Router.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="98" column="28" lean-forward="false" selection-start-line="98" selection-start-column="28" selection-end-line="98" selection-end-column="28" />
+        <state relative-caret-position="151">
+          <caret line="89" column="29" lean-forward="false" selection-start-line="89" selection-start-column="29" selection-end-line="89" selection-end-column="29" />
           <folding>
             <element signature="e#43#64#0" expanded="true" />
-            <marker date="1510644402000" expanded="false" signature="2668:2693" ph="&lt;...Fs&gt;" />
-            <marker date="1510644402000" expanded="false" signature="2819:2844" ph="&lt;...Fs&gt;" />
-            <marker date="1510644402000" expanded="false" signature="2902:2927" ph="&lt;...Fs&gt;" />
-            <marker date="1510644402000" expanded="false" signature="2984:3009" ph="&lt;...Fs&gt;" />
-            <marker date="1510644402000" expanded="false" signature="3067:3092" ph="&lt;...Fs&gt;" />
-            <marker date="1510644402000" expanded="false" signature="3914:3939" ph="&lt;...Fs&gt;" />
-            <marker date="1510644402000" expanded="false" signature="4059:4084" ph="&lt;...Fs&gt;" />
-            <marker date="1510644402000" expanded="false" signature="4204:4229" ph="&lt;...Fs&gt;" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Theros/test/test_Router.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="56" column="63" lean-forward="true" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+        <state relative-caret-position="710">
+          <caret line="56" column="63" lean-forward="false" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/src/utilities/Trie2.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1177">
+          <caret line="380" column="14" lean-forward="false" selection-start-line="380" selection-start-column="14" selection-end-line="380" selection-end-column="14" />
+          <folding>
+            <marker date="1510894269000" expanded="false" signature="12908:12982" ph="&lt;T,CharT,Compare,Allocator&gt;" />
+            <marker date="1510894269000" expanded="true" signature="13088:14398" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/src/Router.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="19" column="30" lean-forward="false" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+            <marker date="1510894335000" expanded="true" signature="341:347" ph="{...}" />
+            <marker date="1510894335000" expanded="true" signature="889:901" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Developer/CommandLineTools/usr/include/c++/v1/algorithm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="1869" column="0" lean-forward="false" selection-start-line="1869" selection-start-column="0" selection-end-line="1869" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Developer/CommandLineTools/usr/include/c++/v1/vector">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="1680" column="0" lean-forward="false" selection-start-line="1680" selection-start-column="0" selection-end-line="1680" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Catch/single_include/catch.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="9024" column="0" lean-forward="false" selection-start-line="9024" selection-start-column="0" selection-end-line="9024" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/test/test_Trie2.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>

@@ -232,6 +232,24 @@ TEST_CASE("url encoding/decoding") {
 
 TEST_CASE("StrUtils")
 {
+    SECTION("has balanced brackets")
+    {
+        auto test_balanced = [](const char* s, bool is_balanced){
+            bool r = has_balanced_bracket(s, (int)strlen(s));
+            REQUIRE(r == is_balanced);
+        };
+
+        test_balanced("{}", true);
+        test_balanced("[]", true);
+        test_balanced("<>", true);
+        test_balanced("[{}]", true);
+        test_balanced(" <{  }> ", true);
+        test_balanced("{", false);
+        test_balanced("<< >]", false);
+        test_balanced("<[>]", false);
+    }
+
+
     SECTION("common prefix") {
 
         auto check_common_prefix = [](const char* x, const char* y, const char* expect) {

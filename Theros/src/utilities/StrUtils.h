@@ -16,6 +16,10 @@ std::string find_common_prefix(const std::string& x, const std::string& y);
 void split_in_half(const std::string& s, size_t at, std::string& first, std::string& second);
 auto split(std::string& s, char delim) -> std::pair<std::string, std::string>;
 
+// returns true if brackets <>, {}, [] are balanced and false otherwise 
+bool has_balanced_bracket(const char* s, int len);
+
+
 // compile time operations
 constexpr bool c_streq(const char* x, const char* y) 
 { 
@@ -28,6 +32,8 @@ constexpr size_t c_strlen(const char *s)
     if(s) { while(*s++) ++len; }
     return len;
 }
+
+
 
 
 } // namespace Theros

@@ -52,6 +52,29 @@ split(std::string& s, char delim)
 }
 
 
+bool has_balanced_bracket(const char* s, int len) 
+{
+    std::vector<char> stack;
+
+    for(int i = 0; i < len; ++i) {
+        switch (s[i]) {
+            case '<': stack.push_back('>'); break;
+            case '{': stack.push_back('}'); break;
+            case '[': stack.push_back(']'); break;
+            case '>':
+            case '}':
+            case ']': {
+                if (stack.back() != s[i])
+                    return false;
+                else
+                    stack.erase(stack.end() - 1);
+            }
+            default: break;
+        }
+    }
+    return stack.size() == 0;
+}
+
 
 
 
