@@ -1,5 +1,5 @@
-#ifndef __TRIE2_H__
-#define __TRIE2_H__
+#ifndef __TRIE_H__
+#define __TRIE_H__
 
 #include <memory>
 #include <string>
@@ -475,4 +475,4 @@ std::ostream& operator<<(std::ostream& os, const Trie<T, CharT, Compare, Allocat
 
 
 } // namespace Theros
-#endif // __TRIE2_H__
+#endif // __TRIE_H__

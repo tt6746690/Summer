@@ -18,7 +18,7 @@ file(GLOB SOURCE_FILES
     "./src/*.h"
     "./src/*.cpp"
     "./src/middlewares/*.h"    
-    "./src/middlewares/*.cpp"   
+    "./src/middlewares/*.cpp"
     "./src/utilities/*.h"
     "./src/utilities/*.cpp" 
 )
@@ -31,6 +31,7 @@ add_executable(server main.cpp ${SOURCE_FILES})
 file(GLOB TEST_FILES
     "./test/*.cpp"
 )
+
 
 add_executable(testing main-test.cpp  ${TEST_FILES} ${SOURCE_FILES})
 

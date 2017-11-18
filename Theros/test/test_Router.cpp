@@ -6,7 +6,7 @@
 #include <algorithm>
 
 #include "Constants.h"
-#include "Trie2.h"
+#include "Trie.h"
 #include "Router.h"
 
 using namespace std;

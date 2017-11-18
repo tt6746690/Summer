@@ -9,7 +9,7 @@
 #include "Traits.h"
 #include "Request.h"
 #include "Response.h"
-#include "Trie2.h"
+#include "Trie.h"
 
 namespace Theros {
 

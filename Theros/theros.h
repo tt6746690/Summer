@@ -19,6 +19,6 @@
 #include "src/utilities/StrUtils.h"
 #include "src/utilities/Codec.h"
 #include "src/utilities/Url.h"
-#include "src/utilities/Trie2.h"
+#include "src/utilities/Trie.h"
 
 #endif // __THEROS_HEADER_INCLUDE__

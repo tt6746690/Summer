@@ -2,247 +2,340 @@
 #include <utility>
 #include <stdexcept>
 
+#include <cstring>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <ostream>
+
+#include "Utils.h"
 #include "Trie.h"
 
+using namespace std;
 using namespace Theros;
 
+using ssumap = unordered_map<string, int>;
 
-TEST_CASE("TrieNode", "[Trie]")
+
+auto make_trie = [](const ssumap& insertee) {
+    auto t = Trie<int>();
+    for(const auto& e : insertee) {
+        t.insert({ e.first, e.second });
+    }
+    return t;
+};
+
+TEST_CASE("TrieNode") 
 {
-    Trie<std::string>::TrieNode n{};
 
-    REQUIRE(n.data_ == "");
-    REQUIRE(n.parent_ == nullptr);
-    REQUIRE(n.child_.size() == 0);
+    SECTION("operator<<") {
+
+        auto edge = TrieNodeEdge<TrieNode<int, char>>();
+        // cout << edge;
+
+        auto node = TrieNode<int, char>();
+        node.add_edge("awt", 123);
+        node.add_edge("wtf", 123);
+        node.add_edge("asf", 123);        
+        // cout << node;
+    }
+
+    SECTION("add_edge + find_lmp_edges") {
+
+        struct lmp_expect {
+            string query;
+            int lower_bound;
+            int upper_bound;
+        };
+        using spvec = vector<lmp_expect>;
+
+        
+        auto test_find_lmp = [](ssumap edges, spvec query_result) {
+            auto node = TrieNode<int, char>();
+            for(const auto& e : edges) {
+                node.add_edge(e.first, e.second);
+            }
+            REQUIRE(node.edges.size() == edges.size());
+
+            for(auto& e: query_result) {
+                {
+                    auto range = node.find_lmp_edges(e.query);
+                    REQUIRE(range.first <= range.second);
+                    REQUIRE(range.first == node.edges.begin() + e.lower_bound);
+                    REQUIRE(range.second == node.edges.begin() + e.upper_bound);
+                }
+
+                {
+                    std::vector<std::pair<std::string, std::string>> kvs;
+                    auto range = node.find_lmp_edges(e.query, kvs);
+                    REQUIRE(range.first <= range.second);
+                    REQUIRE(range.first - node.edges.begin() == e.lower_bound);
+                    REQUIRE(range.second - node.edges.begin() == e.upper_bound);
+                }
+            }
+        };
+    
+        test_find_lmp({
+            {"preMACH", 0},
+            {"preUNIX", 1},
+            {"preXEN", 2},
+            {"preXodic", 3},
+            {"zoo1", 4},
+            {"zoo2", 5}
+        }, {
+            // exact match, prefix and query exhausted : return (i, i), throw error
+            {"preUNIX", 1, 1},
+            {"zoo1", 4, 4},
+            // no prefix match : return (end, end), add new node
+            {"hyper", 6, 6},
+            {"beast", 6, 6},
+            // prefix not exhausted and query not exhausted during match, return (end, end), add new node
+            {"preN", 6, 6},
+            {"preXYZ", 6, 6},
+            // 1 prefix match, prefix exhausted, go down next level
+            {"preUNIXpost", 1, 2},
+            // 1 prefix match, query exhausted, add new node, transfer range of node to newly added node's edges
+            {"preM", 0, 1},
+            {"preXo", 3, 4},
+            // >1 prefix matches, add new node, transfer range of node to newly added node's edges
+            {"pre", 0, 4},
+            {"preX", 2, 4},
+            {"zoo", 4, 6}
+        });
+
+        struct lmp_expect2 {
+            string query;
+            int lower_bound;
+            int upper_bound;
+            vector<pair<string, string>> kvs;
+        };
+        using spvec2 = vector<lmp_expect2>;
+
+
+        // tests kvs are extracted properly 
+        auto test_find_lmp2 = [](ssumap edges, spvec2 query_result) {
+            auto node = TrieNode<int, char>();
+            for(const auto& e : edges) {
+                node.add_edge(e.first, e.second);
+            }
+            REQUIRE(node.edges.size() == edges.size());
+
+            for(auto& e: query_result) 
+            {
+                std::vector<std::pair<std::string, std::string>> kvs;
+                kvs.clear();
+                auto range = node.find_lmp_edges(e.query, kvs);
+//
+//                cout <<  e.query << " " << e.lower_bound << " - " << e.upper_bound << endl;
+//                cout << "range " << range.first - node.edges.begin() << " - " << range.second - node.edges.begin() << endl;
+//                cout << "expected kvs" << e.kvs << endl;
+//                cout << "kvs   " << kvs << endl;
+                     
+                REQUIRE(kvs == e.kvs);
+                REQUIRE(range.first <= range.second);
+                REQUIRE(range.first - node.edges.begin() == e.lower_bound);
+                REQUIRE(range.second - node.edges.begin() == e.upper_bound);
+            }
+        };
+
+        test_find_lmp2({
+            {"/<id>/data", 0},
+            {"/<id>/ok", 1},
+            {"/home", 2}
+        }, {
+            // exact match, prefix and query exhausted : return (i, i), throw error
+            {"/12345/ok", 1, 1, { {"id", "12345"} }},
+            {"/12345/data", 0, 0, { {"id", "12345"} }},
+            {"/home", 2, 2, {}}
+        });
+
+    }
+
 }
 
-TEST_CASE("Trie Full example", "[Trie]")
+TEST_CASE("Trie")
 {
-    Trie<std::string> t{};
-    // using node_ptr = Trie<std::string>::TrieNode *;
-    using iterator = Trie<std::string>::TrieIterator;
 
-    t.insert({"smile", "smile"});
-    t.insert({"smiled", "smiled"});
-    t.insert({"smiles", "smiles"});
-
-    /*
-    |-smile\          smile
-        |-s\          smiles
-        |-d\          smiled
-    */
-    t.insert({"smiling", "smiling"});
-    /*
-    |-smil\                         // branch node 
-        |-ing\          smiling     // input node
-        |-e\            smile       // prev node
-            |-s\        smiles
-            |-d\        smiled
-    */
-    // std::cout << t << std::endl;
-
-    SECTION("prefix_of")
-    {
-        iterator found;
-        std::string prefix;
-
-        found = t.find("smil");
-        prefix = t.prefix_of(found);
-        REQUIRE(prefix == "smil");
-
-        found = t.find("smile");
-        prefix = t.prefix_of(found);
-        REQUIRE(prefix == "smile");
-
-        found = t.find("smiled");
-        prefix = t.prefix_of(found);
-        REQUIRE(prefix == "smiled");
+    SECTION("Initialization") {
+        auto t = Trie<int>();
+        REQUIRE(t.size() == 0);    
+        REQUIRE(t.begin() == t.end());
     }
 
-    SECTION("find")
-    {
-        auto smil = get_child(t.root_, "smil");
-        auto smiling = get_child(smil, "ing");
-        auto smile = get_child(smil, "e");
-        auto smiled = get_child(smile, "d");
-        auto smiles = get_child(smile, "s");
 
-        REQUIRE_NOTHROW(get_child(smile, "d"));
-        REQUIRE_NOTHROW(get_child(smile, "s"));
-        REQUIRE_THROWS_AS(get_child(smil, "d"), std::out_of_range);
-        REQUIRE_THROWS_AS(get_child(smil, "s"), std::out_of_range);
+    SECTION("find") {
 
-        REQUIRE(smil->data_ == "");
-        REQUIRE(smile->data_ == "smile");
-        REQUIRE(smiled->data_ == "smiled");
-        REQUIRE(smiles->data_ == "smiles");
-        REQUIRE(smiling->data_ == "smiling");
+        auto t = make_trie({ 
+            {"smile", 1}, 
+            {"smiles", 2}, 
+            {"smiling", 3},
+            {"smiled", 4},
+            {"smil", 5}
+        });
 
-        iterator found;
-        found = t.find("smil");
-        REQUIRE(found.node_ == smil);
-        REQUIRE(*found == "");
-        found = t.find("smile");
-        REQUIRE(found.node_ == smile);
-        REQUIRE(*found == "smile");
-        found = t.find("smiled");
-        REQUIRE(found.node_ == smiled);
-        REQUIRE(*found == "smiled");
-        found = t.find("smiles");
-        REQUIRE(found.node_ == smiles);
-        REQUIRE(*found == "smiles");
-        found = t.find("smiling");
-        REQUIRE(found.node_ == smiling);
-        REQUIRE(*found == "smiling");
-    }
-}
 
-TEST_CASE("Trie::{find_to_insert, insert}", "[Trie]")
-{
-    Trie<std::string> t{};
-    using node_ptr = Trie<std::string>::TrieNode *;
+        SECTION("found") {
+            auto test_found = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    {
+                        auto it = t.find(e.first);
+                        REQUIRE(it != t.end());
+                        REQUIRE(*it == e.second);
+                    }
+                    {
+                        vector<pair<string, string>> kvs;
+                        auto it = t.find(e.first, kvs);
+                        REQUIRE(it != t.end());
+                        REQUIRE(*it == e.second);
+                    }
+                }
+            };
+            test_found(t, {
+                {"smile", 1}, 
+                {"smiles", 2}, 
+                {"smiling", 3},
+                {"smiled", 4},
+                {"smil", 5}
+            });
+        }
 
-    REQUIRE(t.size_ == 0);
-    REQUIRE(t.root_->data_ == "");
-    REQUIRE(t.root_->parent_ == nullptr);
-    REQUIRE(t.root_->child_.size() == 0);
+        SECTION("not found") {
+            auto test_not_found = [](Trie<int>& t, const vector<string>& keys) {
+                for(const auto& k : keys) {
+                    {
+                        auto it = t.find(k);
+                        REQUIRE(it == t.end());
+                    }
+                    {
+                        vector<pair<string, string>> kvs;
+                        auto it = t.find(k, kvs);
+                        REQUIRE(it == t.end());
+                    }
+                }
+            };
 
-    SECTION("different strings")
-    {
-        t.insert(std::make_pair("a", "value1"));
-        t.insert(std::make_pair("b", "value2"));
+            test_not_found(t, {"s", "sm", "smi", "", "irrelevant"});
+        }
 
-        REQUIRE(get_child(t.root_, "a")->data_ == "value1");
-        REQUIRE(get_child(t.root_, "b")->data_ == "value2");
-        REQUIRE(t.root_->child_.size() == 2);
-    }
+        auto t2 = make_trie({
+            {"/", 1},
+            {"/textbook/<author>", 2},
+            {"/textbook/publish_date/<date>", 3},
+            {"/user/<id>", 4},
+            {"/user/<id>/books/<book_id>", 5}
+        });
 
-    SECTION("previous key is substring")
-    {
-        /*
-            pre         
-            presuffix   
 
-            should append new key 
-
-            pre\
-                |- suffix
+        /**
+         \	( 0 )
+            |-/ 	( 1 )
+                |-textbook/<author> 	( 2 )
+                |-textbook/publish_date/<date> 	( 3 )
+                |-user/<id> 	( 4 )
+                    |-/books/<book_id> 	( 5 )
         */
-        auto prev_key = std::make_pair("pre", "shortstr");
-        auto new_key = std::make_pair("presuffix", "longstr");
 
-        t.insert(prev_key);
-        REQUIRE(t.root_->child_["pre"]->data_ == prev_key.second);
-        REQUIRE(t.root_->child_.size() == 1);
-
-        SECTION("find_to_insert")
+        SECTION("found_with_kvs")
         {
-            node_ptr found;
-            std::string suffix;
-            std::tie(found, suffix) = t.find_to_insert(new_key.first);
 
-            REQUIRE(get_child(t.root_, "pre") == found);
-            REQUIRE(suffix == "suffix");
+            struct exp_found {
+                std::string query;
+                int handle_id;
+                vector<pair<string, string>> kvs;
+            };
+            using expect_t = vector<exp_found>;
+
+            auto test_found = [](Trie<int>& t, const expect_t& expect) {
+                for(const auto& e : expect) {
+                    vector<pair<string, string>> kvs_r;
+                    auto it = t.find(e.query, kvs_r);
+                    REQUIRE(it != t.end());
+                    REQUIRE(*it == e.handle_id);
+                    REQUIRE(kvs_r == e.kvs);
+                }
+            };
+
+            test_found(t2, {
+                {"/", 1, {}},
+                {"/textbook/mrs_bar", 2, {{"author", "mrs_bar"}}},
+                {"/textbook/publish_date/2004", 3, {{"date", "2004"}}},
+                {"/user/mr_foo", 4, {{"id", "mr_foo"}}}, 
+                {"/user/mr_foo/books/foos_grand_journey", 5, {{"id", "mr_foo"}, {"book_id", "foos_grand_journey"}}}
+            });
         }
 
-        SECTION("insert")
-        {
-            t.insert(new_key);
 
-            auto node = t.root_->child_["pre"].get();
-            REQUIRE(t.root_->child_.size() == 1);
-            REQUIRE(node->child_.size() == 1);
-            REQUIRE(node->data_ == "shortstr");
-            REQUIRE(node->child_.at("suffix")->data_ == "longstr");
-        }
+
     }
 
-    SECTION("new key is substring")
-    {
-        /*
-            presuffix         
-            pre
+    SECTION("Insertion") {
 
-            pre\
-                |- suffix
-        */
-        auto prev_key = std::make_pair("presuffix", "prev_key");
-        auto new_key = std::make_pair("pre", "new_key");
 
-        t.insert(prev_key);
+        SECTION("cannot insert elements with duplicate keys") {
+            auto test_no_dup = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.insert({e.first, e.second});
+                    REQUIRE(it == t.end());
+                }
+            };
 
-        REQUIRE(t.root_->child_["presuffix"]->data_ == prev_key.second);
-        REQUIRE(t.root_->child_.size() == 1);
-
-        SECTION("find_to_insert")
-        {
-            node_ptr found;
-            std::string suffix;
-            std::tie(found, suffix) = t.find_to_insert(new_key.first);
-
-            auto node = t.root_.get();
-            REQUIRE(node == found);
-            REQUIRE(suffix == "pre");
+            auto t = make_trie({ {"pre", 1} });
+            test_no_dup(t, { {"pre", 2} });
         }
 
-        SECTION("insert")
-        {
-            t.insert(new_key);
-            REQUIRE_THROWS_AS(t.root_->child_.at("presuffix"), std::out_of_range);
-            REQUIRE_NOTHROW(t.root_->child_.at("pre"));
+        SECTION("Insert at root if there is no prefix match or neither prefix/query exhausted") {
+            auto test_insert_at_root = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.insert({e.first, e.second});
+                    REQUIRE(it != t.end());
+                    REQUIRE(--it == t.end());
+                }
+            };
 
-            auto branch = t.root_->child_.at("pre").get();
-            REQUIRE(branch->data_ == new_key.second);
-            REQUIRE(branch->child_.size() == 1);
-            REQUIRE_NOTHROW(branch->child_.at("suffix"));
-            REQUIRE(branch->child_.at("suffix").get()->data_ == prev_key.second);
+            auto t = make_trie({ {"pre", 1} });
+            test_insert_at_root(t, { {"no_shared_prefix_at_all", 2},  {"pr_neither_exhausted", 3} });
         }
+
+        SECTION("Traverse down a level, if prefix is exhausted, while query string has some chars left") {
+            auto test_go_down = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.insert({e.first, e.second});
+                    REQUIRE(--it != t.end());
+                    REQUIRE(--(--it) == t.end());
+                }
+            };
+
+            auto t = make_trie({ {"banana", 1}, {"apple", 2}, {"application", 3} });
+            test_go_down(t, { {"banananana", 4}, {"apples", 5}, {"applications", 6} });
+        }
+
+        SECTION("Reorganization of nodes if there is a range (len>=1) for which query exhausted") {
+            auto test_reorganize = [](Trie<int>& t, const ssumap& insertee) {
+                for(const auto& e : insertee) {
+                    auto it = t.insert({e.first, e.second});
+                    REQUIRE(it != t.end());
+                    REQUIRE(--it == t.end());
+                }
+            };
+
+            auto t = make_trie({ {"happy", 1}, {"happiness", 2}, {"happening", 3} });
+            test_reorganize(t, { {"happ", 4} });
+        }
+
+
+        SECTION("Comprehensive example") {
+
+            auto t = make_trie({ 
+                {"smile", 1}, 
+                {"smiles", 2}, 
+                {"smiling", 3},
+                {"smiled", 4},
+                {"smil", 5}
+            });
+
+            // cout << t;
+        }
+
     }
 
-    SECTION("keys share common prefix")
-    {
-        /*
-            should split 
-            pre1         
-            pre2  
-
-            pre\
-                |- 1        str1
-                |- 2        str2
-        */
-        auto str1 = std::make_pair("pre1", "str1");
-        auto str2 = std::make_pair("pre2", "str2");
-
-        t.insert(str1);
-        REQUIRE(t.root_->child_["pre1"]->data_ == str1.second);
-        REQUIRE(t.root_->child_.size() == 1);
-
-        SECTION("find_to_insert")
-        {
-            node_ptr found;
-            std::string suffix;
-            std::tie(found, suffix) = t.find_to_insert(str2.first);
-
-            auto node = t.root_.get();
-            REQUIRE(node == found);
-            REQUIRE(suffix == "pre2");
-        }
-
-        SECTION("insert")
-        {
-            t.insert(str2);
-
-            REQUIRE_THROWS_AS(t.root_->child_.at("pre1"), std::out_of_range);
-            REQUIRE_THROWS_AS(t.root_->child_.at("pre2"), std::out_of_range);
-            REQUIRE_NOTHROW(t.root_->child_.at("pre"));
-
-            auto branch = t.root_->child_.at("pre").get();
-            REQUIRE(branch->data_ == "");
-            REQUIRE(branch->child_.size() == 2);
-            REQUIRE_NOTHROW(branch->child_.at("1"));
-            REQUIRE_NOTHROW(branch->child_.at("2"));
-            REQUIRE(branch->child_.at("1").get()->data_ == "str1");
-            REQUIRE(branch->child_.at("2").get()->data_ == "str2");
-        }
-    }
 }
