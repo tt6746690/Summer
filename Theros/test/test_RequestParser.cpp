@@ -16,8 +16,8 @@ TEST_CASE("Uri", "[RequestParser]")
     REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
 
     Request req;
-    REQUIRE(req.method_ == RequestMethod::UNDETERMINED);
-    REQUIRE(req.uri_.state_ == UriState::uri_start);
+    REQUIRE(req.method == RequestMethod::UNDETERMINED);
+    REQUIRE(req.uri.state_ == UriState::uri_start);
 
     std::string payload;
 
@@ -25,21 +25,21 @@ TEST_CASE("Uri", "[RequestParser]")
     {
         payload = "POST http://abc.com:80/~smith/home.html#footer HTTP/1.0\r\n";
         parser.parse(req, std::begin(payload), std::end(payload));
-        REQUIRE(req.uri_.scheme_ == "http");
-        REQUIRE(req.uri_.host_ == "abc.com");
-        REQUIRE(req.uri_.port_ == "80");
-        REQUIRE(req.uri_.abs_path_ == "~smith/home.html");
-        REQUIRE(req.uri_.fragment_ == "footer");
+        REQUIRE(req.uri.scheme == "http");
+        REQUIRE(req.uri.host == "abc.com");
+        REQUIRE(req.uri.port == "80");
+        REQUIRE(req.uri.abs_path == "~smith/home.html");
+        REQUIRE(req.uri.fragment == "footer");
     }
     SECTION("good abs path")
     {
         payload = "POST /~smith/home.html#footer HTTP/1.0\r\n";
         parser.parse(req, std::begin(payload), std::end(payload));
-        REQUIRE(req.uri_.scheme_ == "");
-        REQUIRE(req.uri_.host_ == "");
-        REQUIRE(req.uri_.port_ == "");
-        REQUIRE(req.uri_.abs_path_ == "/~smith/home.html");
-        REQUIRE(req.uri_.fragment_ == "footer");
+        REQUIRE(req.uri.scheme == "");
+        REQUIRE(req.uri.host == "");
+        REQUIRE(req.uri.port == "");
+        REQUIRE(req.uri.abs_path == "/~smith/home.html");
+        REQUIRE(req.uri.fragment == "footer");
     }
 }
 
@@ -49,10 +49,10 @@ TEST_CASE("Overall", "[RequestParser]")
     REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
     
     Request req;
-    REQUIRE(req.method_ == RequestMethod::UNDETERMINED);
-    REQUIRE(req.uri_.state_ == UriState::uri_start);
-    REQUIRE(req.headers_.size() == 0);
-    REQUIRE(req.body_ == "");
+    REQUIRE(req.method == RequestMethod::UNDETERMINED);
+    REQUIRE(req.uri.state_ == UriState::uri_start);
+    REQUIRE(req.headers.size() == 0);
+    REQUIRE(req.body == "");
 
     std::string payload;
 
@@ -66,11 +66,11 @@ TEST_CASE("Overall", "[RequestParser]")
 
         parser.parse(req, std::begin(payload), std::end(payload));
 
-        REQUIRE(req.method_ == RequestMethod::GET);
-        REQUIRE(req.uri_.abs_path_ == "/hi");
-        REQUIRE(req.version_major_ == 1);
-        REQUIRE(req.version_minor_ == 0);
-        REQUIRE(req.headers_.size() == 3);
+        REQUIRE(req.method == RequestMethod::GET);
+        REQUIRE(req.uri.abs_path == "/hi");
+        REQUIRE(req.version_major == 1);
+        REQUIRE(req.version_minor == 0);
+        REQUIRE(req.headers.size() == 3);
 
         std::map<std::string, std::string> headers{
             {"Host", "127.0.0.1:8888"},
@@ -80,11 +80,11 @@ TEST_CASE("Overall", "[RequestParser]")
         for (auto header : headers)
         {
             auto found = find_if(
-                req.headers_.begin(), req.headers_.end(),
+                req.headers.begin(), req.headers.end(),
                 [header](auto built_header) {
                     return header.first == built_header.first;
                 });
-            REQUIRE(found != req.headers_.end());
+            REQUIRE(found != req.headers.end());
             REQUIRE(found->first == header.first);
             REQUIRE(found->second == header.second);
         }
@@ -98,8 +98,8 @@ TEST_CASE("Method", "[RequestParser]")
     REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
     
     Request req;
-    REQUIRE(req.method_ == RequestMethod::UNDETERMINED);
-    REQUIRE(req.uri_.state_ == UriState::uri_start);
+    REQUIRE(req.method == RequestMethod::UNDETERMINED);
+    REQUIRE(req.uri.state_ == UriState::uri_start);
 
     std::string payload;
 
@@ -107,20 +107,20 @@ TEST_CASE("Method", "[RequestParser]")
     {
         payload = "POST /hi HTTP/1.0\r\n";
         parser.parse(req, std::begin(payload), std::end(payload));
-        REQUIRE(req.method_ == RequestMethod::POST);
+        REQUIRE(req.method == RequestMethod::POST);
     }
 
     SECTION("patch")
     {
         payload = "PATCH /hi HTTP/1.0\r\n";
         parser.parse(req, std::begin(payload), std::end(payload));
-        REQUIRE(req.method_ == RequestMethod::PATCH);
+        REQUIRE(req.method == RequestMethod::PATCH);
     }
     SECTION("connect")
     {
         payload = "CONNECT /hi HTTP/1.0 \r\n";
         parser.parse(req, std::begin(payload), std::end(payload));
-        REQUIRE(req.method_ == RequestMethod::CONNECT);
-        REQUIRE(req.version_minor_ == 0);
+    REQUIRE(req.method == RequestMethod::CONNECT);
+        REQUIRE(req.version_minor == 0);
     }
 }

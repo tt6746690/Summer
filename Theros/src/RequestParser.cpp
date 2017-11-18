@@ -88,25 +88,25 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
 
       switch (c) {
       case 'G':
-        request.method_ = RequestMethod::GET;
+        request.method = RequestMethod::GET;
         break;
       case 'H':
-        request.method_ = RequestMethod::HEAD;
+        request.method = RequestMethod::HEAD;
         break;
       case 'P': // POST, PUT, PATCH
-        request.method_ = RequestMethod::UNDETERMINED;
+        request.method = RequestMethod::UNDETERMINED;
         break;
       case 'D':
-        request.method_ = RequestMethod::DELETE;
+        request.method = RequestMethod::DELETE;
         break;
       case 'C':
-        request.method_ = RequestMethod::CONNECT;
+        request.method = RequestMethod::CONNECT;
         break;
       case 'O':
-        request.method_ = RequestMethod::OPTIONS;
+        request.method = RequestMethod::OPTIONS;
         break;
       case 'T':
-        request.method_ = RequestMethod::TRACE;
+        request.method = RequestMethod::TRACE;
         break;
       default:
         return status::reject;
@@ -123,16 +123,16 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     return status::reject;
   case s::req_method:
     if (is_token(c)) {
-      if (request.method_ == RequestMethod::UNDETERMINED) {
+      if (request.method == RequestMethod::UNDETERMINED) {
         switch (c) {
         case 'O':
-          request.method_ = RequestMethod::POST;
+          request.method = RequestMethod::POST;
           return status::in_progress;
         case 'U':
-          request.method_ = RequestMethod::PUT;
+          request.method = RequestMethod::PUT;
           return status::in_progress;
         case 'A':
-          request.method_ = RequestMethod::PATCH;
+          request.method = RequestMethod::PATCH;
           return status::in_progress;
         default:
           return status::reject;
@@ -146,12 +146,12 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     }
     return status::reject;
   case s::req_uri:
-    assert(request.method_ != RequestMethod::UNDETERMINED);
+    assert(request.method != RequestMethod::UNDETERMINED);
     if (is_uri(c)) {
-      return request.uri_.consume(c);
+      return request.uri.consume(c);
     }
     if (is_sp(c)) {
-      request.uri_.decode(); // decode fields here...
+      request.uri.decode(); // decode fields here...
       state_ = s::req_http_h;
       return status::in_progress;
     }
@@ -188,7 +188,7 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     return status::reject;
   case s::req_http_major:
     if (is_digit(c)) {
-      request.version_major_ = c - '0';
+      request.version_major = c - '0';
       state_ = s::req_http_dot;
       return status::in_progress;
     }
@@ -201,7 +201,7 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     return status::reject;
   case s::req_http_minor:
     if (is_digit(c)) {
-      request.version_minor_ = c - '0';
+      request.version_minor = c - '0';
       state_ = s::req_start_line_cr;
       return status::in_progress;
     }
@@ -224,7 +224,7 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
       return status::in_progress;
     }
     if (is_token(c)) {
-      request.headers_.emplace_back();
+      request.headers.emplace_back();
       request.build_header_name(c);
       state_ = s::req_field_name;
       return status::in_progress;
@@ -281,7 +281,7 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
       return status::in_progress;
     }
     if (is_token(c)) {
-      request.headers_.emplace_back();
+      request.headers.emplace_back();
       request.build_header_name(c);
       state_ = s::req_field_name;
       return status::in_progress;

@@ -1,10 +1,7 @@
 #include "catch.hpp"
-#include <utility>
-#include <stdexcept>
 #include <iostream>
-#include <iterator>
-#include <algorithm>
 
+#include "Utils.h"
 #include "Constants.h"
 #include "Trie.h"
 #include "Router.h"
@@ -15,17 +12,22 @@ using namespace Theros;
 #define GET RequestMethod::GET
 #define POST RequestMethod::POST
 
+
+template<typename T>
+auto require_same = [](const vector<T>& x, const vector<T>& y) {
+    REQUIRE(x.size() == y.size());
+    for(int i = 0; i < x.size(); ++i) {
+        REQUIRE(x[i] == y[i]);
+    }
+};
+
+
 TEST_CASE("Router") 
 {
 
-    Response res;
-    Request req; 
-    Context ctx(req, res);
-
-    Router r; 
-
     SECTION("initialization")
     {
+        Router r; 
         REQUIRE(r.routing_tables.size() == method_count);
         for(auto& rt : r.routing_tables) {
             REQUIRE(rt.size() == 0);
@@ -35,6 +37,7 @@ TEST_CASE("Router")
 
     SECTION("handle") 
     {
+        Router r; 
         r.handle(GET, "/home",
                  [](){ cout << "handler 1, lambda 1" << endl; },
                  [](){ cout << "handler 1, lambda 2" << endl; });
@@ -70,5 +73,55 @@ TEST_CASE("Router")
             test_resolve(GET, "/home/", {});
         }
     }
+
+
+    SECTION("path match to route path yield query")
+    {
+        Handler::handler_id_counter = 0;
+        Router r; 
+
+        r.get("/", [](){ cout << "handler 1" << endl; });
+        r.get("/home",
+            [](){ cout << "handler 2" << endl; });
+        r.get("/user/<id>/info",
+            [](){ cout << "handler 3" << endl; });
+        r.get("/user/<id>/ideas",
+            [](){ cout << "handler 4" << endl; });
+
+
+        auto test_resolve = [&r](RequestMethod method, 
+                                 const string& path, 
+                                 vector<int> expected_ids, 
+                                 vector<pair<string, string>> expected_kvs)
+        {
+            auto req = Request();
+            req.method = method;
+            req.uri.abs_path = path;
+
+            vector<pair<string, string>> kvs;
+            auto handles = r.resolve(req, kvs);
+
+            vector<int> handles_ids;
+            transform(handles.begin(), handles.end(), back_inserter(handles_ids),
+                [] (auto h){ return h.id(); });
+            REQUIRE(handles.size() == expected_ids.size());
+            REQUIRE(handles_ids == expected_ids);
+
+            cout << "expected " << expected_kvs << endl;
+            cout << "result   " << kvs << endl;
+
+            REQUIRE(kvs == expected_kvs);
+        };
+
+        cout << r;
+        
+        // good paths
+        vector<pair<string, string>> kvs;
+        test_resolve(GET, "/", {1}, kvs);
+        test_resolve(GET, "/home", {1, 2}, kvs);
+//        test_resolve(GET, "/user/foo/info", {1, 2, 3}, {{"id", "foo"}});
+
+    }
+
 }
 

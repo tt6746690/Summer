@@ -56,7 +56,8 @@
     "istream": "cpp",
     "ostream": "cpp",
     "cstdio": "cpp",
-    "stack": "cpp"
+    "stack": "cpp",
+    "iostream": "cpp"
   },
   "editor.formatOnSave": false,
   "editor.wordWrap": "off"

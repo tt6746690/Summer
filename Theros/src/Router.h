@@ -17,11 +17,11 @@ namespace Theros {
 struct Context
 {
     using MapType = std::unordered_map<std::string, std::string>;
-    Request &req_;
-    Response &res_;
-    MapType &param_;
-    MapType &query_;
-    Context(Request &req, Response &res) : req_(req), res_(res), param_(req.param_), query_(req.query_){};
+    Request &req;
+    Response &res;
+    MapType &param;
+    MapType &query;
+    Context(Request &req, Response &res) : req(req), res(res), param(req.param), query(req.query){};
 };
 
 
@@ -95,7 +95,12 @@ public:
 
     // Looks up path to yield a sequence of handlers, empty if no matching path found
     RouteType resolve(RequestMethod method, const std::string& path);
+    RouteType resolve(RequestMethod method, 
+                      const std::string& path,
+                      std::vector<std::pair<std::string, std::string>>& kvs);
     RouteType resolve(const Request& request);
+    RouteType resolve(const Request& request, 
+                      std::vector<std::pair<std::string, std::string>>& kvs);
 
     // Gets backend table for storing routes
     RoutingTable& table(RequestMethod method);

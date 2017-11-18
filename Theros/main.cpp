@@ -27,10 +27,10 @@ void start_server(int port){
 
     app->router_.handle(RequestMethod::GET, "/r", [](Context &ctx) {
                        // url query parser
-                       ctx.req_.query_ = make_query(ctx.req_.uri_.query_);
+                       ctx.req.query = make_query(ctx.req.uri.query);
 
                        JsonType urlparse = {
-                           {"query", ctx.query_}, {"param", ctx.param_},
+                           {"query", ctx.query}, {"param", ctx.param},
                        };
                        std::cout << std::setw(4) << urlparse << std::endl;
                      });

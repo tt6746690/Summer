@@ -38,15 +38,15 @@ TEST_CASE("url percent encoding/decoding")
         // https://zh.wikipedia.org/wiki/%E7%99%BE%E5%88%86%E5%8F%B7%E7%BC%96%E7%A0%81
 
         Uri uri;
-        uri.scheme_ = "https";
-        uri.host_ = "zh.wikipedia.org";
-        uri.abs_path_ = "/wiki/%E7%99%BE%E5%88%86%E5%8F%B7%E7%BC%96%E7%A0%81";
+        uri.scheme = "https";
+        uri.host = "zh.wikipedia.org";
+        uri.abs_path = "/wiki/%E7%99%BE%E5%88%86%E5%8F%B7%E7%BC%96%E7%A0%81";
 
         uri.decode();
 
-        REQUIRE(uri.scheme_ == "https");
-        REQUIRE(uri.host_ == "zh.wikipedia.org");
-        REQUIRE(uri.abs_path_ == "/wiki/百分号编码");
+        REQUIRE(uri.scheme == "https");
+        REQUIRE(uri.host == "zh.wikipedia.org");
+        REQUIRE(uri.abs_path == "/wiki/百分号编码");
     }
 
 }
@@ -55,35 +55,35 @@ TEST_CASE("url percent encoding/decoding")
 TEST_CASE("Message::Manipulate header member", "[Message]")
 {
     Message msg;
-    REQUIRE(msg.headers_.size() == 0);
+    REQUIRE(msg.headers.size() == 0);
 
-    msg.headers_.emplace_back();
-    REQUIRE(msg.headers_.size() == 1);
+    msg.headers.emplace_back();
+    REQUIRE(msg.headers.size() == 1);
 
     SECTION("build_header_name")
     {
         msg.build_header_name('k');
-        REQUIRE(msg.headers_.back().first == "k");
+        REQUIRE(msg.headers.back().first == "k");
 
         msg.build_header_name('e');
         msg.build_header_name('y');
-        REQUIRE(msg.headers_.back().first == "key");
+        REQUIRE(msg.headers.back().first == "key");
 
         msg.build_header_value('v');
         msg.build_header_value('a');
-        REQUIRE(msg.headers_.back().second == "va");
+        REQUIRE(msg.headers.back().second == "va");
 
         msg.build_header_value('l');
         msg.build_header_value('u');
         msg.build_header_value('e');
-        REQUIRE(msg.headers_.back().second == "value");
+        REQUIRE(msg.headers.back().second == "value");
     }
 
     SECTION("manipulate headers")
     {
         msg.set_header({"foo", "bar"});
         msg.set_header({"bar", "baz"});
-        REQUIRE(msg.headers_.size() == 3);
+        REQUIRE(msg.headers.size() == 3);
 
         SECTION("get_header")
         {
@@ -101,24 +101,24 @@ TEST_CASE("Message::Manipulate header member", "[Message]")
         SECTION("set_header")
         {
             msg.set_header({"foo", "barbar"});
-            REQUIRE(msg.headers_.size() == 3);
+            REQUIRE(msg.headers.size() == 3);
 
-            auto found = std::find_if(msg.headers_.begin(), msg.headers_.end(), [](auto &header) {
+            auto found = std::find_if(msg.headers.begin(), msg.headers.end(), [](auto &header) {
                 return header.first == "foo";
             });
-            REQUIRE(found != msg.headers_.end());
+            REQUIRE(found != msg.headers.end());
             REQUIRE(found->second == "barbar");
         }
 
         SECTION("unset_header")
         {
             msg.unset_header("foo");
-            REQUIRE(msg.headers_.size() == 2);
+            REQUIRE(msg.headers.size() == 2);
 
-            auto found = std::find_if(msg.headers_.begin(), msg.headers_.end(), [](auto &header) {
+            auto found = std::find_if(msg.headers.begin(), msg.headers.end(), [](auto &header) {
                 return header.first == "foo";
             });
-            REQUIRE(found == msg.headers_.end());
+            REQUIRE(found == msg.headers.end());
         }
     }
 }

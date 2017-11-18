@@ -20,13 +20,13 @@ std::string Message::version(int major, int minor)
 
 void Message::build_header_name(char c)
 {
-    assert(headers_.size() != 0);
-    header_name(headers_.back()).push_back(c);
+    assert(headers.size() != 0);
+    header_name(headers.back()).push_back(c);
 }
 void Message::build_header_value(char c)
 {
-    assert(headers_.size() != 0);
-    header_value(headers_.back()).push_back(c);
+    assert(headers.size() != 0);
+    header_value(headers.back()).push_back(c);
 }
 
 Message::HeaderNameType& Message::header_name(const HeaderType &header)
@@ -43,7 +43,7 @@ std::pair<Message::HeaderValueType, bool> Message::get_header(HeaderNameType nam
     HeaderValueType val{};
     bool valid = false;
 
-    for (auto &header : headers_)
+    for (auto &header : headers)
     {
         if (header_name(header) == name)
             val = header_value(header), valid = true;
@@ -53,31 +53,31 @@ std::pair<Message::HeaderValueType, bool> Message::get_header(HeaderNameType nam
 
 std::string Message::flatten_header() const
 {
-    std::string headers_flat;
-    for (auto &header : headers_)
-        headers_flat += header.first + ": " + header.second + CRLF;
-    return headers_flat + CRLF;
+    std::string headersflat;
+    for (auto &header : headers)
+        headersflat += header.first + ": " + header.second + CRLF;
+    return headersflat + CRLF;
 }
 
 void Message::set_header(HeaderType header)
 {
-    auto found = find_if(headers_.begin(), headers_.end(),
+    auto found = find_if(headers.begin(), headers.end(),
                          [&](auto &h) {
                              return h.first == header_name(header);
                          });
-    if (found != headers_.end())
+    if (found != headers.end())
         *found = header;
     else
-        headers_.push_back(header);
+        headers.push_back(header);
 }
 
 void Message::unset_header(HeaderNameType name)
 {
-    auto end = std::remove_if(headers_.begin(), headers_.end(),
+    auto end = std::remove_if(headers.begin(), headers.end(),
                               [&](auto &header) {
                                   return header.first == name;
                               });
-    headers_.erase(end, headers_.end());
+    headers.erase(end, headers.end());
 }
 
 int Message::content_length()
@@ -124,11 +124,11 @@ std::ostream& operator<<(std::ostream& os, const Message::HeaderType& header)
 //////////////////////////////////////////////////
 
 void Uri::decode() {
-  scheme_ = urldecode(scheme_);
-  host_ = urldecode(host_);
-  abs_path_ = urldecode(abs_path_);
-  query_ = urldecode(query_);
-  fragment_ = urldecode(fragment_);
+  scheme = urldecode(scheme);
+  host = urldecode(host);
+  abs_path = urldecode(abs_path);
+  query = urldecode(query);
+  fragment = urldecode(fragment);
 }
 
 
@@ -158,18 +158,18 @@ ParseStatus Uri::consume(char c) {
   case UriState::uri_start:
     if (c == '/') {
       state_ = UriState::uri_abs_path;
-      abs_path_.push_back(c);
+      abs_path.push_back(c);
       return ParseStatus::in_progress;
     }
     if (is_alpha(c)) {
-      scheme_.push_back(c);
+      scheme.push_back(c);
       state_ = UriState::uri_scheme;
       return ParseStatus::in_progress;
     }
     break;
   case UriState::uri_scheme:
     if (is_alpha(c)) {
-      scheme_.push_back(c);
+      scheme.push_back(c);
       return ParseStatus::in_progress;
     }
     if (c == ':') {
@@ -198,11 +198,11 @@ ParseStatus Uri::consume(char c) {
       state_ = UriState::uri_port;
       return ParseStatus::in_progress;
     }
-    host_.push_back(c);
+    host.push_back(c);
     return ParseStatus::in_progress;
   case UriState::uri_port:
     if (is_digit(c)) {
-      port_.push_back(c);
+      port.push_back(c);
       return ParseStatus::in_progress;
     }
     if (c == '/') {
@@ -219,17 +219,17 @@ ParseStatus Uri::consume(char c) {
       state_ = UriState::uri_fragment;
       return ParseStatus::in_progress;
     }
-    abs_path_.push_back(c);
+    abs_path.push_back(c);
     return ParseStatus::in_progress;
   case UriState::uri_query:
     if (c == '#') {
       state_ = UriState::uri_fragment;
       return ParseStatus::in_progress;
     }
-    query_.push_back(c);
+    query.push_back(c);
     return ParseStatus::in_progress;
   case UriState::uri_fragment:
-    fragment_.push_back(c);
+    fragment.push_back(c);
     return ParseStatus::in_progress;
   default:
     break;
@@ -241,16 +241,16 @@ ParseStatus Uri::consume(char c) {
     "http:" "//" host [ ":" port ] [ abs_path [ "?" query ]]
 */
 std::ostream& operator<<(std::ostream &strm, Uri uri) {
-  if (uri.scheme_.size())
-    strm << uri.scheme_ + "://" + uri.host_;
-  if (uri.port_.size())
-    strm << ":" << uri.port_;
-  if (uri.abs_path_.size())
-    strm << uri.abs_path_;
-  if (uri.query_.size())
-    strm << "?" << uri.query_;
-  if (uri.fragment_.size())
-    strm << "#" << uri.fragment_;
+  if (uri.scheme.size())
+    strm << uri.scheme + "://" + uri.host;
+  if (uri.port.size())
+    strm << ":" << uri.port;
+  if (uri.abs_path.size())
+    strm << uri.abs_path;
+  if (uri.query.size())
+    strm << "?" << uri.query;
+  if (uri.fragment.size())
+    strm << "#" << uri.fragment;
   return strm;
 }
 
@@ -260,7 +260,7 @@ std::ostream& operator<<(std::ostream &strm, Uri uri) {
 
 std::string Response::to_payload() const 
 {
-  std::string payloads = status_line() + flatten_header() + body_;
+  std::string payloads = status_line() + flatten_header() + body;
   return payloads;
 }
 
@@ -287,7 +287,7 @@ std::string Response::reason_phrase()
 
 std::string Response::status_line() const 
 {
-  return to_status_line(status_code_, version_major_, version_minor_);
+  return to_status_line(status_code_, version_major, version_minor);
 };
 
 std::string Response::to_status_line(StatusCode status_code, int http_version_major, int http_version_minor) 
@@ -311,7 +311,7 @@ void Response::write_text(std::string data)
     content_type("text/plain");
 
   content_length(content_length() + data.size());
-  body_ += data;
+  body += data;
 }
 
 void Response::write_range(char* data, int start, int end, int total) 
@@ -320,7 +320,7 @@ void Response::write_range(char* data, int start, int end, int total)
   content_length(content_length() + end - start);
   status_code_ = StatusCode::Partial_Content;
 
-  body_ += std::string(data, end-start);
+  body += std::string(data, end-start);
 }
 
 void Response::write_json(JsonType data) {
@@ -329,11 +329,11 @@ void Response::write_json(JsonType data) {
   content_type("application/json");
   content_length(content_length() + dump.size());
 
-  body_ += dump;
+  body += dump;
 }
 
 void Response::clear_body() {
-  body_.clear();
+  body.clear();
   content_length(0);
 }
 
@@ -349,10 +349,10 @@ char *Response::status_code_to_reason(StatusCode status_code)
 
 std::ostream &operator<<(std::ostream &os, const Response &response) {
   os << "< " << response.status_line();
-  for (auto &header : response.headers_) {
+  for (auto &header : response.headers) {
     os << "< " << header << std::endl;
   }
-  os << "< " << response.body_ << std::endl;
+  os << "< " << response.body << std::endl;
   return os;
 }
 

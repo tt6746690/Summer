@@ -129,9 +129,9 @@ void Connection<SocketType>::read() {
             }
             case ParseStatus::accept: {
               response_.status_code(StatusCode::OK);
-              response_.version_major_ = request_.version_major_;
-              response_.version_minor_ = request_.version_minor_;
-              request_.query_ = make_query(request_.uri_.query_);
+              response_.version_major = request_.version_major;
+              response_.version_minor = request_.version_minor;
+              request_.query = make_query(request_.uri.query);
 
               auto handlers = router_.resolve(request_);
               for (auto &handler : handlers) {

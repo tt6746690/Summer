@@ -33,9 +33,34 @@ auto Router::resolve(RequestMethod method, const std::string& path) -> RouteType
 
 auto Router::resolve(const Request& request) -> RouteType
 {
-    auto method = request.method_;
-    auto path = request.uri_.abs_path_;
+    auto method = request.method;
+    auto path = request.uri.abs_path;
     return resolve(method, path);
+}
+
+
+auto Router::resolve(RequestMethod method, 
+                     const std::string& path,
+                     std::vector<std::pair<std::string, std::string>>& kvs) -> RouteType
+{
+    RoutingTable& t = routing_tables[to_underlying_t(method)];
+    auto found = t.find(path, kvs);
+
+    RouteType route;
+    while(found != t.end()) {
+        route.push_back(*found);
+        --found;
+    }
+    std::reverse(route.begin(), route.end());
+    return route;
+}
+
+auto Router::resolve(const Request& request,
+                     std::vector<std::pair<std::string, std::string>>& kvs) -> RouteType
+{
+    auto method = request.method;
+    auto path = request.uri.abs_path;
+    return resolve(method, path, kvs);
 }
 
 
@@ -62,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, const Router& r)
 // std::vector<T> resolve(Request &req)
 // {
 //   auto method = req.method_;
-//   auto path = req.uri_.abs_path_;
+//   auto path = req.uri_.abs_path;
 //   auto &route = routes_[to_underlying_t(method)];
 
 //   std::string param_key, param_value;

@@ -141,12 +141,16 @@ TEST_CASE("TrieNode")
         test_find_lmp2({
             {"/<id>/data", 0},
             {"/<id>/ok", 1},
-            {"/home", 2}
+            {"/home", 2},
+            {"/user/<id>/data", 3},
+            {"/user/<id>/info", 4},
         }, {
             // exact match, prefix and query exhausted : return (i, i), throw error
             {"/12345/ok", 1, 1, { {"id", "12345"} }},
             {"/12345/data", 0, 0, { {"id", "12345"} }},
-            {"/home", 2, 2, {}}
+            {"/home", 2, 2, {}},
+            {"/user/foo/data", 3, 3, { {"id", "foo"} }},
+            {"/user/foo/info", 4, 4, { {"id", "foo"} }},
         });
 
     }

@@ -58,10 +58,10 @@ public:
   auto content_type() -> HeaderValueType;
   void content_type(HeaderValueType value);
 
-  int version_major_;
-  int version_minor_;
-  std::vector<HeaderType> headers_;
-  std::string body_;
+  int version_major;
+  int version_minor;
+  std::vector<HeaderType> headers;
+  std::string body;
 
 public:
   /**
@@ -153,12 +153,12 @@ enum class ParseStatus;
 class Uri
 {
 public:
-  std::string scheme_;
-  std::string host_;
-  std::string port_;
-  std::string abs_path_;
-  std::string query_;
-  std::string fragment_;
+  std::string scheme;
+  std::string host;
+  std::string port;
+  std::string abs_path;
+  std::string query;
+  std::string fragment;
   UriState state_ = UriState::uri_start;
 
 public:
@@ -174,11 +174,11 @@ class Request : public Message
 {
 
 public:
-  RequestMethod method_ = RequestMethod::UNDETERMINED;
+  RequestMethod method = RequestMethod::UNDETERMINED;
 
-  Uri uri_;
-  std::unordered_map<std::string, std::string> param_;
-  std::unordered_map<std::string, std::string> query_;
+  Uri uri;
+  std::unordered_map<std::string, std::string> param;
+  std::unordered_map<std::string, std::string> query;
 
 public:
   constexpr static const char *request_method_to_string(RequestMethod method)
@@ -221,15 +221,15 @@ public:
   friend auto inline operator<<(std::ostream &strm, const Request &request)
       -> std::ostream &
   {
-    strm << "> " << Request::request_method_to_string(request.method_) << " "
-         << request.uri_ << " "
-         << Message::version(request.version_major_, request.version_minor_)
+    strm << "> " << Request::request_method_to_string(request.method) << " "
+         << request.uri << " "
+         << Message::version(request.version_major, request.version_minor)
          << std::endl;
-    for (auto header : request.headers_)
+    for (auto header : request.headers)
     {
       strm << "> " << header << std::endl;
     }
-    strm << "> " << request.body_ << std::endl;
+    strm << "> " << request.body << std::endl;
 
     return strm;
   }
