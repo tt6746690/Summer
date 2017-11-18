@@ -124,8 +124,8 @@ void find_route_prefix_unstrict(const char* x,
 
 
 
-void find_route_prefix_unstrict(std::string x,
-                                std::string y, 
+void find_route_prefix_unstrict(const std::string& x,
+                                const std::string& y, 
                                 int&        x_prefix_len,
                                 int&        y_prefix_len,
                                 std::vector<std::pair<std::string, std::string>>& kvs) 

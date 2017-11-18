@@ -34,8 +34,8 @@ void find_route_prefix_unstrict(const char* x,              // route
                                 int&        y_prefix_len,   // length of y consumed during matching
                                 std::vector<std::pair<std::string, std::string>>& kvs);
 
-void find_route_prefix_unstrict(std::string& x,             // route
-                                std::string& y,             // query path 
+void find_route_prefix_unstrict(const std::string& x,       // route
+                                const std::string& y,       // query path 
                                 int&        x_prefix_len,   // length of x consumed during matching
                                 int&        y_prefix_len,   // length of y consumed during matching
                                 std::vector<std::pair<std::string, std::string>>& kvs);

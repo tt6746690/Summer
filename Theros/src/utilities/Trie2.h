@@ -156,36 +156,51 @@ auto TrieNode<T, CharT>::find_lmp_edges(KeyT query,
                                         std::vector<std::pair<std::string, std::string>>& kvs) 
                                         -> std::pair<EdgesIterator, EdgesIterator>
 {
-    return {};
-    // sort_edges();
+    if(edges.empty()) 
+        return std::make_pair(edges.end(), edges.end());
 
-    // size_t longest_prefix_len = 0;
-    // int lower_bound = -1, upper_bound = -1;
+    sort_edges();
 
-    // for(int i = 0; i < edges.size(); ++i) {
-    //     const auto& edge = edges[i];
-    //     size_t len = find_route_prefix_unstrict(edge.prefix.c_str(), query.c_str(), kvs);
+    int longest_edge_prefix_len = -1, longest_query_prefix_len = -1;
+    int lower_bound = -1, upper_bound = -1;
+    std::vector<std::pair<std::string, std::string>> kvs_final;
 
-    //     if(len == query.size() && len == edge.prefix.size()) 
-    //         return std::make_pair(edges.begin() + i, edges.begin() + i);
-    //     // Found an edge with a longer prefix, start of a range of possibly equally long prefixes 
-    //     if(len > longest_prefix_len) {
-    //         longest_prefix_len = len;
-    //         lower_bound = i;
-    //     }         
-    //     // [lower_bound, i) holds a prefix match
-    //     if(len < longest_prefix_len) {
-    //         upper_bound = i;
-    //         break;
-    //     }
-    // }
+    for(int i = 0; i < edges.size(); ++i) {
+        const auto& edge = edges[i];
 
-    // if((lower_bound == -1 && upper_bound == -1) || 
-    //     (query.size() > longest_prefix_len && edges[lower_bound].prefix.size() > longest_prefix_len))
-    //     return std::make_pair(edges.end(), edges.end());
+        int edge_prefix_len = 0, query_prefix_len = 0;
+        std::vector<std::pair<std::string, std::string>> kvs_tmp;
+        find_route_prefix_unstrict(edge.prefix, query, edge_prefix_len, query_prefix_len, kvs_tmp);
 
-    // upper_bound = (upper_bound >= lower_bound) ? upper_bound : static_cast<int>(edges.size());
-    // return std::make_pair(edges.begin() + lower_bound, edges.begin() + upper_bound);
+        if(query_prefix_len == query.size() && edge_prefix_len == edge.prefix.size()) {
+            kvs.insert(kvs.end(), kvs_tmp.begin(), kvs_tmp.end());
+            return std::make_pair(edges.begin() + i, edges.begin() + i);
+        }
+            
+        // Found an edge with a longer prefix, start of a range of possibly equally long prefixes 
+        if(edge_prefix_len > longest_edge_prefix_len) {
+            longest_edge_prefix_len = edge_prefix_len;
+            longest_query_prefix_len = query_prefix_len;
+            lower_bound = i;
+            // only the lastest match's key value pairs are added to kvs arg
+            kvs_final.clear();
+            kvs_final.insert(kvs_final.end(), kvs_tmp.begin(), kvs_tmp.end());
+        }         
+        // [lower_bound, i) holds a prefix match
+        if(edge_prefix_len < longest_edge_prefix_len) {
+            upper_bound = i;
+            break;
+        }
+    }
+
+    kvs.insert(kvs.end(), kvs_final.begin(), kvs_final.end());
+
+    // both prefix and query not exhauseted during match, no exact match 
+    if(query.size() > longest_query_prefix_len && edges[lower_bound].prefix.size() > longest_edge_prefix_len)
+        return std::make_pair(edges.end(), edges.end());
+
+    upper_bound = (upper_bound >= lower_bound) ? upper_bound : static_cast<int>(edges.size());
+    return std::make_pair(edges.begin() + lower_bound, edges.begin() + upper_bound);
 }
 
 
@@ -269,9 +284,9 @@ public:
     auto insert(const ValueT& value) -> IteratorT;
     // Find exact matching node given key 
     auto find(const KeyT& key) -> IteratorT;
-    // find exact matching node given key, also update stored_key as prefix stored in trie
+    // find exact matching node given key, also update kvs for routing path 
     //      if end() is returned, stored_key value is undefined
-//    auto find(const KeyT& key, std::string& stored_key) -> IteratorT;
+   auto find(const KeyT& key, std::vector<std::pair<std::string, std::string>>& kvs) -> IteratorT;
 
 public:
     template <typename T1, typename T2, typename T3, typename T4>
@@ -385,45 +400,47 @@ auto  Trie<T, CharT, Compare, Allocator>::find(const KeyT& key) -> IteratorT
     return end();
 }
 
-//template<typename T, typename CharT, typename Compare, typename Allocator>
-//auto Trie<T, CharT, Compare, Allocator>::find(const KeyT& key, std::string& stored_key) -> IteratorT
-//{
-    // stored_key.clear();
-    // NodePointerT cur_node = root_node();
-    // const CharT* kstr = key.data();
+template<typename T, typename CharT, typename Compare, typename Allocator>
+auto Trie<T, CharT, Compare, Allocator>::find(const KeyT& key, std::vector<std::pair<std::string, std::string>>& kvs) -> IteratorT
+{
+    NodePointerT cur_node = root_node();
+    const CharT* kstr = key.data();
+    std::vector<std::pair<std::string, std::string>> kvs_final;
 
-    // while(cur_node != nullptr) 
-    // {
-    //     auto range = cur_node->find_lmp_edges(kstr);
-    //     const EdgesT& edges = cur_node->edges;
-        
-    //     EdgesIterator& lower_bound = range.first;
-    //     size_t match_len = find_common_prefix_len(lower_bound->prefix.c_str(), kstr);
-    //     stored_key.append(kstr, match_len);
+    while(cur_node != nullptr) 
+    {
+        std::vector<std::pair<std::string, std::string>> kvs_tmp;
+        auto range = cur_node->find_lmp_edges(kstr, kvs_tmp);
+        const EdgesT& edges = cur_node->edges;
 
-    //     if(range.first == range.second) {
-            
-    //         if(range.first == edges.end()) {
-    //             // No prefix match, or neither prefix/query exhausted
-    //             return end();
-    //         } else {
-    //             // Exact match, return iterator to matching node
-    //             return IteratorT((range.first)->child);
-    //         }
-    //     } else {
-    //         if(match_len == lower_bound->prefix.size()) {
-    //             // prefix exhausted, go down next level
-    //             kstr += match_len;
-    //             cur_node = lower_bound->child;
-    //             continue;
-    //         } else {
-    //             // query exhausted, exact match not found                               
-    //             return end()
-    //         };
-    //     }
-    // }
-//    return end();
-//}
+        int edge_prefix_len = 0, query_prefix_len = 0;
+        EdgesIterator& lower_bound = range.first;
+        find_route_prefix_unstrict(lower_bound->prefix.c_str(), kstr, edge_prefix_len, query_prefix_len, kvs_final);
+
+
+        if(range.first == range.second) {
+            if(range.first == edges.end()) {
+                // No prefix match, or neither prefix/query exhausted
+                return end();
+            } else {
+                // Exact match, return iterator to matching node
+                kvs.insert(kvs.end(), kvs_final.begin(), kvs_final.end());
+                return IteratorT((range.first)->child);
+            }
+        } else {
+            if(edge_prefix_len == lower_bound->prefix.size()) {
+                // prefix exhausted, go down next level
+                kstr += query_prefix_len;
+                cur_node = lower_bound->child;
+                continue;
+            } else {
+                // query exhausted, exact match not found
+                return end();
+            };
+        }
+    }
+   return end();
+}
 
 
 

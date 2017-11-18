@@ -36,33 +36,17 @@ auto make_trie = [](const ssumap& insertee) {
 
 
 
-TEST_CASE("prefix pattern ", "Trie2")
-{
-
-
-    SECTION("routing_example")
-    {
-
-        auto t = make_trie({
-            {"/", 1},
-            {"/textbook/<author>", 2},
-            {"/textbook/public_date/<date>", 3},
-            {"/user/<id>", 4},
-            {"/user/<id>/books/<book_id>", 5}
-        });
-
-        /**
-         \	( 0 )
-            |-/ 	( 1 )
-                |-textbook/<author> 	( 2 )
-                |-textbook/public_date/<date> 	( 3 )
-                |-user/<id> 	( 4 )
-                    |-/books/<book_id> 	( 5 )
-        */
-
-
-    }
-}
+//TEST_CASE("prefix pattern ", "Trie2")
+//{
+//
+//
+//    SECTION("routing_example")
+//    {
+//
+//
+//
+//    }
+//}
 
 
 TEST_CASE("TrieNode2", "Trie2") 
@@ -97,11 +81,21 @@ TEST_CASE("TrieNode2", "Trie2")
             }
             REQUIRE(node.edges.size() == edges.size());
 
-            for(const auto& e: query_result) {
-                auto range = node.find_lmp_edges(e.query);
-                REQUIRE(range.first <= range.second);              
-                REQUIRE(range.first == node.edges.begin() + e.lower_bound);
-                REQUIRE(range.second == node.edges.begin() + e.upper_bound);  
+            for(auto& e: query_result) {
+                {
+                    auto range = node.find_lmp_edges(e.query);
+                    REQUIRE(range.first <= range.second);
+                    REQUIRE(range.first == node.edges.begin() + e.lower_bound);
+                    REQUIRE(range.second == node.edges.begin() + e.upper_bound);
+                }
+
+                {
+                    std::vector<std::pair<std::string, std::string>> kvs;
+                    auto range = node.find_lmp_edges(e.query, kvs);
+                    REQUIRE(range.first <= range.second);
+                    REQUIRE(range.first - node.edges.begin() == e.lower_bound);
+                    REQUIRE(range.second - node.edges.begin() == e.upper_bound);
+                }
             }
         };
     
@@ -109,7 +103,7 @@ TEST_CASE("TrieNode2", "Trie2")
             {"preMACH", 0},
             {"preUNIX", 1},
             {"preXEN", 2},
-            {"preXodic", 3},            
+            {"preXodic", 3},
             {"zoo1", 4},
             {"zoo2", 5}
         }, {
@@ -132,6 +126,53 @@ TEST_CASE("TrieNode2", "Trie2")
             {"preX", 2, 4},
             {"zoo", 4, 6}
         });
+
+        struct lmp_expect2 {
+            string query;
+            int lower_bound;
+            int upper_bound;
+            vector<pair<string, string>> kvs;
+        };
+        using spvec2 = vector<lmp_expect2>;
+
+
+        // tests kvs are extracted properly 
+        auto test_find_lmp2 = [](ssumap edges, spvec2 query_result) {
+            auto node = TrieNode<int, char>();
+            for(const auto& e : edges) {
+                node.add_edge(e.first, e.second);
+            }
+            REQUIRE(node.edges.size() == edges.size());
+
+            for(auto& e: query_result) 
+            {
+                std::vector<std::pair<std::string, std::string>> kvs;
+                kvs.clear();
+                auto range = node.find_lmp_edges(e.query, kvs);
+//
+//                cout <<  e.query << " " << e.lower_bound << " - " << e.upper_bound << endl;
+//                cout << "range " << range.first - node.edges.begin() << " - " << range.second - node.edges.begin() << endl;
+//                cout << "expected kvs" << e.kvs << endl;
+//                cout << "kvs   " << kvs << endl;
+                     
+                REQUIRE(kvs == e.kvs);
+                REQUIRE(range.first <= range.second);
+                REQUIRE(range.first - node.edges.begin() == e.lower_bound);
+                REQUIRE(range.second - node.edges.begin() == e.upper_bound);
+            }
+        };
+
+        test_find_lmp2({
+            {"/<id>/data", 0},
+            {"/<id>/ok", 1},
+            {"/home", 2}
+        }, {
+            // exact match, prefix and query exhausted : return (i, i), throw error
+            {"/12345/ok", 1, 1, { {"id", "12345"} }},
+            {"/12345/data", 0, 0, { {"id", "12345"} }},
+            {"/home", 2, 2, {}}
+        });
+
     }
 
 }
@@ -162,9 +203,17 @@ TEST_CASE("Trie2", "Trie2")
         SECTION("found") {
             auto test_found = [](Trie<int>& t, const ssumap& insertee) {
                 for(const auto& e : insertee) {
-                    auto it = t.find(e.first);
-                    REQUIRE(it != t.end());
-                    REQUIRE(*it == e.second);
+                    {
+                        auto it = t.find(e.first);
+                        REQUIRE(it != t.end());
+                        REQUIRE(*it == e.second);
+                    }
+                    {
+                        vector<pair<string, string>> kvs;
+                        auto it = t.find(e.first, kvs);
+                        REQUIRE(it != t.end());
+                        REQUIRE(*it == e.second);
+                    }
                 }
             };
             test_found(t, {
@@ -179,14 +228,73 @@ TEST_CASE("Trie2", "Trie2")
         SECTION("not found") {
             auto test_not_found = [](Trie<int>& t, const vector<string>& keys) {
                 for(const auto& k : keys) {
-                    auto it = t.find(k);
-                    REQUIRE(it == t.end());
+                    {
+                        auto it = t.find(k);
+                        REQUIRE(it == t.end());
+                    }
+                    {
+                        vector<pair<string, string>> kvs;
+                        auto it = t.find(k, kvs);
+                        REQUIRE(it == t.end());
+                    }
                 }
             };
 
             test_not_found(t, {"s", "sm", "smi", "", "irrelevant"});
         }
+
+        auto t2 = make_trie({
+            {"/", 1},
+            {"/textbook/<author>", 2},
+            {"/textbook/publish_date/<date>", 3},
+            {"/user/<id>", 4},
+            {"/user/<id>/books/<book_id>", 5}
+        });
+
+
+        /**
+         \	( 0 )
+            |-/ 	( 1 )
+                |-textbook/<author> 	( 2 )
+                |-textbook/publish_date/<date> 	( 3 )
+                |-user/<id> 	( 4 )
+                    |-/books/<book_id> 	( 5 )
+        */
+
+        SECTION("found_with_kvs")
+        {
+
+            struct exp_found {
+                std::string query;
+                int handle_id;
+                vector<pair<string, string>> kvs;
+            };
+            using expect_t = vector<exp_found>;
+
+            auto test_found = [](Trie<int>& t, const expect_t& expect) {
+                for(const auto& e : expect) {
+                    vector<pair<string, string>> kvs_r;
+                    auto it = t.find(e.query, kvs_r);
+                    REQUIRE(it != t.end());
+                    REQUIRE(*it == e.handle_id);
+                    REQUIRE(kvs_r == e.kvs);
+                }
+            };
+
+            test_found(t2, {
+                {"/", 1, {}},
+                {"/textbook/mrs_bar", 2, {{"author", "mrs_bar"}}},
+                {"/textbook/publish_date/2004", 3, {{"date", "2004"}}},
+                {"/user/mr_foo", 4, {{"id", "mr_foo"}}}, 
+                {"/user/mr_foo/books/foos_grand_journey", 5, {{"id", "mr_foo"}, {"book_id", "foos_grand_journey"}}}
+            });
+        }
+
+
+
     }
+
+
 
 
     SECTION("Insertion") {
