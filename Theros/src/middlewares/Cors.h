@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "../Constants.h"
-#include "../Response.h"
+#include "../Message.h"
 #include "../Router.h"
 
 namespace Theros

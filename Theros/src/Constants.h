@@ -11,6 +11,7 @@ using ssumap = std::unordered_map<std::string, std::string>;
 
 constexpr char CRLF[] = "\r\n";
 
+
 /**
  * Uri
  */
@@ -31,6 +32,7 @@ enum class UriState
 /**
  * RequestParser
  */
+
 
 /**
  * Requests

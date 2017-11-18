@@ -11,9 +11,9 @@ class Request;
 
 enum class ParseStatus
 {
-  accept = 1,
-  reject,
-  in_progress
+    accept = 1,
+    reject,
+    in_progress
 };
 
 class RequestParser

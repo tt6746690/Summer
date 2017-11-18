@@ -1,5 +1,179 @@
 {
-  "variant": null,
+  "variant": {
+    "label": "Debug",
+    "keywordSettings": {
+      "buildType": "debug"
+    },
+    "description": "Emit debug information without performing optimizations"
+  },
   "activeEnvironments": [],
-  "codeModel": null
+  "codeModel": {
+    "configurations": [
+      {
+        "name": "Debug",
+        "projects": [
+          {
+            "buildDirectory": "/Users/markwang/github/theros/build",
+            "name": "Theros",
+            "sourceDirectory": "/Users/markwang/github/theros",
+            "targets": [
+              {
+                "artifacts": [
+                  "/Users/markwang/github/theros/bin/testing"
+                ],
+                "buildDirectory": "/Users/markwang/github/theros/build/Theros",
+                "fileGroups": [
+                  {
+                    "isGenerated": false,
+                    "sources": [
+                      "src/Connection.h",
+                      "src/Constants.h",
+                      "src/Defines.h",
+                      "src/Message.h",
+                      "src/RequestParser.h",
+                      "src/Router.h",
+                      "src/Server.h",
+                      "src/middlewares/Cors.h",
+                      "src/utilities/Codec.h",
+                      "src/utilities/StrUtils.h",
+                      "src/utilities/Traits.h",
+                      "src/utilities/Trie.h",
+                      "src/utilities/Url.h",
+                      "src/utilities/Utils.h"
+                    ]
+                  },
+                  {
+                    "compileFlags": " -std=c++1z -stdlib=libc++ -Wall -I/usr/local/opt/openssl/include -DASIO_SEPARATE_COMPILATION -DASIO_STANDALONE -Wno-unknown-pragmas -g  ",
+                    "includePath": [
+                      {
+                        "path": "/Users/markwang/github/theros/Theros/src"
+                      },
+                      {
+                        "path": "/Users/markwang/github/theros/Theros/src/middlewares"
+                      },
+                      {
+                        "path": "/Users/markwang/github/theros/Theros/src/utilities"
+                      },
+                      {
+                        "isSystem": true,
+                        "path": "/Users/markwang/github/theros/Theros/../lib/asio-1.10.6/include"
+                      },
+                      {
+                        "isSystem": true,
+                        "path": "/Users/markwang/github/theros/Theros/../lib/Catch/single_include"
+                      },
+                      {
+                        "isSystem": true,
+                        "path": "/Users/markwang/github/theros/Theros/../lib/json/src"
+                      }
+                    ],
+                    "isGenerated": false,
+                    "language": "CXX",
+                    "sources": [
+                      "main-test.cpp",
+                      "test/test_Message.cpp",
+                      "test/test_RequestParser.cpp",
+                      "test/test_Router.cpp",
+                      "test/test_Server.cpp",
+                      "test/test_Trie.cpp",
+                      "test/test_Utils.cpp",
+                      "src/Connection.cpp",
+                      "src/Message.cpp",
+                      "src/RequestParser.cpp",
+                      "src/Router.cpp",
+                      "src/utilities/Codec.cpp",
+                      "src/utilities/StrUtils.cpp",
+                      "src/utilities/Url.cpp"
+                    ]
+                  }
+                ],
+                "fullName": "testing",
+                "linkFlags": "-L/usr/local/opt/openssl/lib -lssl -lcrypto",
+                "linkLanguageFlags": "-std=c++1z -stdlib=libc++ -Wall -I/usr/local/opt/openssl/include -DASIO_SEPARATE_COMPILATION -DASIO_STANDALONE -Wno-unknown-pragmas -g",
+                "linkerLanguage": "CXX",
+                "name": "testing",
+                "sourceDirectory": "/Users/markwang/github/theros/Theros",
+                "type": "EXECUTABLE"
+              },
+              {
+                "artifacts": [
+                  "/Users/markwang/github/theros/bin/server"
+                ],
+                "buildDirectory": "/Users/markwang/github/theros/build/Theros",
+                "fileGroups": [
+                  {
+                    "isGenerated": false,
+                    "sources": [
+                      "src/Connection.h",
+                      "src/Constants.h",
+                      "src/Defines.h",
+                      "src/Message.h",
+                      "src/RequestParser.h",
+                      "src/Router.h",
+                      "src/Server.h",
+                      "src/middlewares/Cors.h",
+                      "src/utilities/Codec.h",
+                      "src/utilities/StrUtils.h",
+                      "src/utilities/Traits.h",
+                      "src/utilities/Trie.h",
+                      "src/utilities/Url.h",
+                      "src/utilities/Utils.h"
+                    ]
+                  },
+                  {
+                    "compileFlags": " -std=c++1z -stdlib=libc++ -Wall -I/usr/local/opt/openssl/include -DASIO_SEPARATE_COMPILATION -DASIO_STANDALONE -Wno-unknown-pragmas -g  ",
+                    "includePath": [
+                      {
+                        "path": "/Users/markwang/github/theros/Theros/src"
+                      },
+                      {
+                        "path": "/Users/markwang/github/theros/Theros/src/middlewares"
+                      },
+                      {
+                        "path": "/Users/markwang/github/theros/Theros/src/utilities"
+                      },
+                      {
+                        "isSystem": true,
+                        "path": "/Users/markwang/github/theros/Theros/../lib/asio-1.10.6/include"
+                      },
+                      {
+                        "isSystem": true,
+                        "path": "/Users/markwang/github/theros/Theros/../lib/Catch/single_include"
+                      },
+                      {
+                        "isSystem": true,
+                        "path": "/Users/markwang/github/theros/Theros/../lib/json/src"
+                      }
+                    ],
+                    "isGenerated": false,
+                    "language": "CXX",
+                    "sources": [
+                      "main.cpp",
+                      "src/Connection.cpp",
+                      "src/Message.cpp",
+                      "src/RequestParser.cpp",
+                      "src/Router.cpp",
+                      "src/utilities/Codec.cpp",
+                      "src/utilities/StrUtils.cpp",
+                      "src/utilities/Url.cpp"
+                    ]
+                  }
+                ],
+                "fullName": "server",
+                "linkFlags": "-L/usr/local/opt/openssl/lib -lssl -lcrypto",
+                "linkLanguageFlags": "-std=c++1z -stdlib=libc++ -Wall -I/usr/local/opt/openssl/include -DASIO_SEPARATE_COMPILATION -DASIO_STANDALONE -Wno-unknown-pragmas -g",
+                "linkerLanguage": "CXX",
+                "name": "server",
+                "sourceDirectory": "/Users/markwang/github/theros/Theros",
+                "type": "EXECUTABLE"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "cookie": "0.9712565552093848",
+    "inReplyTo": "codemodel",
+    "type": "reply"
+  }
 }

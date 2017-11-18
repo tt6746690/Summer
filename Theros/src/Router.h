@@ -7,8 +7,7 @@
 #include <vector>
 
 #include "Traits.h"
-#include "Request.h"
-#include "Response.h"
+#include "Message.h"
 #include "Trie.h"
 
 namespace Theros {

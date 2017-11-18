@@ -2,8 +2,7 @@
 #include <vector> // emplace_back
 
 #include "RequestParser.h"
-#include "Request.h"
-#include "Uri.h" // uri.consume
+#include "Message.h" // uri.consume
 #include "Url.h"
 
 namespace Theros {

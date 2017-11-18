@@ -5,7 +5,7 @@
 #include "catch.hpp"
 
 #include "RequestParser.h"
-#include "Request.h"
+#include "Message.h"
 #include "Constants.h"
 
 using namespace Theros;

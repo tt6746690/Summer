@@ -4,9 +4,53 @@
 
 #include "Message.h"
 #include "Utils.h"
-#include "Response.h"
 
+using namespace std;
 using namespace Theros;
+
+
+TEST_CASE("Enum StatusCode", "[Response]")
+{
+    Response res;
+
+    SECTION("StatusCode enum to int")
+    {
+        REQUIRE(Response::status_code_to_int(StatusCode::Found) == 302);
+    }
+
+    SECTION("StatusCode enum to reason phrase")
+    {
+        const char *OK = Response::status_code_to_reason(StatusCode::OK);
+        REQUIRE(OK == "OK");
+
+        std::string Bad_Request = Response::status_code_to_reason(StatusCode::Bad_Request);
+        REQUIRE(Bad_Request == "Bad Request");
+    }
+}
+
+
+
+TEST_CASE("url percent encoding/decoding")
+{
+
+    SECTION("instance decoding")
+    {
+        // https://zh.wikipedia.org/wiki/%E7%99%BE%E5%88%86%E5%8F%B7%E7%BC%96%E7%A0%81
+
+        Uri uri;
+        uri.scheme_ = "https";
+        uri.host_ = "zh.wikipedia.org";
+        uri.abs_path_ = "/wiki/%E7%99%BE%E5%88%86%E5%8F%B7%E7%BC%96%E7%A0%81";
+
+        uri.decode();
+
+        REQUIRE(uri.scheme_ == "https");
+        REQUIRE(uri.host_ == "zh.wikipedia.org");
+        REQUIRE(uri.abs_path_ == "/wiki/百分号编码");
+    }
+
+}
+
 
 TEST_CASE("Message::Manipulate header member", "[Message]")
 {

@@ -55,7 +55,8 @@
     "__nullptr": "cpp",
     "istream": "cpp",
     "ostream": "cpp",
-    "cstdio": "cpp"
+    "cstdio": "cpp",
+    "stack": "cpp"
   },
   "editor.formatOnSave": false,
   "editor.wordWrap": "off"
