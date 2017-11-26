@@ -13,19 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a608ba20-fa39-49ad-984f-c4aa3deedc50" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.vscode/.cmaketools.json" afterPath="$PROJECT_DIR$/.vscode/.cmaketools.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.vscode/settings.json" afterPath="$PROJECT_DIR$/.vscode/settings.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/main.cpp" afterPath="$PROJECT_DIR$/Theros/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/Connection.cpp" afterPath="$PROJECT_DIR$/Theros/src/Connection.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/Message.cpp" afterPath="$PROJECT_DIR$/Theros/src/Message.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/Message.h" afterPath="$PROJECT_DIR$/Theros/src/Message.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/RequestParser.cpp" afterPath="$PROJECT_DIR$/Theros/src/RequestParser.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/Router.cpp" afterPath="$PROJECT_DIR$/Theros/src/Router.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/Router.h" afterPath="$PROJECT_DIR$/Theros/src/Router.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/utilities/Utils.h" afterPath="$PROJECT_DIR$/Theros/src/utilities/Utils.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/test/test_Message.cpp" afterPath="$PROJECT_DIR$/Theros/test/test_Message.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/test/test_RequestParser.cpp" afterPath="$PROJECT_DIR$/Theros/test/test_RequestParser.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.vscode/c_cpp_properties.json" afterPath="$PROJECT_DIR$/.vscode/c_cpp_properties.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/src/utilities/Trie.h" afterPath="$PROJECT_DIR$/Theros/src/utilities/Trie.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/test/test_Router.cpp" afterPath="$PROJECT_DIR$/Theros/test/test_Router.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theros/test/test_Trie.cpp" afterPath="$PROJECT_DIR$/Theros/test/test_Trie.cpp" />
     </list>
@@ -42,63 +31,10 @@
     <favorites_list name="Summer" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf>
-          <file leaf-file-name="RequestParser.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Theros/src/RequestParser.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="300">
-                  <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="test_Router.cpp" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/Theros/test/test_Router.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="451">
-                  <caret line="104" column="28" lean-forward="true" selection-start-line="104" selection-start-column="28" selection-end-line="104" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#0#20#0" expanded="true" />
-                    <element signature="e#243#255#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Router.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Theros/src/Router.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="116">
-                  <caret line="57" column="44" lean-forward="true" selection-start-line="57" selection-start-column="44" selection-end-line="57" selection-end-column="44" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="Constants.h" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/Theros/src/Constants.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="437">
-                  <caret line="36" column="3" lean-forward="true" selection-start-line="36" selection-start-column="3" selection-end-line="36" selection-end-column="3" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>child_value</find>
       <find>scheme</find>
       <find>pos</find>
       <find>ServerType</find>
@@ -128,6 +64,7 @@
       <find>make_query</find>
       <find>s_uri</find>
       <find>start</find>
+      <find>expected</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -187,6 +124,8 @@
         <option value="$PROJECT_DIR$/Theros/src/Constants.h" />
         <option value="$PROJECT_DIR$/Theros/src/RequestParser.h" />
         <option value="$PROJECT_DIR$/Theros/src/Router.cpp" />
+        <option value="$PROJECT_DIR$/Theros/src/utilities/Trie.h" />
+        <option value="$PROJECT_DIR$/Theros/test/test_Trie.cpp" />
         <option value="$PROJECT_DIR$/Theros/test/test_Router.cpp" />
       </list>
     </option>
@@ -528,11 +467,12 @@
       <workItem from="1510950724672" duration="2254000" />
       <workItem from="1510969359601" duration="5543000" />
       <workItem from="1510982121562" duration="5754000" />
+      <workItem from="1511663027263" duration="1662000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65337000" />
+    <option name="totallyTimeSpent" value="66999000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -546,13 +486,13 @@
   <component name="ToolWindowManager">
     <frame x="20" y="40" width="1880" height="1020" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14744288" sideWeight="0.493994" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07290533" sideWeight="0.493994" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33620688" sideWeight="0.7487479" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2801724" sideWeight="0.4966611" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27314815" sideWeight="0.55676126" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27155173" sideWeight="0.44323874" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27155173" sideWeight="0.44323874" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13166486" sideWeight="0.506006" order="0" side_tool="true" content_ui="tabs" />
@@ -603,12 +543,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="27" />
+      <option name="time" value="28" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Summer/src/Connection.h" />
     <entry file="file://$PROJECT_DIR$/Summer/src/Router.h" />
     <entry file="file://$PROJECT_DIR$/Summer/test/test_Router.cpp" />
     <entry file="file://$PROJECT_DIR$/Summer/main.cpp" />
@@ -634,13 +573,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Theros/test/test_Codec.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/test/test_Codec.cpp" />
     <entry file="file://$PROJECT_DIR$/Theros/test/test_Message.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -658,20 +591,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Theros/test/test_Response.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Theros/test/test_Trie.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/test/test_Response.cpp" />
     <entry file="file://$PROJECT_DIR$/Theros/main-test.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -743,13 +663,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Theros/src/Trie.h" />
-    <entry file="file://$PROJECT_DIR$/Theros/test/test_Uri.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="32" lean-forward="false" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/test/test_Uri.cpp" />
     <entry file="file://$PROJECT_DIR$/lib/Catch/include/reporters/catch_reporter_xml.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -795,7 +709,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="25200">
           <caret line="1680" column="0" lean-forward="false" selection-start-line="1680" selection-start-column="0" selection-end-line="1680" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -828,7 +741,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
           <caret line="1518" column="0" lean-forward="false" selection-start-line="1518" selection-start-column="0" selection-end-line="1518" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -910,10 +822,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/src/utilities/Trie.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="191" column="9" lean-forward="true" selection-start-line="191" selection-start-column="9" selection-end-line="191" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/test/test_Router.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="111" column="0" lean-forward="true" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#243#255#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Theros/src/RequestParser.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
-          <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+          <caret line="20" column="7" lean-forward="false" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Theros/test/test_Trie.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="136" column="17" lean-forward="true" selection-start-line="136" selection-start-column="17" selection-end-line="136" selection-end-column="17" />
           <folding />
         </state>
       </provider>
@@ -921,27 +860,16 @@
     <entry file="file://$PROJECT_DIR$/Theros/src/Router.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="116">
-          <caret line="57" column="44" lean-forward="true" selection-start-line="57" selection-start-column="44" selection-end-line="57" selection-end-column="44" />
+          <caret line="57" column="44" lean-forward="false" selection-start-line="57" selection-start-column="44" selection-end-line="57" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Theros/src/Constants.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="36" column="3" lean-forward="true" selection-start-line="36" selection-start-column="3" selection-end-line="36" selection-end-column="3" />
+        <state relative-caret-position="338">
+          <caret line="36" column="3" lean-forward="false" selection-start-line="36" selection-start-column="3" selection-end-line="36" selection-end-column="3" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Theros/test/test_Router.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="104" column="28" lean-forward="true" selection-start-line="104" selection-start-column="28" selection-end-line="104" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-            <element signature="e#243#255#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

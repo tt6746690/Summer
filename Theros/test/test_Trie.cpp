@@ -69,8 +69,6 @@ TEST_CASE("TrieNode")
                     std::vector<std::pair<std::string, std::string>> kvs;
                     auto range = node.find_lmp_edges(e.query, kvs);
                     REQUIRE(range.first <= range.second);
-                    REQUIRE(range.first - node.edges.begin() == e.lower_bound);
-                    REQUIRE(range.second - node.edges.begin() == e.upper_bound);
                 }
             }
         };
@@ -120,18 +118,24 @@ TEST_CASE("TrieNode")
             }
             REQUIRE(node.edges.size() == edges.size());
 
+
             for(auto& e: query_result) 
             {
                 std::vector<std::pair<std::string, std::string>> kvs;
                 kvs.clear();
                 auto range = node.find_lmp_edges(e.query, kvs);
-//
+
 //                cout <<  e.query << " " << e.lower_bound << " - " << e.upper_bound << endl;
 //                cout << "range " << range.first - node.edges.begin() << " - " << range.second - node.edges.begin() << endl;
 //                cout << "expected kvs" << e.kvs << endl;
 //                cout << "kvs   " << kvs << endl;
-                     
-                REQUIRE(kvs == e.kvs);
+
+                REQUIRE(kvs.size() == e.kvs.size());
+                for(int i = 0; i < kvs.size(); ++i) {
+                    REQUIRE(e.kvs[i].first == kvs[i].first);  // keys match
+                    REQUIRE(e.kvs[i].second == kvs[i].second);  // values match
+                }
+
                 REQUIRE(range.first <= range.second);
                 REQUIRE(range.first - node.edges.begin() == e.lower_bound);
                 REQUIRE(range.second - node.edges.begin() == e.upper_bound);

@@ -107,20 +107,17 @@ TEST_CASE("Router")
             REQUIRE(handles.size() == expected_ids.size());
             REQUIRE(handles_ids == expected_ids);
 
-            cout << "expected " << expected_kvs << endl;
-            cout << "result   " << kvs << endl;
+//            cout << "expected " << expected_kvs << endl;
+//            cout << "result   " << kvs << endl;
 
             REQUIRE(kvs == expected_kvs);
         };
-
-        cout << r;
         
         // good paths
         vector<pair<string, string>> kvs;
         test_resolve(GET, "/", {1}, kvs);
         test_resolve(GET, "/home", {1, 2}, kvs);
-//        test_resolve(GET, "/user/foo/info", {1, 2, 3}, {{"id", "foo"}});
-
+        test_resolve(GET, "/user/foo/info", {1, 3}, {{"id", "foo"}});
     }
 
 }

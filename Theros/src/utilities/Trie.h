@@ -189,7 +189,6 @@ auto TrieNode<T, CharT>::find_lmp_edges(KeyT query,
         // [lower_bound, i) holds a prefix match
         if(edge_prefix_len < longest_edge_prefix_len) {
             upper_bound = i;
-            break;
         }
     }
 
