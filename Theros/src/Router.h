@@ -36,7 +36,7 @@ class Handler
 public:
     using HandleFunc    = std::function<void(Context &)>;
     using ValueT        = std::vector<HandleFunc>;
-    static int handler_id_counter;
+    static int handler_id_counter;      // init to 0
 protected:
     ValueT          handler_;
     int             handler_id_;

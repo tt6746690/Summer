@@ -225,13 +225,13 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     }
     if (is_token(c)) {
       request.headers.emplace_back();
-      request.build_header_name(c);
+      build_header_name(request, c);
       state_ = s::req_field_name;
       return status::in_progress;
     }
   case s::req_field_name:
     if (is_token(c)) {
-      request.build_header_name(c);
+      build_header_name(request, c);
       return status::in_progress;
     }
     if (c == ':') {
@@ -248,7 +248,7 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
       return status::in_progress;
     }
     if (!is_ctl(c)) {
-      request.build_header_value(c);
+      build_header_value(request, c);
       return status::in_progress;
     }
     return status::reject;
@@ -282,7 +282,7 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     }
     if (is_token(c)) {
       request.headers.emplace_back();
-      request.build_header_name(c);
+      build_header_name(request, c);
       state_ = s::req_field_name;
       return status::in_progress;
     }
@@ -296,6 +296,18 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     break;
   }
   return status::reject;
+}
+
+
+void RequestParser::build_header_name(Request& req, char c)
+{
+    assert(req.headers.size() != 0);
+    Message::header_name(req.headers.back()).push_back(c);
+}
+void RequestParser::build_header_value(Request& req, char c)
+{
+    assert(req.headers.size() != 0);
+    Message::header_value(req.headers.back()).push_back(c);
 }
 
 auto RequestParser::view_state(RequestParser::State state, ParseStatus status,

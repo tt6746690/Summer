@@ -271,9 +271,6 @@ TEST_CASE("Trie")
                 {"/user/mr_foo/books/foos_grand_journey", 5, {{"id", "mr_foo"}, {"book_id", "foos_grand_journey"}}}
             });
         }
-
-
-
     }
 
     SECTION("Insertion") {

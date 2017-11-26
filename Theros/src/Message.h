@@ -1,11 +1,12 @@
 #ifndef __HEADER_H__
 #define __HEADER_H__
 
-#include <iosfwd>
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 #include "Defines.h"
 #include "Utils.h"  // enum_map
@@ -15,25 +16,138 @@
 namespace Theros
 {
 
+
+struct DefaultBody  {
+public:
+  using value_type = std::string;
+public:
+
+};
+
+template<typename BodyType = DefaultBody>
+class Message2 {
+public:
+  struct Header {
+    std::string name;
+    std::string value;
+  };
+  using Headers         = std::vector<Header>;
+  using HeadersIterator = typename Headers::iterator;
+  using Body            = typename BodyType::value_type;
+public:
+  int       version_major;
+  int       version_minor;
+  Headers   headers;
+  Body      body;
+public:
+  /** 
+   * Methods for manipulating headers 
+   */
+  /** Finds header value given a header name */
+  std::string FindHeader(const std::string& name);
+  /** Setting a header either modifies an existing header in place or insert a new one */
+  void SetHeader(const Header& header); 
+  /** Removing a header either removes an existing header or is an no-op */
+  void RemoveHeader(const std::string& name);
+
+  /** Convenience methods for Getting/Setting certain headers
+   *    -- Content Length 
+   *    -- Content Type
+   *  Lookup func inserts entry with default values if header not found
+   */
+  int  ContentLength();
+  void ContentLength(int length);
+  std::string ContentType();
+  void ContentType(const std::string& cont_type);
+
+private:
+  /** Returns an iterator to a header with name equivalent to `name` */
+  HeadersIterator find_header_by_name(const std::string& name);
+  friend inline std::ostream& operator<<(std::ostream& os, const Header& h) { return os << h.name << ": " << h.value << eol; }
+};
+
+
+
+// impls 
+
+template<typename BodyType>
+auto Message2<BodyType>::find_header_by_name(const std::string& name) -> HeadersIterator
+{
+  return std::find_if(headers.begin(), headers.end(), 
+    [&name](Header& h){
+      return h.name == name;
+    });
+}
+
+template<typename BodyType>
+std::string Message2<BodyType>::FindHeader(const std::string& name) 
+{
+  std::string header_value;
+  HeadersIterator found = find_header_by_name(name);
+  if (found != headers.end()) header_value = found->value;
+  return header_value;
+}
+
+template<typename BodyType> 
+void Message2<BodyType>::SetHeader(const Header& header) 
+{
+  HeadersIterator found = find_header_by_name(header.name);
+  if (found != headers.end())
+    *found = header;
+  else 
+    headers.push_back(header);
+}
+
+template<typename BodyType>
+void Message2<BodyType>::RemoveHeader(const std::string& name)
+{
+  auto end = std::remove_if(headers.begin(), headers.end(),
+    [&name](Header& h) { return h.name == name; });
+  headers.erase(end, headers.end());
+}
+
+template<typename BodyType>
+int  Message2<BodyType>::ContentLength() {
+  HeadersIterator it = find_header_by_name("Content-Length");
+  if (it != headers.end())
+    return std::atoi(it->value.c_str());
+  else
+    SetHeader({"Content-Length", "0"}); return 0;
+}
+
+
+template<typename BodyType>
+std::string Message2<BodyType>::ContentType() 
+{
+  HeadersIterator it = find_header_by_name("Content-Type");
+  if (it != headers.end()) {
+    return it->value;
+  } else {
+    SetHeader({"Content-Type", ""}); return "";
+  }
+}
+
+template<typename BodyType>
+void Message2<BodyType>::ContentLength(int length) { SetHeader({"Content-Length", std::to_string(length)}); }
+
+template<typename BodyType>
+void Message2<BodyType>::ContentType(const std::string& cont_type) { SetHeader({"Content-Type", cont_type}); }
+
+
+
+
+
 class Message
 {
 public:
-  using HeaderNameType = std::string;
-  using HeaderValueType = std::string;
-  using HeaderType = std::pair<HeaderNameType, HeaderValueType>;
-
-  /**
-   * @brief   appends a char to name/value of last header in headers
-   *
-   * @pre headers_ must be nonempty
-   */
-  void build_header_name(char c);
-  void build_header_value(char c);
+  Message2<> test;
+public:
+  using HeaderType = std::pair<std::string, std::string>;
 
   /**
    * @brief   Gets header with given name
    */
-  auto get_header(HeaderNameType name) -> std::pair<HeaderValueType, bool>;
+  auto get_header(std::string name) -> std::pair<std::string, bool>;
   /**
    * @brief   Concatenates header key:value pair
    */
@@ -48,15 +162,15 @@ public:
   /**
    * @brief   Removes header with given name
    */
-  void unset_header(HeaderNameType name);
+  void unset_header(std::string name);
 
   /**
      * @brief   Gets/Sets commonly used headers
      */
   auto content_length() -> int;
   void content_length(int length);
-  auto content_type() -> HeaderValueType;
-  void content_type(HeaderValueType value);
+  auto content_type() -> std::string;
+  void content_type(std::string value);
 
   int version_major;
   int version_minor;
@@ -72,8 +186,10 @@ public:
   /**
    * @brief   Given a header, return its name/value
    */
-  static auto header_name(const HeaderType &header) -> HeaderNameType &;
-  static auto header_value(const HeaderType &header) -> HeaderValueType &;
+  static std::string& header_name(HeaderType &header) { return std::get<0>(header); }
+  static std::string& header_name(const HeaderType &header) { return std::get<0>(const_cast<HeaderType&>(header)); }
+  static std::string& header_value(HeaderType &header) { return std::get<1>(header); }
+  static std::string& header_value(const HeaderType &header) { return std::get<1>(const_cast<HeaderType&>(header)); }
 
   friend std::ostream& operator<<(std::ostream &strm, const HeaderType&);
 };

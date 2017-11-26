@@ -83,31 +83,3 @@ std::ostream& operator<<(std::ostream& os, const Router& r)
 
 
 } // namespace Theros
-
-// std::vector<T> resolve(Request &req)
-// {
-//   auto method = req.method_;
-//   auto path = req.uri_.abs_path;
-//   auto &route = routes_[to_underlying_t(method)];
-
-//   std::string param_key, param_value;
-//   auto found = route.find(path, param_key, param_value);
-
-//   if (found == route.end())
-//     return {};
-
-//   if (!param_key.empty() && !param_value.empty())
-//     req.param_.insert({param_key, param_value});
-
-//   std::vector<T> handle_sequence;
-
-//   while (found != route.end())
-//   {
-//     if (*found)
-//       handle_sequence.push_back(*found);
-//     --found;
-//   }
-
-//   std::reverse(handle_sequence.begin(), handle_sequence.end());
-//   return handle_sequence;
-// }

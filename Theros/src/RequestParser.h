@@ -19,7 +19,10 @@ enum class ParseStatus
 class RequestParser
 {
 public:
-  enum class State;
+    enum class State;
+public:
+    State state_;
+public:
   explicit RequestParser();
   /**
    * @brief Populate Request object given a Range of chars
@@ -32,11 +35,11 @@ public:
   auto consume(Request &request, char c) -> ParseStatus;
   // Helper functions
   static void view_state(RequestParser::State state, ParseStatus status, char c);
-  friend auto operator<<(std::ostream &strm, ParseStatus &status) -> std::ostream &;
-
+  friend std::ostream& operator<<(std::ostream &strm, ParseStatus &status);
 public:
-  // member public
-  State state_;
+  void build_header_name(Request& req, char c);
+  void build_header_value(Request& req, char c);
+
 };
 
 /*

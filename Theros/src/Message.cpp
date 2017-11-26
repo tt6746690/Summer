@@ -6,10 +6,14 @@
 #include <cassert>
 #include <utility>
 #include <iostream> 
+#include <algorithm>
 
 
 namespace Theros
 {
+
+
+
 
 //////////////////////////////////////////////////
 
@@ -18,29 +22,11 @@ std::string Message::version(int major, int minor)
     return "HTTP/" + std::to_string(major) + "." + std::to_string(minor);
 }
 
-void Message::build_header_name(char c)
-{
-    assert(headers.size() != 0);
-    header_name(headers.back()).push_back(c);
-}
-void Message::build_header_value(char c)
-{
-    assert(headers.size() != 0);
-    header_value(headers.back()).push_back(c);
-}
 
-Message::HeaderNameType& Message::header_name(const HeaderType &header)
-{
-    return std::get<0>(const_cast<HeaderType&>(header));
-}
-Message::HeaderValueType& Message::header_value(const HeaderType &header)
-{
-    return std::get<1>(const_cast<HeaderType&>(header));
-}
 
-std::pair<Message::HeaderValueType, bool> Message::get_header(HeaderNameType name)
+std::pair<std::string, bool> Message::get_header(std::string name)
 {
-    HeaderValueType val{};
+    std::string val{};
     bool valid = false;
 
     for (auto &header : headers)
@@ -71,7 +57,7 @@ void Message::set_header(HeaderType header)
         headers.push_back(header);
 }
 
-void Message::unset_header(HeaderNameType name)
+void Message::unset_header(std::string name)
 {
     auto end = std::remove_if(headers.begin(), headers.end(),
                               [&](auto &header) {
@@ -82,7 +68,7 @@ void Message::unset_header(HeaderNameType name)
 
 int Message::content_length()
 {
-    HeaderValueType val = "";
+    std::string val = "";
     bool found;
     std::tie(val, found) = get_header("Content-Length");
 
@@ -98,9 +84,9 @@ void Message::content_length(int length)
     set_header({"Content-Length", std::to_string(length)});
 }
 
-Message::HeaderValueType Message::content_type()
+std::string Message::content_type()
 {
-    HeaderValueType val = "";
+    std::string val = "";
     bool found;
     std::tie(val, found) = get_header("Content-Type");
 
@@ -111,7 +97,7 @@ Message::HeaderValueType Message::content_type()
     return "";
 }
 
-void Message::content_type(HeaderValueType value)
+void Message::content_type(std::string value)
 {
     set_header({"Content-Type", value});
 }

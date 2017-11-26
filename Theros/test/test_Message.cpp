@@ -60,24 +60,24 @@ TEST_CASE("Message::Manipulate header member", "[Message]")
     msg.headers.emplace_back();
     REQUIRE(msg.headers.size() == 1);
 
-    SECTION("build_header_name")
-    {
-        msg.build_header_name('k');
-        REQUIRE(msg.headers.back().first == "k");
+    // SECTION("build_header_name")
+    // {
+    //     msg.build_header_name('k');
+    //     REQUIRE(msg.headers.back().first == "k");
 
-        msg.build_header_name('e');
-        msg.build_header_name('y');
-        REQUIRE(msg.headers.back().first == "key");
+    //     msg.build_header_name('e');
+    //     msg.build_header_name('y');
+    //     REQUIRE(msg.headers.back().first == "key");
 
-        msg.build_header_value('v');
-        msg.build_header_value('a');
-        REQUIRE(msg.headers.back().second == "va");
+    //     msg.build_header_value('v');
+    //     msg.build_header_value('a');
+    //     REQUIRE(msg.headers.back().second == "va");
 
-        msg.build_header_value('l');
-        msg.build_header_value('u');
-        msg.build_header_value('e');
-        REQUIRE(msg.headers.back().second == "value");
-    }
+    //     msg.build_header_value('l');
+    //     msg.build_header_value('u');
+    //     msg.build_header_value('e');
+    //     REQUIRE(msg.headers.back().second == "value");
+    // }
 
     SECTION("manipulate headers")
     {
@@ -87,7 +87,7 @@ TEST_CASE("Message::Manipulate header member", "[Message]")
 
         SECTION("get_header")
         {
-            Response::HeaderValueType val;
+            std::string val;
             bool found;
 
             std::tie(val, found) = msg.get_header("foo");
