@@ -24,6 +24,18 @@ public:
 
 };
 
+enum class HttpVersion : uint8_t {
+  zero_nine,
+  one_zero,
+  one_one,
+  two_zero
+};
+
+/** Stringify Http version */
+std::string version_as_string(HttpVersion v);
+
+////////////////////////////////////////////////////////////////////////
+
 template<typename BodyType = DefaultBody>
 class Message2 {
 public:
@@ -35,10 +47,9 @@ public:
   using HeadersIterator = typename Headers::iterator;
   using Body            = typename BodyType::value_type;
 public:
-  int       version_major;
-  int       version_minor;
-  Headers   headers;
-  Body      body;
+  HttpVersion   version;
+  Headers       headers;
+  Body          body;
 public:
   /** 
    * Methods for manipulating headers 
@@ -63,8 +74,45 @@ public:
 private:
   /** Returns an iterator to a header with name equivalent to `name` */
   HeadersIterator find_header_by_name(const std::string& name);
-  friend inline std::ostream& operator<<(std::ostream& os, const Header& h) { return os << h.name << ": " << h.value << eol; }
+public:
+  friend inline std::ostream& operator<<(std::ostream& os, const Header& h) { return os << h.name + ": " + h.value; }
 };
+
+////////////////////////////////////////////////////////////////////////
+
+struct Uri
+{
+  std::string scheme;
+  std::string host;
+  std::string port;
+  std::string abs_path;
+  std::string query;
+  std::string fragment;
+};
+
+
+/** Stringify in this format : "http:" "//" host [ ":" port ] [ abs_path [ "?" query ]] */
+std::string uri_as_string(const Uri& uri);
+
+
+////////////////////////////////////////////////////////////////////////
+
+class Request2 : public Message2<> {
+public:
+  using Method  = RequestMethod;
+  using MapType = std::unordered_map<std::string, std::string>;
+public:
+  Method    method;
+  Uri       uri;
+  MapType   uri_param;
+  MapType   uri_query;
+public:
+  friend std::ostream& operator<<(std::ostream& os, const Request2& req);
+};
+
+
+std::string   request_method_as_string(RequestMethod method);
+RequestMethod request_method_from_cstr(const char* method);
 
 
 
@@ -74,9 +122,7 @@ template<typename BodyType>
 auto Message2<BodyType>::find_header_by_name(const std::string& name) -> HeadersIterator
 {
   return std::find_if(headers.begin(), headers.end(), 
-    [&name](Header& h){
-      return h.name == name;
-    });
+    [&name](Header& h){ return h.name == name; });
 }
 
 template<typename BodyType>
@@ -136,11 +182,8 @@ void Message2<BodyType>::ContentType(const std::string& cont_type) { SetHeader({
 
 
 
-
 class Message
 {
-public:
-  Message2<> test;
 public:
   using HeaderType = std::pair<std::string, std::string>;
 
@@ -196,6 +239,22 @@ public:
 
 
 
+class Response2 : public Message2<> {
+public:
+  StatusCode status_code;
+public:
+  Response2() : status_code(StatusCode::OK) { }
+
+  /** Serialize status line */
+  std::string StatusLine();
+};
+
+int status_code_as_int(StatusCode status_code);
+const char* status_code_as_reason(StatusCode status_code);
+StatusCode status_code_from_int(int status_code);
+
+
+ 
 
 class Response : public Message
 {
@@ -264,26 +323,6 @@ public:
 
 
 
-enum class ParseStatus;
-
-class Uri
-{
-public:
-  std::string scheme;
-  std::string host;
-  std::string port;
-  std::string abs_path;
-  std::string query;
-  std::string fragment;
-  UriState state_ = UriState::uri_start;
-
-public:
-  /** @brief   Advance state for parsing uri given char */
-  ParseStatus consume(char c);
-  /** @brief   Decodes fields in uri */
-  void decode();
-  friend std::ostream& operator<<(std::ostream &strm, const Uri uri);
-};
 
 
 class Request : public Message
@@ -338,7 +377,7 @@ public:
       -> std::ostream &
   {
     strm << "> " << Request::request_method_to_string(request.method) << " "
-         << request.uri << " "
+         << uri_as_string(request.uri) << " "
          << Message::version(request.version_major, request.version_minor)
          << std::endl;
     for (auto header : request.headers)

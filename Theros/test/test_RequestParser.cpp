@@ -14,10 +14,10 @@ TEST_CASE("Uri", "[RequestParser]")
 {
     RequestParser parser;
     REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
+    REQUIRE(parser.uri_state_ == UriState::uri_start);
 
     Request req;
     REQUIRE(req.method == RequestMethod::UNDETERMINED);
-    REQUIRE(req.uri.state_ == UriState::uri_start);
 
     std::string payload;
 
@@ -47,10 +47,10 @@ TEST_CASE("Overall", "[RequestParser]")
 {
     RequestParser parser;
     REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
-    
+    REQUIRE(parser.uri_state_ == UriState::uri_start);
+
     Request req;
     REQUIRE(req.method == RequestMethod::UNDETERMINED);
-    REQUIRE(req.uri.state_ == UriState::uri_start);
     REQUIRE(req.headers.size() == 0);
     REQUIRE(req.body == "");
 
@@ -96,10 +96,10 @@ TEST_CASE("Method", "[RequestParser]")
 
     RequestParser parser;
     REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
-    
+    REQUIRE(parser.uri_state_ == UriState::uri_start);
+
     Request req;
     REQUIRE(req.method == RequestMethod::UNDETERMINED);
-    REQUIRE(req.uri.state_ == UriState::uri_start);
 
     std::string payload;
 

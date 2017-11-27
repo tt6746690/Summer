@@ -2,6 +2,7 @@
 #include <utility>
 #include "catch.hpp"
 
+#include "RequestParser.h"
 #include "Message.h"
 #include "Utils.h"
 
@@ -42,7 +43,7 @@ TEST_CASE("url percent encoding/decoding")
         uri.host = "zh.wikipedia.org";
         uri.abs_path = "/wiki/%E7%99%BE%E5%88%86%E5%8F%B7%E7%BC%96%E7%A0%81";
 
-        uri.decode();
+        RequestParser::uri_decode(uri);
 
         REQUIRE(uri.scheme == "https");
         REQUIRE(uri.host == "zh.wikipedia.org");

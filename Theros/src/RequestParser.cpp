@@ -2,7 +2,6 @@
 #include <vector> // emplace_back
 
 #include "RequestParser.h"
-#include "Message.h" // uri.consume
 #include "Url.h"
 
 namespace Theros {
@@ -30,7 +29,124 @@ enum class RequestParser::State {
   req_header_end        // 20
 };
 
-RequestParser::RequestParser() : state_(State::req_start){};
+RequestParser::RequestParser() 
+  : state_(State::req_start), uri_state_(UriState::uri_start) {};
+
+
+void RequestParser::uri_decode(Uri& uri) 
+{
+  uri.scheme = urldecode(uri.scheme);
+  uri.host = urldecode(uri.host);
+  uri.abs_path = urldecode(uri.abs_path);
+  uri.query = urldecode(uri.query);
+  uri.fragment = urldecode(uri.fragment);
+}
+
+/*
+    Request-URI    = "*" | absoluteURI | abs_path | authority
+
+    http_URL (absoluteURI) = "http:" "//" host [ ":" port ] [ abs_path [ "?"
+   query ]]
+
+    Note
+      -- port=80 by default
+      -- host, scheme are case insensitive, rest case sensitive
+      -- abs_path=/ by default
+
+
+    Caveates:
+      ignore "*", and authority format
+
+    TODO:
+      -- decode url
+      -- transmit error code that is appropriate
+      -- return 414 request-uri too long ...
+  */
+
+auto RequestParser::consume(Uri& uri, char c) -> ParseStatus
+{
+  switch (uri_state_) {
+  case UriState::uri_start:
+    if (c == '/') {
+      uri_state_ = UriState::uri_abs_path;
+      uri.abs_path.push_back(c);
+      return ParseStatus::in_progress;
+    }
+    if (is_alpha(c)) {
+      uri.scheme.push_back(c);
+      uri_state_ = UriState::uri_scheme;
+      return ParseStatus::in_progress;
+    }
+    break;
+  case UriState::uri_scheme:
+    if (is_alpha(c)) {
+      uri.scheme.push_back(c);
+      return ParseStatus::in_progress;
+    }
+    if (c == ':') {
+      uri_state_ = UriState::uri_slash;
+      return ParseStatus::in_progress;
+    }
+    break;
+  case UriState::uri_slash:
+    if (c == '/') {
+      uri_state_ = UriState::uri_slash_shash;
+      return ParseStatus::in_progress;
+    }
+    break;
+  case UriState::uri_slash_shash:
+    if (c == '/') {
+      uri_state_ = UriState::uri_host;
+      return ParseStatus::in_progress;
+    }
+    break;
+  case UriState::uri_host:
+    if (c == '/') {
+      uri_state_ = UriState::uri_abs_path;
+      return ParseStatus::in_progress;
+    }
+    if (c == ':') {
+      uri_state_ = UriState::uri_port;
+      return ParseStatus::in_progress;
+    }
+    uri.host.push_back(c);
+    return ParseStatus::in_progress;
+  case UriState::uri_port:
+    if (is_digit(c)) {
+      uri.port.push_back(c);
+      return ParseStatus::in_progress;
+    }
+    if (c == '/') {
+      uri_state_ = UriState::uri_abs_path;
+      return ParseStatus::in_progress;
+    }
+    break;
+  case UriState::uri_abs_path:
+    if (c == '?') {
+      uri_state_ = UriState::uri_query;
+      return ParseStatus::in_progress;
+    }
+    if (c == '#') {
+      uri_state_ = UriState::uri_fragment;
+      return ParseStatus::in_progress;
+    }
+    uri.abs_path.push_back(c);
+    return ParseStatus::in_progress;
+  case UriState::uri_query:
+    if (c == '#') {
+      uri_state_ = UriState::uri_fragment;
+      return ParseStatus::in_progress;
+    }
+    uri.query.push_back(c);
+    return ParseStatus::in_progress;
+  case UriState::uri_fragment:
+    uri.fragment.push_back(c);
+    return ParseStatus::in_progress;
+  default:
+    break;
+  }
+  return ParseStatus::reject;
+};
 
 /*
         Request         = Request-Line                  ; Section 5.1
@@ -148,10 +264,10 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
   case s::req_uri:
     assert(request.method != RequestMethod::UNDETERMINED);
     if (is_uri(c)) {
-      return request.uri.consume(c);
+      return consume(request.uri, c);
     }
     if (is_sp(c)) {
-      request.uri.decode(); // decode fields here...
+      uri_decode(request.uri);
       state_ = s::req_http_h;
       return status::in_progress;
     }

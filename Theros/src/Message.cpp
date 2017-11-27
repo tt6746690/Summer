@@ -12,8 +12,95 @@
 namespace Theros
 {
 
+std::string version_as_string(HttpVersion v)
+{
+  std::string version = "HTTP/";
+  switch(v) {
+    case HttpVersion::zero_nine: version += "0.9"; break;
+    case HttpVersion::one_zero:  version += "1.0"; break;
+    case HttpVersion::one_one:   version += "1.1"; break;
+    case HttpVersion::two_zero:  version += "2.0"; break;
+  }
+  return version;
+}
 
 
+std::string uri_as_string(const Uri& uri)
+{
+  std::string s;
+  if (uri.scheme.size())    s += uri.scheme + "://" + uri.host;
+  if (uri.port.size())      s += ":" + uri.port;
+  if (uri.abs_path.size())  s += uri.abs_path;
+  if (uri.query.size())     s += "?" + uri.query;
+  if (uri.fragment.size())  s += "#" + uri.fragment;
+  return s;
+}
+
+
+std::string request_method_as_string(RequestMethod method)
+{
+  return enum_map(request_methods, method);
+}
+
+RequestMethod request_method_from_cstr(const char* method)
+{
+  switch (method[0]) {
+    case 'G': return RequestMethod::GET;
+    case 'H': return RequestMethod::HEAD;
+    case 'P': {
+      switch(method[1]) {
+        case 'O': return RequestMethod::POST;
+        case 'U': return RequestMethod::PUT;
+        case 'A': return RequestMethod::PATCH;
+        default: break;
+      }
+    }
+    case 'D': return RequestMethod::DELETE;
+    case 'C': return RequestMethod::CONNECT;
+    case 'O': return RequestMethod::OPTIONS;
+    case 'T': return RequestMethod::TRACE;
+    default:  return RequestMethod::UNDETERMINED;
+  }
+}
+
+
+std::ostream& operator<<(std::ostream& os, const Request2& req)
+{
+  std::string s;
+  s += "> " + request_method_as_string(req.method) + " " + 
+    uri_as_string(req.uri) + " " + version_as_string(req.version) + eol;
+  os << s;
+  for(auto& h : req.headers) { os << "> " << h << eol; }
+  os << "> " << req.body << eol;
+  return os;
+}
+
+std::string Response2::StatusLine()
+{
+  std::string s;
+  s += version_as_string(version) + " " + std::to_string(status_code_as_int(status_code)) + " "
+    + status_code_as_reason(status_code) + CRLF;
+  return s;
+}
+
+
+int status_code_as_int(StatusCode status_code) 
+{ 
+  return enum_map(status_codes, status_code); 
+}
+const char* status_code_as_reason(StatusCode status_code) 
+{ 
+  return enum_map(reason_phrases, status_code); 
+}
+
+StatusCode status_code_from_int(int status_code) 
+{
+  for (int i = 0; i < status_code_count; ++i) {
+    if (status_codes[i] == status_code)
+      return static_cast<StatusCode>(i);
+  }
+  return StatusCode::Not_Found;
+}
 
 //////////////////////////////////////////////////
 
@@ -21,7 +108,6 @@ std::string Message::version(int major, int minor)
 {
     return "HTTP/" + std::to_string(major) + "." + std::to_string(minor);
 }
-
 
 
 std::pair<std::string, bool> Message::get_header(std::string name)
@@ -109,119 +195,15 @@ std::ostream& operator<<(std::ostream& os, const Message::HeaderType& header)
 
 //////////////////////////////////////////////////
 
-void Uri::decode() {
-  scheme = urldecode(scheme);
-  host = urldecode(host);
-  abs_path = urldecode(abs_path);
-  query = urldecode(query);
-  fragment = urldecode(fragment);
-}
+// void Uri::decode() {
+//   scheme = urldecode(scheme);
+//   host = urldecode(host);
+//   abs_path = urldecode(abs_path);
+//   query = urldecode(query);
+//   fragment = urldecode(fragment);
+// }
 
 
-/*
-    Request-URI    = "*" | absoluteURI | abs_path | authority
-
-    http_URL (absoluteURI) = "http:" "//" host [ ":" port ] [ abs_path [ "?"
-   query ]]
-
-    Note
-      -- port=80 by default
-      -- host, scheme are case insensitive, rest case sensitive
-      -- abs_path=/ by default
-
-
-    Caveates:
-      ignore "*", and authority format
-
-    TODO:
-      -- decode url
-      -- transmit error code that is appropriate
-      -- return 414 request-uri too long ...
-  */
-
-ParseStatus Uri::consume(char c) {
-  switch (state_) {
-  case UriState::uri_start:
-    if (c == '/') {
-      state_ = UriState::uri_abs_path;
-      abs_path.push_back(c);
-      return ParseStatus::in_progress;
-    }
-    if (is_alpha(c)) {
-      scheme.push_back(c);
-      state_ = UriState::uri_scheme;
-      return ParseStatus::in_progress;
-    }
-    break;
-  case UriState::uri_scheme:
-    if (is_alpha(c)) {
-      scheme.push_back(c);
-      return ParseStatus::in_progress;
-    }
-    if (c == ':') {
-      state_ = UriState::uri_slash;
-      return ParseStatus::in_progress;
-    }
-    break;
-  case UriState::uri_slash:
-    if (c == '/') {
-      state_ = UriState::uri_slash_shash;
-      return ParseStatus::in_progress;
-    }
-    break;
-  case UriState::uri_slash_shash:
-    if (c == '/') {
-      state_ = UriState::uri_host;
-      return ParseStatus::in_progress;
-    }
-    break;
-  case UriState::uri_host:
-    if (c == '/') {
-      state_ = UriState::uri_abs_path;
-      return ParseStatus::in_progress;
-    }
-    if (c == ':') {
-      state_ = UriState::uri_port;
-      return ParseStatus::in_progress;
-    }
-    host.push_back(c);
-    return ParseStatus::in_progress;
-  case UriState::uri_port:
-    if (is_digit(c)) {
-      port.push_back(c);
-      return ParseStatus::in_progress;
-    }
-    if (c == '/') {
-      state_ = UriState::uri_abs_path;
-      return ParseStatus::in_progress;
-    }
-    break;
-  case UriState::uri_abs_path:
-    if (c == '?') {
-      state_ = UriState::uri_query;
-      return ParseStatus::in_progress;
-    }
-    if (c == '#') {
-      state_ = UriState::uri_fragment;
-      return ParseStatus::in_progress;
-    }
-    abs_path.push_back(c);
-    return ParseStatus::in_progress;
-  case UriState::uri_query:
-    if (c == '#') {
-      state_ = UriState::uri_fragment;
-      return ParseStatus::in_progress;
-    }
-    query.push_back(c);
-    return ParseStatus::in_progress;
-  case UriState::uri_fragment:
-    fragment.push_back(c);
-    return ParseStatus::in_progress;
-  default:
-    break;
-  }
-  return ParseStatus::reject;
-};
 
 /*
     "http:" "//" host [ ":" port ] [ abs_path [ "?" query ]]
@@ -242,6 +224,10 @@ std::ostream& operator<<(std::ostream &strm, Uri uri) {
 
 
 //////////////////////////////////////////////////
+
+
+
+
 
 
 std::string Response::to_payload() const 

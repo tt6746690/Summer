@@ -3,6 +3,9 @@
 
 #include <iosfwd>
 
+#include "Message.h"
+#include "Constants.h"
+
 namespace Theros
 {
 
@@ -22,6 +25,7 @@ public:
     enum class State;
 public:
     State state_;
+    UriState uri_state_;
 public:
   explicit RequestParser();
   /**
@@ -33,6 +37,10 @@ public:
    * @brief   Advance parser state given input char
    */
   auto consume(Request &request, char c) -> ParseStatus;
+  auto consume(Uri& uri, char c) -> ParseStatus;
+
+  /** Decodes string member of a Uri */
+  static void uri_decode(Uri& uri);
   // Helper functions
   static void view_state(RequestParser::State state, ParseStatus status, char c);
   friend std::ostream& operator<<(std::ostream &strm, ParseStatus &status);
