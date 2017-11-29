@@ -32,7 +32,8 @@ enum class HttpVersion : uint8_t {
   zero_nine,
   one_zero,
   one_one,
-  two_zero
+  two_zero,
+  undetermined
 };
 
 /** Stringify Http version */
@@ -54,6 +55,7 @@ public:
   Headers       headers;
   Body          body;
 public:
+  Message() : version(HttpVersion::undetermined) { }
   /** 
    * Methods for manipulating headers 
    */
@@ -79,7 +81,7 @@ private:
   HeadersIterator find_header_by_name(const std::string& name);
 public:
   friend inline std::ostream& operator<<(std::ostream& os, const Header& h) { return os << h.name + ": " + h.value; }
-};
+}; 
 
 
 
@@ -112,6 +114,7 @@ public:
   MapType   uri_param;
   MapType   uri_query;
 public:
+  Request() : method(RequestMethod::UNDETERMINED) { }
   friend std::ostream& operator<<(std::ostream& os, const Request& req);
 };
 

@@ -68,8 +68,7 @@ TEST_CASE("Overall", "[RequestParser]")
 
         REQUIRE(req.method == RequestMethod::GET);
         REQUIRE(req.uri.abs_path == "/hi");
-        REQUIRE(req.version_major == 1);
-        REQUIRE(req.version_minor == 0);
+        REQUIRE(req.version == HttpVersion::one_zero);
         REQUIRE(req.headers.size() == 3);
 
         std::map<std::string, std::string> headers{
@@ -82,11 +81,11 @@ TEST_CASE("Overall", "[RequestParser]")
             auto found = find_if(
                 req.headers.begin(), req.headers.end(),
                 [header](auto built_header) {
-                    return header.first == built_header.first;
+                    return header.first == built_header.name;
                 });
             REQUIRE(found != req.headers.end());
-            REQUIRE(found->first == header.first);
-            REQUIRE(found->second == header.second);
+            REQUIRE(found->name == header.first);
+            REQUIRE(found->value == header.second);
         }
     }
 }
@@ -120,7 +119,7 @@ TEST_CASE("Method", "[RequestParser]")
     {
         payload = "CONNECT /hi HTTP/1.0 \r\n";
         parser.parse(req, std::begin(payload), std::end(payload));
-    REQUIRE(req.method == RequestMethod::CONNECT);
-        REQUIRE(req.version_minor == 0);
+        REQUIRE(req.method == RequestMethod::CONNECT);
+        REQUIRE(req.version == HttpVersion::one_zero);
     }
 }

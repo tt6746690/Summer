@@ -14,14 +14,13 @@ namespace Theros
 
 std::string version_as_string(HttpVersion v)
 {
-  std::string version = "HTTP/";
   switch(v) {
-    case HttpVersion::zero_nine: version += "0.9"; break;
-    case HttpVersion::one_zero:  version += "1.0"; break;
-    case HttpVersion::one_one:   version += "1.1"; break;
-    case HttpVersion::two_zero:  version += "2.0"; break;
+    case HttpVersion::zero_nine: return "HTTP/0.9"; 
+    case HttpVersion::one_zero:  return "HTTP/1.0";
+    case HttpVersion::one_one:   return "HTTP/1.1";
+    case HttpVersion::two_zero:  return "HTTP/2.0";
+    default: return "";
   }
-  return version;
 }
 
 
