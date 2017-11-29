@@ -2,6 +2,8 @@
 #include "asio.hpp"
 #include "asio/ssl.hpp"
 
+#include <vector>     // vector<pair<string, string>>    
+#include <string>
 #include <iostream>
 
 #include "Connection.h"
@@ -128,7 +130,11 @@ void Connection<SocketType>::read() {
               response_.status_code = StatusCode::OK;
               response_.version = request_.version;
 
-              auto handlers = router_.resolve(request_);
+              // Resolves route and populate request.uri_param 
+              std::vector<std::pair<std::string, std::string>> kv;
+              auto handlers = router_.resolve(request_, kv);
+              request_.uri_param.insert(kv.begin(), kv.end());
+
               for (auto &handler : handlers) {
                handler(context_);
               }

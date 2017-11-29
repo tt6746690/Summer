@@ -58,6 +58,10 @@ public:
     template <typename F>
     inline HandleFunc wrap(F f, std::true_type) { return [f](Context& ctx){ f(ctx); }; };
 
+    // Appends a new callable to handler_ 
+    template <typename F>
+    inline void append(F f) { handler_.push_back(wrap(f, callable_with<F, Context&>())); }
+
     // Gets id of handler
     inline int id() const { return handler_id_; };
 public:

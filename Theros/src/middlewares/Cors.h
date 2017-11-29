@@ -29,84 +29,63 @@ class Cors : public Handler
 {
 
   public:
-    Cors(const std::vector<std::string> origins,
-         const std::vector<RequestMethod> methods,
+    Cors(const std::vector<std::string>& origins,
+         const std::vector<RequestMethod>& methods,
          const int max_age = 51840000)
-        : Handler(),
-          origins_(origins),
-          methods_(methods),
-          max_age_(max_age)
-    {
-        handle_cors();
-    };
+        : Handler(), origins_(origins), methods_(methods), max_age_(max_age)
+    { handle_cors(); };
 
   private:
     void handle_cors()
     {
-//        handler_ = [ origins_ = origins_,
-//                     methods_ = methods_,
-//                     max_age_ = max_age_ ](Context & ctx)
-//        {
-//
-//            Response::HeaderValueType origin;
-//            bool valid;
-//            std::tie(origin, valid) = ctx.req_.get_header("Origin");
-//
-//            if (!valid)
-//                return;
-//
-//            if (ctx.req_.method_ != RequestMethod::OPTIONS)
-//            {
-//                // simple CORS request,
-//                if (std::find(origins_.begin(), origins_.end(), "*") != origins_.end())
-//                {
-//                    ctx.res_.set_header({"Access-Control-Allow-Origin", "*"});
-//                    return;
-//                }
-//                if (std::find(origins_.begin(), origins_.end(), origin) != origins_.end())
-//                    ctx.res_.set_header({"Access-Control-Allow-Origin", origin});
-//            }
-//            else
-//            {
-//                // preflight request
-//                Response::HeaderValueType method;
-//                std::tie(method, valid) = ctx.req_.get_header("Access-Control-Request-Method");
-//
-//                if (!valid)
-//                    return;
-//
-//                Response::HeaderValueType header;
-//                std::tie(method, valid) = ctx.req_.get_header("Access-Control-Request-Method");
-//
-//                if (!valid)
-//                    header = "";
-//
-//                if (std::find(methods_.begin(), methods_.end(),
-//                              Request::string_to_request_method(method)) != methods_.end())
-//                {
-//                    std::string methods;
-//                    std::for_each(methods_.begin(), methods_.end() - 1, [&methods](auto m) {
-//                        methods += std::string(Request::request_method_to_string(m)) + ", ";
-//                    });
-//                    methods += std::string(Request::request_method_to_string(methods_.back()));
-//                    ctx.res_.set_header({"Access-Control-Allow-Methods", methods});
-//                }
-//                else
-//                {
-//                    return;
-//                }
-//
-//                // not handling allowed headers, simply propagate to allowed
-//                std::string headers;
-//                std::for_each(ctx.req_.headers_.begin(), ctx.req_.headers_.end(), [&headers](auto p) {
-//                    headers += std::get<0>(p) + ", ";
-//                });
-//                if (!headers.empty())
-//                    headers.erase(headers.end() - 2, headers.end());
-//                ctx.res_.set_header({"Access-Control-Allow-Headers", headers});
-//                ctx.res_.set_header({"Access-Control-Max-Age", std::to_string(max_age_)});
-//            }
-//        };
+       auto cors_handler = [  origins_ = origins_,
+                              methods_ = methods_,
+                              max_age_ = max_age_ ](Context & ctx)
+           {
+
+           std::string origin = ctx.req.FindHeader("Origin");
+           if(origin == "") return;
+           
+           if(ctx.req.method != RequestMethod::OPTIONS)
+           {
+                // simple CORS request,
+               if (std::find(origins_.begin(), origins_.end(), "*") != origins_.end()) {
+                   ctx.res.SetHeader({"Access-Control-Allow-Origin", "*"});
+                   return;
+               }
+               if (std::find(origins_.begin(), origins_.end(), origin) != origins_.end())
+                   ctx.res.SetHeader({"Access-Control-Allow-Origin", origin});
+           } else {
+               // preflight request
+               std::string method = ctx.req.FindHeader("Access-Control-Request-Method");
+               if (origin == "") return;
+               std::string header = ctx.req.FindHeader("Access-Control-Request-Method");
+               if (header == "") return;
+
+               if (std::find(methods_.begin(), methods_.end(), request_method_from_cstr(method.c_str())) != methods_.end()) {
+                   std::string methods;
+                   std::for_each(methods_.begin(), methods_.end() - 1, [&methods](auto m) {
+                       methods += request_method_as_string(m) + ", ";
+                   });
+                   methods += std::string(request_method_as_string(methods_.back()));
+                   ctx.res.SetHeader({"Access-Control-Allow-Methods", methods});
+               } else {
+                   return;
+               }
+
+               // not handling allowed headers, simply propagate to allowed
+               std::string headers;
+               std::for_each(ctx.req.headers.begin(), ctx.req.headers.end(), [&headers](auto p) {
+                   headers += p.name + ", ";
+               });
+               if (!headers.empty())
+                   headers.erase(headers.end() - 2, headers.end());
+               ctx.res.SetHeader({"Access-Control-Allow-Headers", headers});
+               ctx.res.SetHeader({"Access-Control-Max-Age", std::to_string(max_age_)});
+           }
+       };
+
+       append(cors_handler);
     }
 
   private:
