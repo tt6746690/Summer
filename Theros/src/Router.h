@@ -7,8 +7,10 @@
 #include <vector>
 
 #include "Traits.h"
-#include "Message.h"
 #include "Trie.h"
+#include "Utils.h"  // to_underlying_t
+
+#include "Message.h"
 
 namespace Theros {
 

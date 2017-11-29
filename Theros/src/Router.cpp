@@ -1,6 +1,5 @@
 #include <algorithm>    // reverse
 
-#include "Utils.h"
 #include "Router.h"
 
 namespace Theros {

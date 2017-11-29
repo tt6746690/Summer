@@ -11,8 +11,8 @@
 
 #include "src/Defines.h"
 #include "src/Constants.h"
-#include "src/RequestParser.h"
 #include "src/Message.h"
+#include "src/RequestParser.h"
 #include "src/Router.h"
 #include "src/Connection.h"
 #include "src/Server.h"

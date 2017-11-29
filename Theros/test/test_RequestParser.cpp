@@ -13,7 +13,7 @@ using namespace Theros;
 TEST_CASE("Uri", "[RequestParser]")
 {
     RequestParser parser;
-    REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
+    REQUIRE(parser.state_ == static_cast<ParserState>(1));
     REQUIRE(parser.uri_state_ == UriState::uri_start);
 
     Request req;
@@ -46,7 +46,7 @@ TEST_CASE("Uri", "[RequestParser]")
 TEST_CASE("Overall", "[RequestParser]")
 {
     RequestParser parser;
-    REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
+    REQUIRE(parser.state_ == static_cast<ParserState>(1));
     REQUIRE(parser.uri_state_ == UriState::uri_start);
 
     Request req;
@@ -94,7 +94,7 @@ TEST_CASE("Method", "[RequestParser]")
 {
 
     RequestParser parser;
-    REQUIRE(parser.state_ == static_cast<RequestParser::State>(1));
+    REQUIRE(parser.state_ == static_cast<ParserState>(1));
     REQUIRE(parser.uri_state_ == UriState::uri_start);
 
     Request req;

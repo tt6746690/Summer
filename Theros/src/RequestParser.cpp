@@ -6,31 +6,9 @@
 
 namespace Theros {
 
-enum class RequestParser::State {
-  req_start = 1,        // 1
-  req_start_lf,         // 2
-  req_method,           // 3
-  req_uri,              // 4
-  req_http_h,           // 5
-  req_http_ht,          // 6
-  req_http_htt,         // 7
-  req_http_http,        // 8
-  req_http_slash,       // 9
-  req_http_major,       // 10
-  req_http_dot,         // 11
-  req_http_minor,       // 12
-  req_start_line_cr,    // 13
-  req_start_line_lf,    // 14
-  req_field_name_start, // 15
-  req_field_name,       // 16
-  req_field_value,      // 17
-  req_header_lf,        // 18
-  req_header_lws,       // 19
-  req_header_end        // 20
-};
 
 RequestParser::RequestParser() 
-  : state_(State::req_start), uri_state_(UriState::uri_start) {};
+  : state_(ParserState::req_start), uri_state_(UriState::uri_start) {};
 
 
 void RequestParser::uri_decode(Uri& uri) 
@@ -142,8 +120,6 @@ auto RequestParser::consume(Uri& uri, char c) -> ParseStatus
   case UriState::uri_fragment:
     uri.fragment.push_back(c);
     return ParseStatus::in_progress;
-  default:
-    break;
   }
   return ParseStatus::reject;
 };
@@ -200,7 +176,7 @@ void RequestParser::set_version(Request& req, char major, char minor)
             2. did not verify uri
     */
 auto RequestParser::consume(Request &request, char c) -> ParseStatus {
-  using s = RequestParser::State;
+  using s = ParserState;
   using status = ParseStatus;
 
   char version_major = 1, version_minor = 0;
@@ -436,25 +412,6 @@ void RequestParser::build_header_value(Request& req, char c)
     req.headers.back().value.push_back(c);
 }
 
-auto RequestParser::view_state(RequestParser::State state, ParseStatus status,
-                               char c) -> void {
-  std::cout << "state: " << static_cast<int>(state) << "\tstatus: " << status
-            << "\tchar: ";
-
-  if (is_char(c)) {
-    if (is_cr(c)) {
-      std::cout << "\\r";
-    } else if (is_lf(c)) {
-      std::cout << "\\n";
-    } else {
-      std::cout << c;
-    }
-  } else {
-    std::cout << static_cast<int>(c);
-  }
-
-  std::cout << std::endl;
-}
 
 auto operator<<(std::ostream &os, ParseStatus &status) -> std::ostream & {
   switch (status) {

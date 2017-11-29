@@ -4,7 +4,6 @@
 #include <iosfwd>
 
 #include "Message.h"
-#include "Constants.h"
 
 namespace Theros
 {
@@ -19,36 +18,56 @@ enum class ParseStatus
     in_progress
 };
 
+
+enum class ParserState {
+    req_start = 1,        // 1
+    req_start_lf,         // 2
+    req_method,           // 3
+    req_uri,              // 4
+    req_http_h,           // 5
+    req_http_ht,          // 6
+    req_http_htt,         // 7
+    req_http_http,        // 8
+    req_http_slash,       // 9
+    req_http_major,       // 10
+    req_http_dot,         // 11
+    req_http_minor,       // 12
+    req_start_line_cr,    // 13
+    req_start_line_lf,    // 14
+    req_field_name_start, // 15
+    req_field_name,       // 16
+    req_field_value,      // 17
+    req_header_lf,        // 18
+    req_header_lws,       // 19
+    req_header_end        // 20
+};
+
 class RequestParser
 {
 public:
-    enum class State;
-public:
-    State state_;
+    ParserState state_;
     UriState uri_state_;
 public:
-  explicit RequestParser();
-  /**
-   * @brief Populate Request object given a Range of chars
-   */
-  template <typename In>
-  auto parse(Request &request, In begin, In end) -> std::tuple<In, ParseStatus>;
-  /**
-   * @brief   Advance parser state given input char
-   */
-  auto consume(Request &request, char c) -> ParseStatus;
-  auto consume(Uri& uri, char c) -> ParseStatus;
+    explicit RequestParser();
+    /**
+    * @brief Populate Request object given a Range of chars
+    */
+    template <typename In>
+    auto parse(Request &request, In begin, In end) -> std::tuple<In, ParseStatus>;
+    /**
+    * @brief   Advance parser state given input char
+    */
+    auto consume(Request &request, char c) -> ParseStatus;
+    auto consume(Uri& uri, char c) -> ParseStatus;
 
-  /** Decodes string member of a Uri */
-  static void uri_decode(Uri& uri);
-  /** Given version major and minor, output a version for request */
-  void set_version(Request& req, char major, char minor);
-  /**  Helper functions */
-  static void view_state(RequestParser::State state, ParseStatus status, char c);
-  friend std::ostream& operator<<(std::ostream &strm, ParseStatus &status);
+    /** Decodes string member of a Uri */
+    static void uri_decode(Uri& uri);
+    /** Given version major and minor, output a version for request */
+    void set_version(Request& req, char major, char minor);
 public:
-  void build_header_name(Request& req, char c);
-  void build_header_value(Request& req, char c);
+    friend std::ostream& operator<<(std::ostream &strm, ParseStatus &status);
+    void build_header_name(Request& req, char c);
+    void build_header_value(Request& req, char c);
 
 };
 
@@ -95,31 +114,31 @@ constexpr bool is_sp(char c) { return c == 32; }
 constexpr bool is_ht(char c) { return c == 9; }
 constexpr bool is_separator(char c)
 {
-  switch (c)
-  {
-  case '(':
-  case ')':
-  case '<':
-  case '>':
-  case '@':
-  case ',':
-  case ';':
-  case ':':
-  case '\\':
-  case '"':
-  case '/':
-  case '[':
-  case ']':
-  case '?':
-  case '=':
-  case '{':
-  case '}':
-  case ' ':
-  case '\t':
-    return true;
-  default:
-    return false;
-  }
+    switch (c)
+    {
+        case '(':
+        case ')':
+        case '<':
+        case '>':
+        case '@':
+        case ',':
+        case ';':
+        case ':':
+        case '\\':
+        case '"':
+        case '/':
+        case '[':
+        case ']':
+        case '?':
+        case '=':
+        case '{':
+        case '}':
+        case ' ':
+        case '\t':
+            return true;
+        default:
+            return false;
+    }
 }
 constexpr bool is_token(char c) { return !is_ctl(c) && !is_separator(c) && is_char(c); }
 
@@ -128,14 +147,14 @@ constexpr bool is_token(char c) { return !is_ctl(c) && !is_separator(c) && is_ch
 template <typename In>
 inline std::tuple<In, ParseStatus> RequestParser::parse(Request &request, In begin, In end)
 {
-  ParseStatus status;
-  while (begin != end)
-  {
+    ParseStatus status;
+    while (begin != end)
+    {
     status = consume(request, *begin++);
     if (status == ParseStatus::accept || status == ParseStatus::reject)
       break;
-  }
-  return {begin, status};
+    }
+    return {begin, status};
 }
 
 } // namespace Theros

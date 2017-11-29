@@ -8,9 +8,10 @@
 #include <chrono>
 #include <utility> // enable_shared_from_this, move
 
-#include "RequestParser.h"
 #include "Message.h"
+#include "RequestParser.h"
 #include "Router.h"
+
 
 namespace Theros
 {

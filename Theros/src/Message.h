@@ -1,15 +1,13 @@
-#ifndef __HEADER_H__
-#define __HEADER_H__
+#ifndef __MESSAGE_H__
+#define __MESSAGE_H__
 
 #include <iostream>
-#include <string>
-#include <utility>
-#include <vector>
-#include <unordered_map>
 #include <algorithm>
 
-#include "Defines.h"
-#include "Utils.h"  // enum_map
+#include <string>
+#include <vector>
+#include <unordered_map>
+
 #include "Constants.h"
 
 
@@ -216,4 +214,4 @@ void Message<BodyType>::ContentType(const std::string& cont_type) { SetHeader({"
 
 
 } // namespace Theros
-#endif // __CONSTANTS_H__
+#endif // __MESSAGE_H__

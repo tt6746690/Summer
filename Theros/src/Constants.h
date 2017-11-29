@@ -2,12 +2,9 @@
 #define __CONSTANTS_H__
 
 #include "json.hpp"
-#include <unordered_map>
 
 namespace Theros
 {
-// Type definitions
-using ssumap = std::unordered_map<std::string, std::string>;
 
 constexpr char CRLF[] = "\r\n";
 
