@@ -60,5 +60,6 @@
     "iostream": "cpp"
   },
   "editor.formatOnSave": false,
-  "editor.wordWrap": "off"
+  "editor.wordWrap": "off",
+  "C_Cpp.clang_format_style": "file"
 }

@@ -1,61 +1,54 @@
+// #define NDEBUG
 #include "json.hpp"
+#include "theros.h"
+
+#include <cstdio>
+#include <cstdlib>
 
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 #include <utility>
 #include <vector>
-#include <thread>
 
-
-// #define NDEBUG
-#include "theros.h"
-
-
-#include <cstdio>
-#include <cstdlib> 
-
-using namespace asio;
+using namespace std;
+// using namespace asio;
 using namespace Theros;
 using nlohmann::json;
 
-template<typename ServerType>
-void start_server(int port){
-    ServerAddr server_address =
-        std::make_pair("127.0.0.1", port);
-    auto app = std::make_unique<ServerType>(server_address);
+template <typename ServerType = HttpServer>
+void make_server(int port)
+{
+    ServerAddr addr = make_pair("127.0.0.1", port);
+    auto app = ServerType(addr);
+    auto &r = app.router_;
 
-    app->router_.handle(RequestMethod::GET, "/r", [](Context &ctx) {
-                       // url query parser
-                       ctx.req.uri_query = make_query(ctx.req.uri.query);
+    r.get("/<user>/home", [](Context &ctx) {
+        // url query parser
+        ctx.req.uri_query = make_query(ctx.req.uri.query);
 
-                       JsonType urlparse = {
-                           {"query", ctx.query}, {"param", ctx.param},
-                       };
-                       std::cout << std::setw(4) << urlparse << std::endl;
-                     });
+        JsonType urlparse = {
+            {"query", ctx.query},
+            {"param", ctx.param},
+        };
+        cout << setw(4) << urlparse << eol;
+    });
 
-    std::cout << "app starts running on " << 
-      app->host() << std::to_string(app->port()) << std::endl;
-    std::cout << app->router_ << std::endl;
-                     
-    app->run();
+    string msg =
+      "app starts running on " + app.host() + ":" + to_string(app.port()) + eol;
+    cout << msg;
+
+    app.run();
 }
 
+int main(int argc, char *argv[]) {
+    try {
+    thread server_task(make_server<>, 8888);
+    server_task.join();
+    } catch (const exception e) {
+    cerr << e.what() << eol;
+    }
 
-int main(int argc, char**argv) {
-
-  try {
-
-    std::thread httpserver_task(start_server<HttpServer>, 8888);
-//    std::thread httpsserver_task(start_server<HttpsServer>, 8889);
-
-    httpserver_task.join();
-//    httpsserver_task.join();
-
-  } catch (const std::exception e) {
-    std::cerr << e.what() << std::endl;
-  }
-
-  return 0;
+    return 0;
 }
