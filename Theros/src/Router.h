@@ -17,11 +17,14 @@ namespace Theros {
 struct Context
 {
     using MapType = std::unordered_map<std::string, std::string>;
-    Request &req;
-    Response &res;
-    MapType &param;
-    MapType &query;
-    Context(Request &req, Response &res) : req(req), res(res), param(req.param), query(req.query){};
+public:
+    Request&    req;
+    Response&   res;
+    MapType&    param;
+    MapType&    query;
+public:
+    Context(Request &req, Response &res)
+            : req(req), res(res), param(req.uri_param), query(req.uri_query){ };
 };
 
 

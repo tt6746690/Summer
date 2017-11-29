@@ -22,12 +22,12 @@ using nlohmann::json;
 template<typename ServerType>
 void start_server(int port){
     ServerAddr server_address =
-        std::make_pair("127.0.0.2", port);
+        std::make_pair("127.0.0.1", port);
     auto app = std::make_unique<ServerType>(server_address);
 
     app->router_.handle(RequestMethod::GET, "/r", [](Context &ctx) {
                        // url query parser
-                       ctx.req.query = make_query(ctx.req.uri.query);
+                       ctx.req.uri_query = make_query(ctx.req.uri.query);
 
                        JsonType urlparse = {
                            {"query", ctx.query}, {"param", ctx.param},

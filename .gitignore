@@ -5,6 +5,9 @@ cmake-build-debug/
 # logs
 log 
 
+# clion 
+.idea/workspace.xml
+
 
 # build 
 build/

@@ -41,7 +41,9 @@ public:
 
   /** Decodes string member of a Uri */
   static void uri_decode(Uri& uri);
-  // Helper functions
+  /** Given version major and minor, output a version for request */
+  void set_version(Request& req, char major, char minor);
+  /**  Helper functions */
   static void view_state(RequestParser::State state, ParseStatus status, char c);
   friend std::ostream& operator<<(std::ostream &strm, ParseStatus &status);
 public:

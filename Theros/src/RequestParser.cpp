@@ -148,6 +148,15 @@ auto RequestParser::consume(Uri& uri, char c) -> ParseStatus
   return ParseStatus::reject;
 };
 
+
+void RequestParser::set_version(Request& req, char major, char minor)
+{
+  if(major == 0 && minor == 9) req.version = HttpVersion::zero_nine;
+  if(major == 1 && minor == 0) req.version = HttpVersion::one_zero;
+  if(major == 1 && minor == 1) req.version = HttpVersion::one_one;
+  if(major == 2 && minor == 0) req.version = HttpVersion::two_zero;
+}
+
 /*
         Request         = Request-Line                  ; Section 5.1
                         *(( general-header              ; Section 4.5
@@ -193,6 +202,8 @@ auto RequestParser::consume(Uri& uri, char c) -> ParseStatus
 auto RequestParser::consume(Request &request, char c) -> ParseStatus {
   using s = RequestParser::State;
   using status = ParseStatus;
+
+  char version_major = 1, version_minor = 0;
 
   switch (state_) {
   case s::req_start:
@@ -304,7 +315,7 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     return status::reject;
   case s::req_http_major:
     if (is_digit(c)) {
-      request.version_major = c - '0';
+      version_major = c - '0';
       state_ = s::req_http_dot;
       return status::in_progress;
     }
@@ -317,7 +328,8 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
     return status::reject;
   case s::req_http_minor:
     if (is_digit(c)) {
-      request.version_minor = c - '0';
+      version_minor = c - '0';
+      set_version(request, version_major, version_minor);
       state_ = s::req_start_line_cr;
       return status::in_progress;
     }
@@ -408,8 +420,6 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
       return status::accept;
     }
     return status::reject;
-  default:
-    break;
   }
   return status::reject;
 }
@@ -418,12 +428,12 @@ auto RequestParser::consume(Request &request, char c) -> ParseStatus {
 void RequestParser::build_header_name(Request& req, char c)
 {
     assert(req.headers.size() != 0);
-    Message::header_name(req.headers.back()).push_back(c);
+    req.headers.back().name.push_back(c);
 }
 void RequestParser::build_header_value(Request& req, char c)
 {
     assert(req.headers.size() != 0);
-    Message::header_value(req.headers.back()).push_back(c);
+    req.headers.back().value.push_back(c);
 }
 
 auto RequestParser::view_state(RequestParser::State state, ParseStatus status,
@@ -446,20 +456,12 @@ auto RequestParser::view_state(RequestParser::State state, ParseStatus status,
   std::cout << std::endl;
 }
 
-auto operator<<(std::ostream &strm, ParseStatus &status) -> std::ostream & {
+auto operator<<(std::ostream &os, ParseStatus &status) -> std::ostream & {
   switch (status) {
-  case ParseStatus::accept:
-    strm << "[Accept = ";
-    break;
-  case ParseStatus::reject:
-    strm << "[Reject = ";
-    break;
-  case ParseStatus::in_progress:
-    strm << "[In progress = ";
-    break;
-  default:
-    break;
+    case ParseStatus::accept: os << "[Accept = "; break;
+    case ParseStatus::reject: os << "[Reject = "; break;
+    case ParseStatus::in_progress: os << "[In progress = "; break;
   }
-  return strm << static_cast<int>(status) << "]";
+  return os << static_cast<int>(status) << "]";
 }
 }

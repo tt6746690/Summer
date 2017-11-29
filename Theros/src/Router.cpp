@@ -75,7 +75,7 @@ std::ostream& operator<<(std::ostream& os, const Router& r)
     for(int i = 0; i < method_count; ++i) {
         auto& table =  r.routing_tables[i];
         if(table.size())
-            os << Request::request_method_to_string(static_cast<RequestMethod>(i)) << eol << table << eol;
+            os << request_method_as_string(static_cast<RequestMethod>(i)) << eol << table << eol;
     }
     return os;
 }

@@ -74,7 +74,7 @@ void Connection<SslSocket>::start(){
 
 template<typename SocketType>
 void Connection<SocketType>::send_read_timeout(){
-  response_.status_code(StatusCode::Request_Timeout);
+  response_.status_code = StatusCode::Request_Timeout;
   write();
 }
 
@@ -110,8 +110,7 @@ void Connection<SocketType>::read() {
         ParseStatus parse_status;
 
         std::tie(begin, parse_status) =
-            request_parser_.parse(request_, buffer_.begin(),
-                                  buffer_.begin() + bytes_read);
+            request_parser_.parse(request_, buffer_.begin(), buffer_.begin() + bytes_read);
 
         /**
         * Current buffer is fully read, branch on ParseStatus
@@ -128,10 +127,8 @@ void Connection<SocketType>::read() {
               break;
             }
             case ParseStatus::accept: {
-              response_.status_code(StatusCode::OK);
-              response_.version_major = request_.version_major;
-              response_.version_minor = request_.version_minor;
-              request_.query = make_query(request_.uri.query);
+              response_.status_code = StatusCode::OK;
+              response_.version = request_.version;
 
               auto handlers = router_.resolve(request_);
               for (auto &handler : handlers) {
@@ -143,7 +140,7 @@ void Connection<SocketType>::read() {
             }
 
             case ParseStatus::reject: {
-              response_.status_code(StatusCode::Bad_Request);
+              response_.status_code = StatusCode::Bad_Request;
               write();
               break;
             }
@@ -158,7 +155,7 @@ void Connection<SocketType>::write() {
 
   asio::async_write(
     socket_, 
-    asio::buffer(response_.to_payload()),
+    asio::buffer(response_.ToPayload()),
     asio::transfer_all(),
     [ this, self = this->shared_from_this() ](
         std::error_code ec, std::size_t bytes_written) {
