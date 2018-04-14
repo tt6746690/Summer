@@ -473,5 +473,6 @@ std::ostream& operator<<(std::ostream& os, const Trie<T, CharT, Compare, Allocat
 }
 
 
+
 } // namespace Theros
 #endif // __TRIE_H__

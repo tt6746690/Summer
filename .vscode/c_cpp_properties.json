@@ -2,41 +2,18 @@
     "configurations": [
         {
             "name": "null",
-            "includePath": [
-                "${workspaceRoot}",
-                "./src",
-                "/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1",
-                "/Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.3.0/include",
-                "/Library/Developer/CommandLineTools/usr/include",
-                "/usr/include/c++/4.2.1",
-                "/usr/include/c++/4.2.1/tr1",
-                "/usr/local/include",
-                "/usr/include",
-                "${workspaceRoot}/lib/Catch/single_include",
-                "${workspaceRoot}/lib/asio-1.10.6/include",
-                "${workspaceRoot}/Theros/src/utilities"
-            ],
+            "includePath": [],
             "defines": [],
             "browse": {
-                "path": [
-                    "${workspaceRoot}",
-                    "./src",
-                    "/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1",
-                    "/Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.3.0/include",
-                    "/Library/Developer/CommandLineTools/usr/include",
-                    "/usr/include/c++/4.2.1",
-                    "/usr/include/c++/4.2.1/tr1",
-                    "/usr/local/include",
-                    "/usr/include"
-                ],
+                "path": [],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
             },
+            "intelliSenseMode": "clang-x64",
             "macFrameworkPath": [
                 "/System/Library/Frameworks",
                 "/Library/Frameworks"
-            ],
-            "intelliSenseMode": "clang-x64"
+            ]
         }
     ],
     "version": 3

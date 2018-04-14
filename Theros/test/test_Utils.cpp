@@ -219,14 +219,6 @@ TEST_CASE("url encoding/decoding") {
         REQUIRE(urldecode(url) == u8"François");
     }
 
-
-    SECTION("make query") {
-        auto query = make_query("foo=bar&a=d,s,d");
-        REQUIRE_NOTHROW(query.at("foo"));
-        REQUIRE(query["foo"] == "bar");
-        REQUIRE_NOTHROW(query.at("a"));
-        REQUIRE(query["a"] == "d,s,d");
-    }
 }
 
 

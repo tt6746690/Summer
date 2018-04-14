@@ -32,7 +32,4 @@ using JsonType = nlohmann::json;
 #endif
 
 
-
-
-
 #endif // __DEFINES_H__

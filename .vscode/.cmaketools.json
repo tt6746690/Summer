@@ -34,6 +34,7 @@
                       "src/Router.h",
                       "src/Server.h",
                       "src/middlewares/Cors.h",
+                      "src/middlewares/QueryParser.h",
                       "src/utilities/Codec.h",
                       "src/utilities/StrUtils.h",
                       "src/utilities/Traits.h",
@@ -112,6 +113,7 @@
                       "src/Router.h",
                       "src/Server.h",
                       "src/middlewares/Cors.h",
+                      "src/middlewares/QueryParser.h",
                       "src/utilities/Codec.h",
                       "src/utilities/StrUtils.h",
                       "src/utilities/Traits.h",
@@ -172,7 +174,7 @@
         ]
       }
     ],
-    "cookie": "0.06593901136022873",
+    "cookie": "0.5452957866849746",
     "inReplyTo": "codemodel",
     "type": "reply"
   }

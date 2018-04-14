@@ -33,11 +33,6 @@ std::string urlencode(const std::string &url);
  */
 std::string urldecode(const std::string &url);
 
-/**
- * @brief   Convert a query string to a map of key-value pairs
- */
-std::unordered_map<std::string, std::string> make_query(const std::string &query);
-
 
 } // namespace Theros
 #endif // __URL_H__

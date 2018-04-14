@@ -13,7 +13,6 @@
 #include <vector>
 
 using namespace std;
-// using namespace asio;
 using namespace Theros;
 using nlohmann::json;
 
@@ -24,10 +23,25 @@ void make_server(int port)
     auto app = ServerType(addr);
     auto &r = app.router_;
 
-    r.get("/<user>/home", [](Context &ctx) {
-        // url query parser
-        ctx.req.uri_query = make_query(ctx.req.uri.query);
+    r.use("/", [](Context & ctx) {
+        constexpr char tok_and = '&';
+        constexpr char tok_equal = '=';
 
+        std::string query = ctx.req.uri.query;
+        query += tok_and;
+
+        std::size_t pos = 0;
+        std::string token, key, value;
+
+        while ((pos = query.find(tok_and)) != std::string::npos) {
+            token = query.substr(0, pos);
+            std::tie(key, value) = split(token, tok_equal);
+            ctx.req.uri_query.insert({key, value});
+            query.erase(0, pos + 1);
+        }
+    });
+
+    r.get("/<user>/home", [](Context &ctx) {
         JsonType urlparse = {
             {"query", ctx.query},
             {"param", ctx.param},
@@ -35,8 +49,7 @@ void make_server(int port)
         cout << setw(4) << urlparse << eol;
     });
 
-    string msg =
-      "app starts running on " + app.host() + ":" + to_string(app.port()) + eol;
+    string msg = "app starts running on " + app.host() + ":" + to_string(app.port()) + eol;
     cout << msg;
 
     app.run();

@@ -80,26 +80,7 @@ std::string urldecode(const std::string &url)
   return decoded;
 }
 
-std::unordered_map<std::string, std::string> make_query(const std::string &qstr) 
-{
-  constexpr char tok_and = '&';
-  constexpr char tok_equal = '=';
 
-  std::string query = qstr;
-  query += tok_and;
-
-  std::size_t pos = 0;
-  std::string token, key, value;
-  std::unordered_map<std::string, std::string> query_map;
-
-  while ((pos = query.find(tok_and)) != std::string::npos) {
-    token = query.substr(0, pos);
-    std::tie(key, value) = split(token, tok_equal);
-    query_map.insert({key, value});
-    query.erase(0, pos + 1);
-  }
-  return query_map;
-}
 
 
 } // namespace Theros

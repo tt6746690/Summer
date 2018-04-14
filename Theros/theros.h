@@ -18,6 +18,8 @@
 #include "src/Server.h"
 
 #include "src/middlewares/Cors.h"
+#include "src/middlewares/QueryParser.h"
+
 
 
 #endif // __THEROS_HEADER_INCLUDE__

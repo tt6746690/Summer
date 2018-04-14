@@ -27,7 +27,10 @@ namespace Theros
  */
 class Cors : public Handler
 {
-
+  private:
+    std::vector<std::string> origins_;
+    std::vector<RequestMethod> methods_;
+    int max_age_;
   public:
     Cors(const std::vector<std::string>& origins,
          const std::vector<RequestMethod>& methods,
@@ -87,11 +90,6 @@ class Cors : public Handler
 
        append(cors_handler);
     }
-
-  private:
-    std::vector<std::string> origins_;
-    std::vector<RequestMethod> methods_;
-    int max_age_;
 };
 
 } // namespace Theros
